@@ -30,7 +30,10 @@ class FirebaseUtils {
     }
   }
 
-  setRecentSearch(name: string, packageInfo: { name: string; version: string }) {
+  setRecentSearch(
+    name: string,
+    packageInfo: { name: string; version: string }
+  ) {
     if (!this.firebase) {
       return
     }
@@ -222,7 +225,5 @@ class FirebaseUtils {
   }
 }
 
-export default new FirebaseUtils(
-  firebase,
-  !!process.env.FIREBASE_DATABASE_URL
-)
+// eslint-disable-next-line import/no-anonymous-default-export
+export default new FirebaseUtils(firebase, !!process.env.FIREBASE_DATABASE_URL)
