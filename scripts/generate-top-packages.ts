@@ -1,27 +1,13 @@
 /**
  * Script to generate a list of top packages to pre-populate modules-v3
- *
- * This reads from Firebase:
- * - searches-v2: to find popular packages (high count, searched in last 6 months)
- * - modules-v2: to get the latest 20 versions for each package
- *
- * Output: top-packages.json with package name, versions, and priority
- *
- * Features:
- * - Concurrent fetching for speed
- * - Incremental saves to resume from crashes
- * - Proper semver validation (no pre-release/beta versions)
- *
- * Usage: node scripts/generate-top-packages.js
  */
 
-const path = require('path')
-const fs = require('fs')
-const admin = require('firebase-admin')
-const semver = require('semver')
-
-// Use the same encoding/decoding as the main app
-const { encodeFirebaseKey, decodeFirebaseKey } = require('../utils/index')
+import path from 'path'
+import fs from 'fs'
+import * as admin from 'firebase-admin'
+import semver from 'semver'
+// @ts-ignore
+import { encodeFirebaseKey, decodeFirebaseKey } from '../utils/index'
 
 // Initialize Firebase Admin
 const serviceAccountPath = path.join(
@@ -53,17 +39,29 @@ const CONCURRENCY = 20 // Number of concurrent Firebase requests
 const OUTPUT_PATH = path.join(__dirname, '../top-packages.json')
 const PROGRESS_PATH = path.join(__dirname, '../top-packages-progress.json')
 
+interface PackageInfo {
+  name: string
+  versions: string[]
+  searchCount: number
+  lastSearched: string
+  priority: number
+}
+
+interface EligiblePackage {
+  encodedName: string
+  name: string
+  count: number
+  lastSearched: number
+}
+
 /**
  * Check if a version is a valid, stable semver version (no pre-release tags)
  */
-function isValidStableVersion(version) {
-  // Check for prerelease tags in the original version string
-  // This catches things like "1.0.0-alpha", "2.0.0-beta.1", "3.0.0-rc.0"
+function isValidStableVersion(version: string): boolean {
   if (version.includes('-')) {
     return false
   }
 
-  // Clean and validate the version
   const cleaned = semver.valid(semver.coerce(version))
   if (!cleaned) {
     return false
@@ -73,14 +71,17 @@ function isValidStableVersion(version) {
 }
 
 // Load existing progress if available
-function loadProgress() {
+function loadProgress(): { processedNames: Set<string>; results: PackageInfo[] } {
   if (fs.existsSync(PROGRESS_PATH)) {
     try {
       const data = JSON.parse(fs.readFileSync(PROGRESS_PATH, 'utf8'))
       console.log(
         `Resuming from progress file: ${data.results.length} packages already processed`
       )
-      return data
+      return {
+        processedNames: new Set(data.processedNames),
+        results: data.results
+      }
     } catch (e) {
       console.log('Could not load progress file, starting fresh')
     }
@@ -89,7 +90,7 @@ function loadProgress() {
 }
 
 // Save progress incrementally
-function saveProgress(processedNames, results) {
+function saveProgress(processedNames: Set<string>, results: PackageInfo[]) {
   const data = {
     processedNames: Array.from(processedNames),
     results,
@@ -99,7 +100,12 @@ function saveProgress(processedNames, results) {
 }
 
 // Process a batch of packages concurrently
-async function processBatch(packages, processedNames, results, topPackages) {
+async function processBatch(
+  packages: EligiblePackage[], 
+  processedNames: Set<string>, 
+  results: PackageInfo[], 
+  topPackages: EligiblePackage[]
+): Promise<PackageInfo[]> {
   const promises = packages.map(async pkg => {
     if (processedNames.has(pkg.name)) {
       return null // Already processed
@@ -145,14 +151,14 @@ async function processBatch(packages, processedNames, results, topPackages) {
         }
       }
       return null
-    } catch (err) {
+    } catch (err: any) {
       console.error(`Error processing package ${pkg.name}:`, err.message)
       return null
     }
   })
 
   const batchResults = await Promise.all(promises)
-  return batchResults.filter(r => r !== null)
+  return batchResults.filter((r): r is PackageInfo => r !== null)
 }
 
 async function main() {
@@ -174,10 +180,10 @@ async function main() {
   )
 
   // Filter packages: searched at least MIN_SEARCH_COUNT times AND within last 6 months
-  const eligiblePackages = []
+  const eligiblePackages: EligiblePackage[] = []
 
   for (const [encodedName, data] of Object.entries(searchesData)) {
-    const { count, lastSearched } = data
+    const { count, lastSearched } = data as { count: number; lastSearched: number }
 
     if (count >= MIN_SEARCH_COUNT && lastSearched >= sixMonthsAgo) {
       eligiblePackages.push({
@@ -203,12 +209,10 @@ async function main() {
 
   // Load existing progress
   const progress = loadProgress()
-  const processedNames = new Set(progress.processedNames || [])
-  const results = progress.results || []
+  const processedNames = progress.processedNames
+  const results = progress.results
 
   // Process in batches
-  let processed = processedNames.size
-
   for (let i = 0; i < topPackages.length; i += CONCURRENCY) {
     const batch = topPackages.slice(i, i + CONCURRENCY)
     const unprocessedBatch = batch.filter(p => !processedNames.has(p.name))
@@ -235,9 +239,8 @@ async function main() {
       processedNames.add(pkg.name)
     }
 
-    processed = processedNames.size
     console.log(
-      `Processed ${processed}/${topPackages.length} packages (${results.length} with valid versions)`
+      `Processed ${processedNames.size}/${topPackages.length} packages (${results.length} with valid versions)`
     )
 
     // Save progress after each batch

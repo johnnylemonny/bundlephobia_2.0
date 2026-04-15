@@ -1,0 +1,183 @@
+import React, { useEffect, useRef, useState } from 'react'
+import { formatSize } from '../../../../../utils'
+import colors from '../../../../../client/config/colors'
+import { Treemap, TreemapSquare } from '../../../../../client/components/Treemap'
+
+interface DependencySize {
+  name: string
+  approximateSize: number
+  isSelf?: boolean
+  percentShare?: number
+  sizeShare?: number
+  tooltip?: string
+  isOthers?: boolean
+}
+
+interface TreemapSectionProps {
+  packageName: string
+  packageSize: number
+  dependencySizes: { name: string; approximateSize: number }[]
+}
+
+const TreemapSection: React.FC<TreemapSectionProps> = ({
+  packageName,
+  packageSize,
+  dependencySizes,
+}) => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+  const treemapSectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!treemapSectionRef.current) return
+
+    const width = treemapSectionRef.current.getBoundingClientRect().width
+    let heightMultiplier = 1
+
+    if (dependencySizes.length < 5) {
+      heightMultiplier = 0.5
+    } else if (dependencySizes.length <= 10) {
+      heightMultiplier = 0.7
+    } else if (dependencySizes.length <= 15) {
+      heightMultiplier = 1.1
+    }
+
+    let height = 250 * heightMultiplier
+
+    if (window.innerWidth <= 640) {
+      height = window.innerHeight * 0.65 * heightMultiplier
+    } else if (window.innerWidth <= 768) {
+      height = window.innerHeight * 0.45 * heightMultiplier
+    }
+
+    setDimensions({ width, height })
+  }, [dependencySizes])
+
+  const { width, height } = dimensions
+
+  const getFormattedSize = (value: number) => {
+    const { size, unit } = formatSize(value)
+    return `${size.toFixed(2)} ${unit}`
+  }
+
+  let dependenciesCopy: DependencySize[] = dependencySizes.map(dep => ({
+    ...dep,
+    isSelf: dep.name === packageName,
+    name: dep.name === packageName ? '(self)' : dep.name,
+  }))
+
+  const sizeSum = dependenciesCopy.reduce(
+    (acc, dep) => acc + dep.approximateSize,
+    0
+  )
+
+  let enrichedDependencies: DependencySize[] = dependenciesCopy.map(dep => {
+    const percentShare = (dep.approximateSize / sizeSum) * 100
+    const sizeShare = (dep.approximateSize / sizeSum) * packageSize
+    return {
+      ...dep,
+      percentShare,
+      sizeShare,
+      tooltip: `${dep.name} ｜ ${percentShare.toFixed(1)}% ｜ ~ ${getFormattedSize(
+        sizeShare
+      )}`,
+    }
+  })
+
+  enrichedDependencies.sort((depA, depB) => (depB.percentShare || 0) - (depA.percentShare || 0))
+
+  let compactedDependencies: DependencySize[] = []
+  const compactLimit = typeof window !== 'undefined' && window.innerWidth <= 768 ? 8 : 16
+  const ellipsizeLimit = typeof window !== 'undefined' && window.innerWidth <= 768 ? 3.5 : 1.5
+
+  if (enrichedDependencies.length > compactLimit) {
+    const mainDependencies = enrichedDependencies.slice(0, compactLimit)
+    const otherDependencies = enrichedDependencies.slice(compactLimit)
+
+    const approximateSize = otherDependencies.reduce(
+      (acc, dep) => acc + dep.approximateSize,
+      0
+    )
+    const percentShare = otherDependencies.reduce(
+      (acc, dep) => acc + (dep.percentShare || 0),
+      0
+    )
+    const sizeShare = otherDependencies.reduce(
+      (acc, dep) => acc + (dep.sizeShare || 0),
+      0
+    )
+
+    compactedDependencies = [
+      ...mainDependencies,
+      {
+        name: '(others)',
+        approximateSize,
+        percentShare,
+        sizeShare,
+        isOthers: true,
+        tooltip: otherDependencies
+          .map(
+            dep =>
+              `${dep.name} ｜ ${dep.percentShare?.toFixed(1)}% ｜ ~ ${getFormattedSize(
+                dep.sizeShare || 0
+              )} min`
+          )
+          .join(' \u000D\u000A  \u000D\u000A '),
+      },
+    ]
+  } else {
+    compactedDependencies = enrichedDependencies
+  }
+
+  return (
+    <section className="treemap__section" ref={treemapSectionRef}>
+      <h2 className="result__section-heading"> Composition </h2>
+      <Treemap width={width} height={height} className="treemap">
+        {compactedDependencies.map((dep, index) => (
+          <TreemapSquare
+            key={dep.name}
+            value={dep.percentShare || 0}
+            style={{ background: colors[index % colors.length] }}
+            data-balloon={dep.tooltip}
+            data-balloon-pos="top"
+            className="treemap__square"
+          >
+            {(dep.percentShare || 0) > ellipsizeLimit &&
+            dep.name.length < (dep.percentShare || 0) * (12 / ellipsizeLimit) ? (
+              <div className="treemap__content">
+                <div className="treemap__label">
+                  {dep.isSelf || dep.isOthers ? (
+                    <span> {dep.name} </span>
+                  ) : (
+                    <a href={`/package/${dep.name}`} target="_blank" rel="noreferrer">
+                      {dep.name}
+                    </a>
+                  )}
+                </div>
+                <div
+                  className="treemap__percent"
+                  style={{
+                    fontSize: `${14 + Math.min((dep.percentShare || 0) * 1.2, 25)}px`,
+                  }}
+                >
+                  {dep.percentShare?.toFixed(1)}
+                  <span className="treemap__percent-sign">%</span>
+                </div>
+              </div>
+            ) : (
+              <span className="treemap__ellipsis">&hellip;</span>
+            )}
+          </TreemapSquare>
+        ))}
+      </Treemap>
+      <p className="treemap__note">
+        <b>Note: </b> These sizes represent the contribution made by dependencies
+        (direct or transitive) to <code>{packageName}</code>
+        &apos;s size. These may be different from the dependencies&apos; standalone
+        sizes.
+      </p>
+    </section>
+  )
+}
+
+export default TreemapSection
+旋

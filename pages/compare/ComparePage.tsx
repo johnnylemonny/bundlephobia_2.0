@@ -1,24 +1,38 @@
 import React, { PureComponent } from 'react'
 import Head from 'next/head'
-
-import Layout from '../../client/components/Layout'
-import BarGraph from '../../client/components/BarGraph'
-import AutocompleteInput from '../../client/components/AutocompleteInput'
-import BuildProgressIndicator from '../../client/components/BuildProgressIndicator'
 import Router from 'next/router'
 import Link from 'next/link'
 import isEmptyObject from 'is-empty-object'
+
+import Layout from '../../client/components/Layout'
+import { AutocompleteInput } from '../../client/components/AutocompleteInput'
 import { parsePackageString } from '../../utils/common.utils'
-
 import API from '../../client/api'
+import { PackageResult } from '../../types'
 
+// @ts-ignore
 import GithubLogo from '../../client/assets/github-logo.svg'
-import EmptyBox from '../../client/assets/empty-box.svg'
 
-export default class ResultPage extends PureComponent {
-  fetchResults = packageString => {
-    const startTime = Date.now()
+interface State {
+  results: Partial<PackageResult>
+  resultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
+  resultsError: any
+  historicalResultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
+  inputInitialValue: string
+  historicalResults: any[]
+}
 
+export default class ComparePage extends PureComponent<{}, State> {
+  state: State = {
+    results: {},
+    resultsPromiseState: null,
+    resultsError: null,
+    historicalResultsPromiseState: null,
+    inputInitialValue: '',
+    historicalResults: [],
+  }
+
+  fetchResults = (packageString: string) => {
     API.getInfo(packageString)
       .then(results => {
         const newPackageString = `${results.name}@${results.version}`
@@ -41,7 +55,7 @@ export default class ResultPage extends PureComponent {
       })
   }
 
-  fetchHistory = packageString => {
+  fetchHistory = (packageString: string) => {
     API.getHistory(packageString, 15)
       .then(results => {
         this.setState({
@@ -55,7 +69,7 @@ export default class ResultPage extends PureComponent {
       })
   }
 
-  handleSearchSubmit = packageString => {
+  handleSearchSubmit = (packageString: string) => {
     this.setState({
       results: {},
       historicalResultsPromiseState: 'pending',
@@ -70,50 +84,12 @@ export default class ResultPage extends PureComponent {
     this.fetchHistory(normalizedQuery)
   }
 
-  handleProgressDone = () => {
-    this.setState({
-      resultsPromiseState: 'fulfilled',
-    })
-  }
-
-  formatHistoricalResults = () => {
-    const { results, historicalResults } = this.state
-    const totalVersions = {
-      ...historicalResults,
-      [results.version]: results,
-    }
-
-    const formattedResults = Object.keys(totalVersions).map(version => {
-      if (isEmptyObject(totalVersions[version])) {
-        return { version, disabled: true }
-      }
-      return {
-        version,
-        size: totalVersions[version].size,
-        gzip: totalVersions[version].gzip,
-      }
-    })
-    const sorted = formattedResults.sort((packageA, packageB) => {
-      const versionA = packageA.version.replace(/\D/g, '')
-      const versionB = packageB.version.replace(/\D/g, '')
-      return parseInt(versionA) > parseInt(versionB)
-    })
-    return typeof window !== 'undefined' && window.innerWidth < 640
-      ? sorted.slice(-10)
-      : sorted
-  }
-
-  handleBarClick = reading => {
-    const { results } = this.state
-
-    const packageString = `${results.name}@${reading.version}`
-    this.setState({ inputInitialValue: packageString })
-    this.handleSearchSubmit(packageString)
-  }
-
   render() {
     return (
       <Layout className="compare-page">
+        <Head>
+          <title>Compare Packages | Bundlephobia</title>
+        </Head>
         <div className="page-container">
           <header className="result-header">
             <section className="result-header--left-section">
@@ -141,7 +117,6 @@ export default class ResultPage extends PureComponent {
                 placeholder="package A"
                 initialValue={''}
                 onSearchSubmit={this.handleSearchSubmit}
-                maxFullSizeCharsMultiplier={0.5}
                 hideSearchIcon
               />
               <div className="compare__vs">vs</div>
@@ -150,7 +125,6 @@ export default class ResultPage extends PureComponent {
                 placeholder="package B"
                 initialValue={''}
                 onSearchSubmit={this.handleSearchSubmit}
-                maxFullSizeCharsMultiplier={0.5}
                 hideSearchIcon
               />
             </div>

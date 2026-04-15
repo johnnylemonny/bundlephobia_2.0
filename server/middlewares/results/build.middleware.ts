@@ -26,7 +26,7 @@ async function buildMiddleware(ctx: Context) {
   ctx.cacheControl = {
     maxAge: force
       ? 0
-      : semver.valid(parsePackageString(packageQuery).version)
+      : semver.valid(version)
       ? config.CACHE.SIZE_API_HAS_VERSION
       : config.CACHE.SIZE_API_DEFAULT,
   }

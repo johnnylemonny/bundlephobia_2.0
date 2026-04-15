@@ -64,3 +64,59 @@
 {"level":"error","message":"BuildError lodash@4.18.1","type":"BUILD_ERROR"}
 {"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
 {"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BuildError react@16.5.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-build-error@0.0.2","type":"BUILD_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/missing-dependency-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError react@16.5.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-build-error@0.0.2","type":"BUILD_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/missing-dependency-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError react@16.5.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-build-error@0.0.2","type":"BUILD_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/missing-dependency-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError react@16.5.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-build-error@0.0.2","type":"BUILD_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError @bundlephobia/missing-dependency-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"EntryPointError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"EntryPointError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"EntryPointError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BlocklistedPackageError polymer-cli@1.9.11","type":"BUILD_ERROR"}
+{"level":"error","message":"EntryPointError @bundlephobia/test-entry-point-error@0.0.1","type":"BUILD_ERROR"}
+{"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"PackageNotFoundError @bundlephobia/does-not-exist@null","type":"BUILD_ERROR"}
+{"level":"error","message":"PackageVersionMismatchError @bundlephobia/test-entry-point-error@459.0.0","type":"BUILD_ERROR"}

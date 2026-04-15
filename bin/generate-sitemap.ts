@@ -1,10 +1,10 @@
-const { SitemapStream, streamToPromise } = require( 'sitemap' )
-const { Readable } = require( 'stream' )
-const { writeFileSync } = require('fs')
-const path = require('path')
+import { SitemapStream, streamToPromise } from 'sitemap'
+import { Readable } from 'stream'
+import { writeFileSync } from 'fs'
+import path from 'path'
 
 // Source: https://analytics.amplitude.com/bundlephobia/chart/3tbq2vm/edit/jmy3u6h
-const popularPackages = [
+const popularPackages: string[] = [
   "react",
   "moment",
   "lodash",
@@ -183,7 +183,7 @@ const popularPackages = [
   "polished"
 ]
 
-const otherPages = ['', '/scan']
+const otherPages: string[] = ['', '/scan']
 
 const links = [
   ...otherPages.map(page => ({
@@ -191,8 +191,8 @@ const links = [
     changefreq: 'weekly',
     priority: 1
   })),
-  ...popularPackages.map(package => ({
-    url: `/package/${package}`,
+  ...popularPackages.map(packageItem => ({
+    url: `/package/${packageItem}`,
     changefreq: 'weekly',
     priority: 0.7
   })),
@@ -209,6 +209,7 @@ const sitemapPromise = streamToPromise(Readable.from(links).pipe(stream)).then((
 sitemapPromise
   .then((sitemap) => {
   writeFileSync(path.join(__dirname, '..', 'client', 'assets', 'public', 'sitemap.xml'), sitemap, 'utf8')
+  console.log('Sitemap generated successfully')
 })
   .catch((err) => {
     console.error(err)

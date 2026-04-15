@@ -1,10 +1,12 @@
-require('dotenv-defaults').config()
-const LRU = require('lru-cache')
-const firebase = require('firebase')
-const debug = require('debug')('bp:cache')
-const { encodeFirebaseKey } = require('../cache.utils')
+import 'dotenv-defaults/config'
+import LRU from 'lru-cache'
+import firebase from 'firebase'
+import createDebug from 'debug'
+import { encodeFirebaseKey } from '../cache.utils'
+import { FastifyRequest, FastifyReply } from 'fastify'
 
-const LRUCache = new LRU({ max: 1500 })
+const debug = createDebug('bp:cache')
+const LRUCache = new LRU<string, any>({ max: 1500 })
 
 // Configurable Firebase keys for read/write operations
 const FIREBASE_READ_KEY_EXPORTS =
@@ -19,7 +21,12 @@ debug(
   FIREBASE_WRITE_KEY_EXPORTS
 )
 
-async function getPackageResultFromKey(key, { name, version }) {
+interface PackageInfo {
+  name: string
+  version: string
+}
+
+async function getPackageResultFromKey(key: string, { name, version }: PackageInfo) {
   const ref = firebase
     .database()
     .ref()
@@ -31,7 +38,11 @@ async function getPackageResultFromKey(key, { name, version }) {
   return snapshot.val()
 }
 
-async function getPackageResult({ name, version, readKey }) {
+interface GetPackageParams extends PackageInfo {
+  readKey?: string
+}
+
+async function getPackageResult({ name, version, readKey }: GetPackageParams) {
   const targetReadKey = readKey || FIREBASE_READ_KEY_EXPORTS
   // Try primary read key first
   const result = await getPackageResultFromKey(targetReadKey, { name, version })
@@ -60,7 +71,11 @@ async function getPackageResult({ name, version, readKey }) {
   return null
 }
 
-async function setPackageResult({ name, version, result }) {
+interface SetPackageParams extends PackageInfo {
+  result: any
+}
+
+async function setPackageResult({ name, version, result }: SetPackageParams) {
   const modules = firebase.database().ref().child(FIREBASE_WRITE_KEY_EXPORTS)
   return modules
     .child(encodeFirebaseKey(name))
@@ -68,7 +83,7 @@ async function setPackageResult({ name, version, result }) {
     .set(result)
 }
 
-async function getExportsSizeMiddlware(req, res) {
+export async function getExportsSizeMiddlware(req: FastifyRequest<{ Querystring: { name: string; version: string; readKey?: string } }>, res: FastifyReply) {
   const name = decodeURIComponent(req.query.name)
   const version = decodeURIComponent(req.query.version)
   const readKey = req.query.readKey
@@ -99,7 +114,7 @@ async function getExportsSizeMiddlware(req, res) {
   return res.code(404).send()
 }
 
-async function postExportsSizeMiddleware(req, res) {
+export async function postExportsSizeMiddleware(req: FastifyRequest<{ Body: { name: string; version: string; result: any } }>, res: FastifyReply) {
   const { name, version, result } = req.body
 
   if (!name || !version || !result) return res.code(422).send()
@@ -114,5 +129,3 @@ async function postExportsSizeMiddleware(req, res) {
     return res.code(500).send({ error: err })
   }
 }
-
-module.exports = { getExportsSizeMiddlware, postExportsSizeMiddleware }

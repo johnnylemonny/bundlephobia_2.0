@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, ReactNode } from 'react'
 import Analytics from '../../client/analytics'
 import ResultLayout from '../../client/components/ResultLayout'
 import Separator from '../../client/components/Separator'
@@ -8,26 +8,43 @@ import Dropzone from 'react-dropzone'
 import Router from 'next/router'
 import * as semver from 'semver'
 
-export default class Scan extends Component {
-  state = {
+interface Package {
+  name: string
+  versionRange: string
+  resolvedVersion: string
+}
+
+interface State {
+  packages: Package[] | null
+  selectedPackages: { name: string; resolvedVersion: string }[]
+}
+
+export default class Scan extends Component<{}, State> {
+  state: State = {
     packages: null,
     selectedPackages: [],
   }
+
+  packageSelectionContainer: HTMLUListElement | null = null
 
   componentDidMount() {
     Analytics.pageView('scan')
   }
 
-  resolveVersionFromRange = range => {
+  resolveVersionFromRange = (range: string): string => {
     const rangeSet = new semver.Range(range).set
+    // @ts-ignore - semver types can be tricky with internal structures
     return rangeSet[0][0].semver.version
   }
 
   setSelectedPackages = () => {
+    if (!this.packageSelectionContainer) return
+
     const checkedInputs =
       this.packageSelectionContainer.querySelectorAll('input:checked')
 
-    const selectedPackages = Array.from(checkedInputs).map(({ value }) => {
+    const selectedPackages = Array.from(checkedInputs).map(input => {
+      const { value } = input as HTMLInputElement
       const [name, resolvedVersion] = value.split('#')
       return { name, resolvedVersion }
     })
@@ -39,12 +56,13 @@ export default class Scan extends Component {
     this.setSelectedPackages()
   }
 
-  handleDropAccepted = ([file]) => {
+  handleDropAccepted = ([file]: File[]) => {
     const reader = new FileReader()
     reader.onload = () => {
       try {
-        const json = JSON.parse(reader.result)
-        const packages = Object.keys(json.dependencies)
+        const result = reader.result as string
+        const json = JSON.parse(result)
+        const packages = Object.keys(json.dependencies || {})
           .filter(packageName => {
             const versionRange = json.dependencies[packageName]
             return semver.valid(versionRange) || semver.validRange(versionRange)
@@ -99,14 +117,15 @@ export default class Scan extends Component {
     Analytics.scanParseError()
   }
 
-  render() {
-    let content
+  render(): ReactNode {
+    let content: ReactNode
     const { packages, selectedPackages } = this.state
 
     if (!packages) {
       content = (
         <div>
           <Dropzone
+            // @ts-ignore - react-dropzone types might differ between versions
             className="scan__dropzone"
             onDropAccepted={this.handleDropAccepted}
             onDropRejected={this.handleDropRejected}

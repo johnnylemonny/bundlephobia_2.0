@@ -1,14 +1,15 @@
-require('dotenv-defaults').config()
-const firebase = require('firebase')
-const LRU = require('lru-cache')
-const debug = require('debug')('bp:cache')
-const { encodeFirebaseKey } = require('../cache.utils')
-const LRUCache = new LRU({ max: 3000 })
+import 'dotenv-defaults/config'
+import firebase from 'firebase'
+import LRU from 'lru-cache'
+import createDebug from 'debug'
+import { encodeFirebaseKey } from '../cache.utils'
+import { FastifyRequest, FastifyReply } from 'fastify'
+
+const debug = createDebug('bp:cache')
+const LRUCache = new LRU<string, any>({ max: 3000 })
 
 // Configurable Firebase keys for read/write operations
 // This allows safe migration from modules-v2 (old) to modules-v3 (new package-build-stats 8.x)
-// When FIREBASE_READ_KEY is 'modules-v3', it will try v3 first, then fall back to v2
-// When FIREBASE_READ_KEY is 'modules-v2', it will only read from v2
 const FIREBASE_READ_KEY = process.env.FIREBASE_READ_KEY || 'modules-v3'
 const FIREBASE_WRITE_KEY = process.env.FIREBASE_WRITE_KEY || 'modules-v3'
 
@@ -19,7 +20,12 @@ debug(
   FIREBASE_WRITE_KEY
 )
 
-async function getPackageResultFromKey(key, { name, version }) {
+interface PackageInfo {
+  name: string
+  version: string
+}
+
+async function getPackageResultFromKey(key: string, { name, version }: PackageInfo) {
   const ref = firebase
     .database()
     .ref()
@@ -31,7 +37,11 @@ async function getPackageResultFromKey(key, { name, version }) {
   return snapshot.val()
 }
 
-async function getPackageResult({ name, version, readKey }) {
+interface GetPackageParams extends PackageInfo {
+  readKey?: string
+}
+
+async function getPackageResult({ name, version, readKey }: GetPackageParams) {
   const targetReadKey = readKey || FIREBASE_READ_KEY
   // Try primary read key first
   const result = await getPackageResultFromKey(targetReadKey, { name, version })
@@ -60,7 +70,11 @@ async function getPackageResult({ name, version, readKey }) {
   return null
 }
 
-async function setPackageResult({ name, version, result }) {
+interface SetPackageParams extends PackageInfo {
+  result: any
+}
+
+async function setPackageResult({ name, version, result }: SetPackageParams) {
   const modules = firebase.database().ref().child(FIREBASE_WRITE_KEY)
   return modules
     .child(encodeFirebaseKey(name))
@@ -68,7 +82,7 @@ async function setPackageResult({ name, version, result }) {
     .set(result)
 }
 
-async function getPackageSizeMiddlware(req, res) {
+export async function getPackageSizeMiddlware(req: FastifyRequest<{ Querystring: { name: string; version: string; readKey?: string } }>, res: FastifyReply) {
   const name = decodeURIComponent(req.query.name)
   const version = decodeURIComponent(req.query.version)
   const readKey = req.query.readKey
@@ -99,7 +113,7 @@ async function getPackageSizeMiddlware(req, res) {
   return res.code(404).send()
 }
 
-async function postPackageSizeMiddlware(req, res) {
+export async function postPackageSizeMiddlware(req: FastifyRequest<{ Body: { name: string; version: string; result: any } }>, res: FastifyReply) {
   const { name, version, result } = req.body
 
   if (!name || !version || !result) return res.code(422).send()
@@ -114,5 +128,3 @@ async function postPackageSizeMiddlware(req, res) {
     return res.code(500).send({ error: err })
   }
 }
-
-module.exports = { getPackageSizeMiddlware, postPackageSizeMiddlware }

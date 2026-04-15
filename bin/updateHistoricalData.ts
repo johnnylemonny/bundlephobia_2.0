@@ -1,15 +1,23 @@
 #!/usr/bin/env node
 
-const firebase = require('firebase')
-const FirebaseUtils = require('../utils/firebase.utils')
-const trending = require('trending-github')
-const fetch = require('node-fetch')
-const debug = require('debug')('bp:trending-fetch')
-const GithubAPI = require('github')
-const isEmptyObject = require('is-empty-object')
-const promiseSeries = require('promise.series')
+import firebase from 'firebase'
+// @ts-ignore
+import FirebaseUtils from '../utils/firebase.utils'
+// @ts-ignore
+import trending from 'trending-github'
+import fetch from 'node-fetch'
+import createDebug from 'debug'
+// @ts-ignore
+import GithubAPI from 'github'
+// @ts-ignore
+import isEmptyObject from 'is-empty-object'
+// @ts-ignore
+import promiseSeries from 'promise.series'
+import dotenv from 'dotenv'
 
-require('dotenv').config()
+dotenv.config()
+
+const debug = createDebug('bp:trending-fetch')
 
 const github = new GithubAPI({
   debug: false
@@ -27,37 +35,44 @@ const firebaseConfig = {
   databaseURL: process.env.FIREBASE_DATABASE_URL
 }
 
-firebase.initializeApp(firebaseConfig)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+}
 
 const firebaseUtils = new FirebaseUtils(firebase)
 const port = process.env.PORT || 5000
 
-async function getPackageFromRepo(author, name) {
-  const {
-    data: { content }
-  } = await github.repos.getContent({
-    repo: author,
-    owner: name,
-    path: 'package.json'
-  })
+async function getPackageFromRepo(author: string, name: string): Promise<string | undefined> {
+  try {
+    const {
+      data: { content }
+    } = await github.repos.getContent({
+      repo: author,
+      owner: name,
+      path: 'package.json'
+    })
 
-  if (content) {
-    const decodedContent = Buffer.from(content, 'base64').toString('utf8')
-    return JSON.parse(decodedContent).name
+    if (content) {
+      const decodedContent = Buffer.from(content, 'base64').toString('utf8')
+      return JSON.parse(decodedContent).name
+    }
+  } catch (err) {
+    debug('failed to get package.json for %s/%s', author, name)
   }
+  return undefined
 }
 
-async function getGithubTrendingPackages() {
+async function getGithubTrendingPackages(): Promise<string[]> {
   const repos = await trending('daily', 'javascript')
   const packages = await Promise.all(
-    repos.map(repo => getPackageFromRepo(repo.author, repo.name))
+    repos.map((repo: any) => getPackageFromRepo(repo.author, repo.name))
   )
-  return packages.filter(pack => pack)
+  return packages.filter((pack): pack is string => !!pack)
 }
 
-async function getTrendingSearches() {
+async function getTrendingSearches(): Promise<string[]> {
   const limit = 20
-  let trendingSearches = []
+  let trendingSearches: string[] = []
   const searches = await firebaseUtils.getDailySearches()
 
   if (searches) {
@@ -72,7 +87,7 @@ async function getTrendingSearches() {
   return trendingSearches
 }
 
-async function updateHistoricalData() {
+export async function updateHistoricalData() {
   try {
     const [githubTrendingPackages, searchTrendingPackages] = await Promise.all([
       getGithubTrendingPackages(),
@@ -88,12 +103,12 @@ async function updateHistoricalData() {
   }
 }
 
-async function getVersionsToBuild(name) {
-  const versionsToBuild = []
+async function getVersionsToBuild(name: string): Promise<string[]> {
+  const versionsToBuild: string[] = []
   const res = await fetch(
     `http://localhost:${port}/api/package-history?package=${name}`
   )
-  const versionInfo = await res.json()
+  const versionInfo: Record<string, any> = await res.json()
 
   Object.keys(versionInfo).forEach(version => {
     if (isEmptyObject(versionInfo[version])) {
@@ -104,32 +119,15 @@ async function getVersionsToBuild(name) {
   return versionsToBuild
 }
 
-async function getVersionsToBuild(name) {
-  const versionsToBuild = []
-  const res = await fetch(
-    `http://localhost:${port}/api/package-history?package=${name}`
-  )
-  const versionInfo = await res.json()
-
-  Object.keys(versionInfo).forEach(version => {
-    if (isEmptyObject(versionInfo[version])) {
-      versionsToBuild.push(version)
-    }
-  })
-
-  return versionsToBuild
-}
-
-async function buildPackage(name, version) {
+async function buildPackage(name: string, version: string) {
   debug('building package %s %s', name, version)
-  const versionsToBuild = []
   const res = await fetch(
     `http://localhost:${port}/api/size?package=${name + '@' + version}`
   )
   debug('result %s %s %O', name, version, await res.json())
 }
 
-async function buildPackageFromGithub(name, author) {
+async function buildPackageFromGithub(name: string, author: string) {
   debug('building repo %s', name)
   const packageName = await getPackageFromRepo(name, author)
 
@@ -154,11 +152,11 @@ async function mostPopuplarGithubRepos() {
 
   debug(
     'Popular GitHub Repos %o',
-    repos.data.items.map(r => r.name)
+    repos.data.items.map((r: any) => r.name)
   )
 
   try {
-    const promises = repos.data.items.map(({ name, owner }) => () =>
+    const promises = repos.data.items.map(({ name, owner }: any) => () =>
       buildPackageFromGithub(name, owner.login)
     )
     await promiseSeries(promises)
@@ -167,4 +165,6 @@ async function mostPopuplarGithubRepos() {
   }
 }
 
-mostPopuplarGithubRepos()
+if (require.main === module) {
+  mostPopuplarGithubRepos()
+}

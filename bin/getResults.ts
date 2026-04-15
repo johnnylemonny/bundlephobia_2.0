@@ -1,7 +1,10 @@
-const firebase = require('firebase')
-const { encodeFirebaseKey, decodeFirebaseKey } = require('../utils/index')
-const fs = require('fs')
-require('dotenv').config()
+import firebase from 'firebase'
+import { encodeFirebaseKey, decodeFirebaseKey } from '../utils/index'
+import fs from 'fs'
+import path from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -9,11 +12,15 @@ const firebaseConfig = {
   databaseURL: process.env.FIREBASE_DATABASE_URL,
 }
 
-firebase.initializeApp(firebaseConfig)
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig)
+}
 
-function getFirebaseStoreFromDisk() {
+function getFirebaseStoreFromDisk(): any {
   try {
-    return require('./data/firebase-modules.json')
+    const dataPath = path.join(__dirname, 'data', 'firebase-modules.json')
+    const rawData = fs.readFileSync(dataPath, 'utf8')
+    return JSON.parse(rawData)
   } catch (err) {
     console.log('not found on disk')
     return null
@@ -37,7 +44,7 @@ async function getFirebaseStoreFromNetwork() {
   )[0]
 
   let currentLastEntry = firstEntry
-  let allData = {}
+  let allData: any = {}
   let counter = 0
 
   console.log('fetching from ', firstEntry, ' to ', lastEntry)
@@ -60,24 +67,29 @@ async function getFirebaseStoreFromNetwork() {
       counter,
       currentLastEntry,
       'total of ',
-      Object.keys(snapshot),
+      packageNames.length,
       ' packages.'
     )
     allData = { ...allData, ...snapshot }
   }
 
-  fs.mkdirSync(__dirname + '/data', { recursive: true })
+  const dataDir = path.join(__dirname, 'data')
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir, { recursive: true })
+  }
 
   fs.writeFileSync(
-    __dirname + '/data/firebase-modules.json',
+    path.join(dataDir, 'firebase-modules.json'),
     JSON.stringify(allData, null, 2),
     'utf8'
   )
   return allData
 }
 
-async function getResults() {
+export async function getResults() {
   let firebaseStore = getFirebaseStoreFromDisk()
+  if (!firebaseStore) return []
+  
   console.log('loaded firebase store')
   return Object.keys(firebaseStore).flatMap(packageName =>
     Object.keys(firebaseStore[packageName]).map(
@@ -86,14 +98,12 @@ async function getResults() {
   )
 }
 
-async function getPackages() {
+export async function getPackages() {
   let firebaseStore =
     getFirebaseStoreFromDisk() || (await getFirebaseStoreFromNetwork())
   const packages = Object.keys(firebaseStore).map(
     packageName => firebaseStore[packageName]
   )
-  console.log('fetched ', Object.keys(firebaseStore), ' packages ')
+  console.log('fetched ', Object.keys(firebaseStore).length, ' packages ')
   return packages
 }
-
-module.exports = { getResults, getPackages }

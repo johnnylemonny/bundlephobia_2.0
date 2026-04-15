@@ -1,14 +1,16 @@
-require('dotenv-defaults').config()
-const firebase = require('firebase')
-const fastify = require('fastify')()
-const {
+import 'dotenv-defaults/config'
+import firebase from 'firebase'
+import fastifyFactory from 'fastify'
+import {
   getPackageSizeMiddlware,
   postPackageSizeMiddlware,
-} = require('./middlewares/package-size.middleware')
-const {
+} from './middlewares/package-size.middleware'
+import {
   getExportsSizeMiddlware,
   postExportsSizeMiddleware,
-} = require('./middlewares/exports-size.middleware')
+} from './middlewares/exports-size.middleware'
+
+const fastify = fastifyFactory()
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -27,7 +29,7 @@ fastify.post('/exports-cache', postExportsSizeMiddleware)
 fastify
   .listen({ port: 7001 })
   .then(() => {
-    console.log(`server listening on ${fastify.server.address().port}`)
+    console.log(`server listening on 7001`)
   })
   .catch(err => {
     console.error(err)

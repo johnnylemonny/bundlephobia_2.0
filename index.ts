@@ -58,8 +58,9 @@ const dev = env.nodeEnv !== 'production'
 const app = next({ dev })
 const handle = app.getRequestHandler()
 
-app.prepare().then(() => {
-  const server = new Koa()
+const server = new Koa()
+
+export const initServer = async () => {
   const router = new Router()
 
   server.use(requestId())
@@ -270,7 +271,17 @@ app.prepare().then(() => {
   })
 
   server.use(router.routes())
-  server.listen(port, () => {
-    console.log(`> Ready on http://localhost:${port}`)
+  return server
+}
+
+if (process.env.NODE_ENV !== 'test') {
+  app.prepare().then(async () => {
+    await initServer()
+    server.listen(port, () => {
+      console.log(`> Ready on http://localhost:${port}`)
+    })
   })
-})
+}
+
+export default server
+

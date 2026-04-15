@@ -1,11 +1,12 @@
-import 'dotenv-defaults/config.js'
-import Fastify from 'fastify'
+import 'dotenv-defaults/config'
+import Fastify, { FastifyRequest, FastifyReply } from 'fastify'
 import {
   getPackageStats,
   getAllPackageExports,
   getPackageExportSizes,
   eventQueue,
 } from 'package-build-stats'
+// @ts-ignore
 import Amplitude from '@amplitude/node'
 
 const fastify = Fastify()
@@ -13,7 +14,7 @@ const fastify = Fastify()
 if (process.env.AMPLITUDE_API_KEY) {
   const client = Amplitude.init(process.env.AMPLITUDE_API_KEY)
 
-  eventQueue.on('*', (event, details) => {
+  eventQueue.on('*', (event: string, details: any) => {
     client.logEvent({
       event_type: event,
       user_id: 'build-service',
@@ -28,21 +29,21 @@ if (process.env.AMPLITUDE_API_KEY) {
   }, 5000)
 }
 
-fastify.get('/size', async (req, res) => {
+fastify.get('/size', async (req: FastifyRequest<{ Querystring: { p: string } }>, res: FastifyReply) => {
   const packageString = decodeURIComponent(req.query.p)
   try {
     const result = await getPackageStats(packageString, {
       installTimeout: 60000,
     })
     return res.code(200).send(result)
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
-    const errorToSend = 'toJSON' in err ? err.toJSON() : err
+    const errorToSend = err && typeof err === 'object' && 'toJSON' in err ? err.toJSON() : err
     return res.code(500).send(errorToSend)
   }
 })
 
-fastify.get('/exports-sizes', async (req, res) => {
+fastify.get('/exports-sizes', async (req: FastifyRequest<{ Querystring: { p: string } }>, res: FastifyReply) => {
   const packageString = decodeURIComponent(req.query.p)
 
   try {
@@ -50,14 +51,14 @@ fastify.get('/exports-sizes', async (req, res) => {
       installTimeout: 60000,
     })
     return res.code(200).send(result)
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
-    const errorToSend = 'toJSON' in err ? err.toJSON() : err
+    const errorToSend = err && typeof err === 'object' && 'toJSON' in err ? err.toJSON() : err
     return res.code(500).send(errorToSend)
   }
 })
 
-fastify.get('/exports', async (req, res) => {
+fastify.get('/exports', async (req: FastifyRequest<{ Querystring: { p: string } }>, res: FastifyReply) => {
   const packageString = decodeURIComponent(req.query.p)
 
   try {
@@ -65,9 +66,9 @@ fastify.get('/exports', async (req, res) => {
       installTimeout: 60000,
     })
     return res.code(200).send(result)
-  } catch (err) {
+  } catch (err: any) {
     console.log(err)
-    const errorToSend = 'toJSON' in err ? err.toJSON() : err
+    const errorToSend = err && typeof err === 'object' && 'toJSON' in err ? err.toJSON() : err
     return res.code(500).send(errorToSend)
   }
 })
@@ -75,7 +76,7 @@ fastify.get('/exports', async (req, res) => {
 fastify
   .listen({ port: 7002 })
   .then(() => {
-    console.log(`server listening on ${fastify.server.address().port}`)
+    console.log(`server listening on 7002`)
   })
   .catch(err => {
     console.error(err)

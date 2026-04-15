@@ -17,18 +17,17 @@ const requestQueue = new Queue({
   maxAge: 60 * 2,
 })
 
-const workerPath =
-  process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
-    ? './server/worker.ts'
-    : './server/worker.js'
+const isDevLike =
+  process.env.NODE_ENV === 'development' ||
+  process.env.NODE_ENV === 'test' ||
+  !process.env.NODE_ENV
+
+const workerPath = isDevLike ? './server/worker.ts' : './server/worker.js'
 
 const pool = workerpool.pool(workerPath, {
   maxWorkers: config.MAX_WORKERS,
   workerType: 'process',
-  forkArgs:
-    process.env.NODE_ENV === 'development' || !process.env.NODE_ENV
-      ? ['-r', 'esbuild-register']
-      : [],
+  forkArgs: isDevLike ? ['-r', 'ts-node/register'] : [],
 })
 
 if (process.env.BUILD_SERVICE_ENDPOINT) {

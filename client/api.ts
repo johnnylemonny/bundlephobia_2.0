@@ -1,18 +1,5 @@
 import fetch from 'unfetch'
-
-type PackageSuggestion = {
-  searchScore: number
-  score: { detail: { popularity: number } }
-}
-
-type RecentSearch = {
-  [key: string]: {
-    name: string
-    version: string
-    lastSearched: number
-    count: number
-  }
-}
+import { PackageResult, RecentSearch, PackageSuggestion } from '../types'
 
 export default class API {
   static get<T = unknown>(url: string, isInternal = true): Promise<T> {
@@ -52,19 +39,27 @@ export default class API {
   }
 
   static getInfo(packageString: string) {
-    return API.get(`/api/size?package=${packageString}&record=true`)
+    return API.get<PackageResult>(`/api/size?package=${packageString}&record=true`)
   }
 
   static getExports(packageString: string) {
-    return API.get(`/api/exports?package=${packageString}`)
+    return API.get<{
+      name: string
+      version: string
+      exports: Record<string, string>
+    }>(`/api/exports?package=${packageString}`)
   }
 
   static getExportsSizes(packageString: string) {
-    return API.get(`/api/exports-sizes?package=${packageString}`)
+    return API.get<{
+      name: string
+      version: string
+      assets: { name: string; size: number; gzip: number; type: string }[]
+    }>(`/api/exports-sizes?package=${packageString}`)
   }
 
   static getHistory(packageString: string, limit: number) {
-    return API.get(
+    return API.get<PackageResult[]>(
       `/api/package-history?package=${packageString}&limit=${limit}`
     )
   }
@@ -74,7 +69,9 @@ export default class API {
   }
 
   static getSimilar(packageName: string) {
-    return API.get(`/api/similar-packages?package=${packageName}`)
+    return API.get<{
+      category: { label: string; score: number; similar: string[] }
+    }>(`/api/similar-packages?package=${packageName}`)
   }
 
   static getSuggestions(query: string) {
