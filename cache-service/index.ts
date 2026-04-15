@@ -10,7 +10,7 @@ import {
   postExportsSizeMiddleware,
 } from './middlewares/exports-size.middleware'
 
-const fastify = fastifyFactory()
+const fastify: any = fastifyFactory()
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -31,7 +31,7 @@ fastify
   .then(() => {
     console.log(`server listening on 7001`)
   })
-  .catch(err => {
+  .catch((err: any) => {
     console.error(err)
     process.exit(1)
   })

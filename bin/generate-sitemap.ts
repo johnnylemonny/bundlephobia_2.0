@@ -208,7 +208,7 @@ const sitemapPromise = streamToPromise(Readable.from(links).pipe(stream)).then((
 
 sitemapPromise
   .then((sitemap) => {
-  writeFileSync(path.join(__dirname, '..', 'client', 'assets', 'public', 'sitemap.xml'), sitemap, 'utf8')
+  writeFileSync(path.join(process.cwd(), 'client', 'assets', 'public', 'sitemap.xml'), sitemap, 'utf8')
   console.log('Sitemap generated successfully')
 })
   .catch((err) => {

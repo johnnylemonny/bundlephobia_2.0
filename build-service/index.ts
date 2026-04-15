@@ -1,5 +1,5 @@
 import 'dotenv-defaults/config'
-import Fastify, { FastifyRequest, FastifyReply } from 'fastify'
+import { fastify as FastifyFactory, FastifyRequest, FastifyReply } from 'fastify'
 import {
   getPackageStats,
   getAllPackageExports,
@@ -9,14 +9,14 @@ import {
 // @ts-ignore
 import Amplitude from '@amplitude/node'
 
-const fastify = Fastify()
+const fastify: any = FastifyFactory()
 
 if (process.env.AMPLITUDE_API_KEY) {
   const client = Amplitude.init(process.env.AMPLITUDE_API_KEY)
 
-  eventQueue.on('*', (event: string, details: any) => {
+  eventQueue.on('*', (event: any, details: any) => {
     client.logEvent({
-      event_type: event,
+      event_type: String(event),
       user_id: 'build-service',
       event_properties: {
         ...details,
@@ -78,7 +78,7 @@ fastify
   .then(() => {
     console.log(`server listening on 7002`)
   })
-  .catch(err => {
+  .catch((err: any) => {
     console.error(err)
     process.exit(1)
   })

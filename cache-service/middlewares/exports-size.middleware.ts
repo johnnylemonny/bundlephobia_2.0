@@ -6,7 +6,7 @@ import { encodeFirebaseKey } from '../cache.utils'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 const debug = createDebug('bp:cache')
-const LRUCache = new LRU<string, any>({ max: 1500 })
+const LRUCache = new LRU({ max: 3000 })
 
 // Configurable Firebase keys for read/write operations
 const FIREBASE_READ_KEY_EXPORTS =

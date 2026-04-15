@@ -2,7 +2,7 @@
 
 import firebase from 'firebase'
 // @ts-ignore
-import FirebaseUtils from '../utils/firebase.utils'
+import firebaseUtils from '../utils/firebase.utils'
 // @ts-ignore
 import trending from 'trending-github'
 import fetch from 'node-fetch'
@@ -25,8 +25,8 @@ const github = new GithubAPI({
 
 github.authenticate({
   type: 'oauth',
-  key: process.env.GITHUB_CLIENT_ID,
-  secret: process.env.GITHUB_CLIENT_SECRET
+  key: process.env.GITHUB_CLIENT_ID!,
+  secret: process.env.GITHUB_CLIENT_SECRET!
 })
 
 const firebaseConfig = {
@@ -39,7 +39,6 @@ if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig)
 }
 
-const firebaseUtils = new FirebaseUtils(firebase)
 const port = process.env.PORT || 5000
 
 async function getPackageFromRepo(author: string, name: string): Promise<string | undefined> {
@@ -63,11 +62,11 @@ async function getPackageFromRepo(author: string, name: string): Promise<string 
 }
 
 async function getGithubTrendingPackages(): Promise<string[]> {
-  const repos = await trending('daily', 'javascript')
+  const repos = (await trending('daily', 'javascript')) as any[]
   const packages = await Promise.all(
     repos.map((repo: any) => getPackageFromRepo(repo.author, repo.name))
   )
-  return packages.filter((pack): pack is string => !!pack)
+  return packages.filter((pack: string | undefined): pack is string => !!pack)
 }
 
 async function getTrendingSearches(): Promise<string[]> {
@@ -94,9 +93,7 @@ export async function updateHistoricalData() {
       getTrendingSearches()
     ])
 
-    const popularPackages = [
-      ...new Set(githubTrendingPackages.concat(searchTrendingPackages))
-    ]
+    const popularPackages = Array.from(new Set(githubTrendingPackages.concat(searchTrendingPackages)))
     console.log('popular', popularPackages)
   } catch (err) {
     console.log(err)

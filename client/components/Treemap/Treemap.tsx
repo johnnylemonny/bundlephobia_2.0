@@ -12,9 +12,10 @@ class TreeMap extends Component<TreeMapProps> {
   render() {
     const { width, height, children, ...others } = this.props
 
-    const values = React.Children.map(children, square =>
-      React.isValidElement(square) ? square.props.value : square
-    )
+    const values =
+      React.Children.map(children, square =>
+        React.isValidElement(square) ? (square.props as any).value : 0
+      ) || []
 
     const squared = squarify(values, width, height, 0, 0)
     const getBorderRadius = (index: number) => {

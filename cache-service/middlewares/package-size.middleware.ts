@@ -6,7 +6,7 @@ import { encodeFirebaseKey } from '../cache.utils'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 const debug = createDebug('bp:cache')
-const LRUCache = new LRU<string, any>({ max: 3000 })
+const LRUCache = new LRU({ max: 3000 })
 
 // Configurable Firebase keys for read/write operations
 // This allows safe migration from modules-v2 (old) to modules-v3 (new package-build-stats 8.x)
