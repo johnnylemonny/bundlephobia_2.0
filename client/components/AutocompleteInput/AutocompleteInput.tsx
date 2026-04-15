@@ -15,6 +15,8 @@ type AutocompleteInputProps = {
   containerClass?: string
   autoFocus?: boolean
   onSearchSubmit: (value: string) => void
+  placeholder?: string
+  hideSearchIcon?: boolean
 }
 
 export const AutocompleteInput = ({
@@ -24,6 +26,8 @@ export const AutocompleteInput = ({
   containerClass,
   autoFocus,
   onSearchSubmit,
+  placeholder = 'find package',
+  hideSearchIcon = false,
 }: AutocompleteInputProps) => {
   const searchInput = React.useRef<AutoComplete | null>(null)
   const {
@@ -57,7 +61,7 @@ export const AutocompleteInput = ({
         <AutoComplete
           getItemValue={item => item.package.name}
           inputProps={{
-            placeholder: 'find package',
+            placeholder: placeholder,
             className: cx('autocomplete-input', {
               'autocomplete-input--error': error,
             }),
@@ -115,9 +119,11 @@ export const AutocompleteInput = ({
           )}
         </div>
       </div>
-      <button type="submit" className="autocomplete-input__search-icon">
-        <SearchIcon className="" />
-      </button>
+      {!hideSearchIcon && (
+        <button type="submit" className="autocomplete-input__search-icon">
+          <SearchIcon className="" />
+        </button>
+      )}
     </form>
   )
 }

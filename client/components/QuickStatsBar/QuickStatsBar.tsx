@@ -9,7 +9,7 @@ import NPMIcon from '../../assets/npm-logo.svg'
 import InfoIcon from '../../assets/info.svg'
 import { PackageInfo } from '../../../types'
 
-type QuickStatsBarProps = Pick<
+type QuickStatsBarProps = Partial<Pick<
   PackageInfo,
   | 'name'
   | 'description'
@@ -17,7 +17,7 @@ type QuickStatsBarProps = Pick<
   | 'dependencyCount'
   | 'isTreeShakeable'
   | 'hasSideEffects'
->
+>>
 
 class QuickStatsBar extends Component<QuickStatsBarProps> {
   static defaultProps = {
@@ -34,7 +34,7 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
   }
 
   getTrimmedDescription = () => {
-    const { description } = this.props
+    const { description = '' } = this.props
     const trimmed = description.trim()
 
     if (trimmed.endsWith('.')) {
@@ -84,7 +84,7 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
           <div className="quick-stats-bar__stat">
             <SideEffectIcon className="quick-stats-bar__stat-icon" />{' '}
             <span>
-              {!(hasSideEffects === false) && hasSideEffects.length
+              {Array.isArray(hasSideEffects) && hasSideEffects.length
                 ? 'some side-effects'
                 : 'side-effect free'}
             </span>
@@ -93,12 +93,12 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
         <div className="quick-stats-bar__stat quick-stats-bar__stat--optional">
           <DependencyIcon className="quick-stats-bar__stat-icon" />
           <span>
-            {dependencyCount === 0 ? (
+            {(dependencyCount || 0) === 0 ? (
               'no dependencies'
             ) : (
               <span>
                 {dependencyCount}{' '}
-                {dependencyCount > 1 ? 'dependencies' : 'dependency'}
+                {(dependencyCount || 0) > 1 ? 'dependencies' : 'dependency'}
               </span>
             )}
           </span>

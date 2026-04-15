@@ -231,6 +231,7 @@ class ResultPage extends PureComponent<Props, State> {
         hasJSModule: totalVersions[version].hasJSModule,
         hasJSNext: totalVersions[version].hasJSNext,
         isModuleType: totalVersions[version].isModuleType,
+        disabled: false,
       }
     })
     const sorted = formattedResults.sort((packageA, packageB) =>
@@ -250,7 +251,7 @@ class ResultPage extends PureComponent<Props, State> {
 
     Analytics.graphBarClicked({
       packageName: packageString,
-      idDisabled: reading.disabled,
+      isDisabled: reading.disabled,
     })
   }
 
@@ -273,7 +274,7 @@ class ResultPage extends PureComponent<Props, State> {
     } else {
       const packageInfo = parsePackageString(this.getPackageString(router))
       name = packageInfo.name
-      version = packageInfo.version
+      version = packageInfo.version || undefined
       formattedSizeText = ''
       formattedGZIPSizeText = ''
     }
@@ -323,14 +324,14 @@ class ResultPage extends PureComponent<Props, State> {
     const getQuickStatsBar = () =>
       resultsPromiseState === 'fulfilled' && (
         <QuickStatsBar
-          description={results.description}
-          dependencyCount={results.dependencyCount}
-          hasSideEffects={results.hasSideEffects}
+          description={results.description || ''}
+          dependencyCount={results.dependencyCount || 0}
+          hasSideEffects={results.hasSideEffects || false}
           isTreeShakeable={
-            results.hasJSModule || results.hasJSNext || results.isModuleType
+            !!(results.hasJSModule || results.hasJSNext || results.isModuleType)
           }
-          repository={results.repository}
-          name={results.name}
+          repository={results.repository || ''}
+          name={results.name || ''}
         />
       )
 
@@ -438,7 +439,7 @@ class ResultPage extends PureComponent<Props, State> {
               <h2 className="result-error__code">{errorName}</h2>
               <p
                 className="result-error__message"
-                dangerouslySetInnerHTML={{ __html: errorBody }}
+                dangerouslySetInnerHTML={{ __html: errorBody || '' }}
               />
               {errorDetails && (
                 <details className="result-error__details">

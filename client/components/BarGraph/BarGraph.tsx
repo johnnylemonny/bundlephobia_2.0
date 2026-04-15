@@ -7,13 +7,13 @@ import { BarVersion } from '../BarVersion/BarVersion'
 
 export type Reading = {
   version: string
-  size: number
-  gzip: number
+  size?: number
+  gzip?: number
   disabled: boolean
-  hasSideEffects: boolean
-  hasJSModule: boolean
-  hasJSNext: boolean
-  isModuleType: boolean
+  hasSideEffects?: boolean
+  hasJSModule?: boolean
+  hasJSNext?: boolean
+  isModuleType?: boolean
 }
 
 type BarGraphProps = {
@@ -26,15 +26,15 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
     const { readings } = this.props
 
     const gzipValues = readings
-      .filter(reading => !reading.disabled)
-      .map(reading => reading.gzip)
+      .filter(reading => !reading.disabled && reading.gzip !== undefined)
+      .map(reading => reading.gzip!)
 
     const sizeValues = readings
-      .filter(reading => !reading.disabled)
-      .map(reading => reading.size)
+      .filter(reading => !reading.disabled && reading.size !== undefined)
+      .map(reading => reading.size!)
 
-    const maxValue = Math.max(...[...gzipValues, ...sizeValues])
-    return 100 / maxValue
+    const maxValue = Math.max(...[...gzipValues, ...sizeValues], 0)
+    return maxValue === 0 ? 0 : 100 / maxValue
   }
 
   getFirstSideEffectFreeIndex = () => {
@@ -43,7 +43,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
       reading => !reading.hasSideEffects
     )
     const firstSideEffectFreeIndex = readings.findIndex(
-      reading => !(reading.disabled || reading.hasSideEffects)
+      reading => reading.hasSideEffects === false && !reading.disabled
     )
 
     return sideEffectFreeIntroducedRecently ? firstSideEffectFreeIndex : -1
@@ -52,7 +52,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
   getFirstTreeshakeableIndex = () => {
     const { readings } = this.props
     const treeshakingIntroducedRecently = !readings.every(
-      reading => reading.hasJSModule
+      reading => !!reading.hasJSModule
     )
     const firstTreeshakingIndex = readings.findIndex(
       reading =>
@@ -84,8 +84,8 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
     options: { isFirstTreeshakeable: boolean; isFirstSideEffectFree: boolean }
   ) => {
     const getTooltipMessage = (reading: Reading) => {
-      const formattedSize = formatSize(reading.size)
-      const formattedGzip = formatSize(reading.gzip)
+      const formattedSize = formatSize(reading.size || 0)
+      const formattedGzip = formatSize(reading.gzip || 0)
       return `Minified: ${formattedSize.size.toFixed(1)}${
         formattedSize.unit
       } | Gzipped: ${formattedGzip.size.toFixed(1)}${
@@ -128,12 +128,12 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
 
         <div
           className="bar-graph__bar"
-          style={{ height: `${(reading.size - reading.gzip) * scale}%` }}
+          style={{ height: `${((reading.size || 0) - (reading.gzip || 0)) * scale}%` }}
           data-balloon={getTooltipMessage(reading)}
         />
         <div
           className="bar-graph__bar2"
-          style={{ height: `${reading.gzip * scale}%` }}
+          style={{ height: `${(reading.gzip || 0) * scale}%` }}
           data-balloon={getTooltipMessage(reading)}
         />
         <BarVersion version={reading.version} />
