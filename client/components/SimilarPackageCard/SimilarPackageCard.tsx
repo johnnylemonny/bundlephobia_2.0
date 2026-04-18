@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import cx from 'classnames'
 import Link from 'next/link'
+import Router from 'next/router'
 import queryString from 'query-string'
 
 import { formatSize } from '../../../utils'
-import { sanitizeHTML } from '../../../utils/common.utils'
+import { sanitizeHTML, parsePackageString } from '../../../utils/common.utils'
 import TreeShakeIcon from '../../assets/tree-shake.svg'
 import PlusIcon from '../../assets/plus.svg'
 import GithubIcon from '../../assets/github-logo.svg'
@@ -24,6 +25,24 @@ export default class SimilarPackageCard extends Component<SimilarPackageCardProp
     })
 
     return `https://github.com/pastelsky/bundlephobia/issues/new?${params}`
+  }
+
+  handleCompareClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!('pack' in this.props)) return
+
+    const { pack } = this.props
+    const currentPackageString = (Router.query.packageString as string[] || []).join('/')
+    
+    Router.push({
+      pathname: '/compare',
+      query: {
+        p1: currentPackageString,
+        p2: pack.name,
+      },
+    })
   }
 
   render() {
@@ -117,21 +136,31 @@ export default class SimilarPackageCard extends Component<SimilarPackageCardProp
         <div className="similar-package-card__wrap">
           <div className="similar-package-card__header">
             <h3 className="similar-package-card__name">{pack.name}</h3>
-            {pack.repository && (
-              <a
-                href={pack.repository}
-                onClick={e => {
-                  e.stopPropagation()
-                  window.location = pack.repository
-                }}
+            <div className="similar-package-card__actions">
+              <button 
+                className="similar-package-card__compare-btn"
+                onClick={this.handleCompareClick}
+                title="Compare with current"
               >
-                {pack.repository.includes('github.com') ? (
-                  <GithubIcon className="similar-package-card__github-icon" />
-                ) : (
-                  <GitIcon className="similar-package-card__github-icon" />
-                )}
-              </a>
-            )}
+                Compare
+              </button>
+              {pack.repository && (
+                <a
+                  href={pack.repository}
+                  className="similar-package-card__repo-link"
+                  onClick={e => {
+                    e.stopPropagation()
+                    window.location.href = pack.repository
+                  }}
+                >
+                  {pack.repository.includes('github.com') ? (
+                    <GithubIcon className="similar-package-card__github-icon" />
+                  ) : (
+                    <GitIcon className="similar-package-card__github-icon" />
+                  )}
+                </a>
+              )}
+            </div>
           </div>
           <p
             className="similar-package-card__description"

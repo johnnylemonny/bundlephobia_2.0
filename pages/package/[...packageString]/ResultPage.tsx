@@ -35,6 +35,10 @@ import Warning from '../../../client/components/Warning/Warning'
 import arrayToSentence from 'array-to-sentence'
 import { PackageResult } from '../../../types'
 
+import { addToRecentSearches } from '../../../client/utils/recentSearches'
+
+import { toPng } from 'html-to-image'
+
 interface State {
   results: Partial<PackageResult>
   resultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
@@ -52,6 +56,7 @@ interface Props {
 
 class ResultPage extends PureComponent<Props, State> {
   activeQuery: string | null = null
+  statsContainerRef = React.createRef<HTMLDivElement>()
 
   state: State = {
     results: {},
@@ -114,6 +119,7 @@ class ResultPage extends PureComponent<Props, State> {
           },
           () => {
             Router.replace(`/package/${newPackageString}`)
+            addToRecentSearches(results.name!, results.version!)
           }
         )
 
@@ -150,6 +156,33 @@ class ResultPage extends PureComponent<Props, State> {
         this.setState({ historicalResultsPromiseState: 'rejected' })
         console.error('Fetching history failed:', err)
       })
+  }
+
+  exportToImage = async () => {
+    if (this.statsContainerRef.current) {
+      const node = this.statsContainerRef.current
+      const { results } = this.state
+      const fileName = `bundlephobia-${results.name || 'package'}.png`
+
+      try {
+        const dataUrl = await toPng(node, {
+          backgroundColor:
+            document.documentElement.getAttribute('data-theme') === 'dark'
+              ? '#1a1a1a'
+              : '#ffffff',
+          style: {
+            padding: '20px',
+            borderRadius: '12px',
+          },
+        })
+        const link = document.createElement('a')
+        link.download = fileName
+        link.href = dataUrl
+        link.click()
+      } catch (err) {
+        console.error('oops, something went wrong!', err)
+      }
+    }
   }
 
   fetchSimilarPackages = (packageString: string) => {
@@ -380,8 +413,15 @@ class ResultPage extends PureComponent<Props, State> {
                 </Warning>
               )}
             {resultsPromiseState === 'fulfilled' && (
-              <div className="content-split-container">
+              <div className="content-split-container" ref={this.statsContainerRef}>
                 <div className="stats-container">
+                  <button 
+                    className="result-page__export-btn"
+                    onClick={this.exportToImage}
+                    title="Export as Image"
+                  >
+                    Share Image
+                  </button>
                   <div className="size-container">
                     <h3> Bundle Size </h3>
                     <div className="size-stats">

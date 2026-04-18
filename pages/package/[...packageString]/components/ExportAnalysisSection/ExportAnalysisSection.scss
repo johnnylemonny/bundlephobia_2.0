@@ -9,6 +9,34 @@
   flex-direction: column;
 }
 
+.export-analysis-section__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.export-analysis-section__copy-btn {
+  background: rgba(var(--color-text), 0.05);
+  border: 1px solid rgba(var(--color-text), 0.1);
+  color: var(--color-text);
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(var(--color-text), 0.1);
+    border-color: rgba(var(--color-text), 0.2);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
 .export-analysis-section__topbar {
   display: flex;
   align-items: center;

@@ -4,25 +4,27 @@
 @import '../../../stylesheets/variables';
 
 .similar-package-card {
-  border: 1px solid $autocomplete-border-color;
+  border: 1px solid rgba(var(--color-text), 0.1);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-  border-radius: 10px;
+  border-radius: 12px;
   width: calc(25% - #{$global-spacing * 2});
   display: flex;
   flex-direction: column;
   margin: $global-spacing;
-  color: inherit;
-  transition: all 0.2s;
+  color: var(--color-text);
+  background: var(--color-bg);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  overflow: hidden;
 
   &:hover {
-    transform: scale(1.01);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.06);
-    border: 1px solid fade-in($autocomplete-border-color, 0.02);
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border-color: rgba(var(--color-text), 0.2);
   }
 
   &.similar-package-card--empty {
     border-style: dashed;
-    background: transparentize($raven, 0.97);
+    background: rgba(var(--color-text), 0.02);
   }
 
   @media screen and (max-width: 64em) {
@@ -37,11 +39,12 @@
 
   @media screen and (max-width: 40em) {
     width: 100%;
+    margin: $global-spacing 0;
   }
 }
 
 .similar-package-card--empty {
-  color: transparentize($raven, 0.5);
+  color: rgba(var(--color-text), 0.5);
   align-items: center;
 }
 
@@ -51,6 +54,8 @@
 
   .similar-package-card--empty & {
     padding: $global-spacing * 5 $global-spacing * 2;
+    display: flex;
+    flex-direction: column;
     align-items: center;
     text-align: center;
   }
@@ -58,41 +63,71 @@
 
 .similar-package-card__header {
   display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: $global-spacing;
 }
 
 .similar-package-card__name {
   margin: 0;
   font-family: $font-family-code;
-  font-weight: $font-weight-light;
+  font-weight: 600;
+  @include font-size-md;
   flex-grow: 1;
-  word-break: break-word;
+  word-break: break-all;
+}
+
+.similar-package-card__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.similar-package-card__compare-btn {
+  background: rgba(var(--color-text), 0.05);
+  border: 1px solid rgba(var(--color-text), 0.1);
+  color: var(--color-text);
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--color-text);
+    color: var(--color-bg);
+  }
 }
 
 .similar-package-card__description {
   @include font-size-sm;
-  color: $dark-raven;
+  color: var(--color-text);
+  opacity: 0.7;
   line-height: 1.5;
-  margin: $global-spacing 0 0 0;
+  margin: 0;
   word-break: break-word;
-  img {
-    height: auto;
-    max-width: 100%;
-  }
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 
   .similar-package-card--empty & {
     text-transform: uppercase;
     letter-spacing: 1px;
     font-weight: $font-weight-bold;
-    color: transparentize($raven, 0.4);
+    opacity: 0.4;
   }
 }
 
 .similar-package-card__footer {
-  background: lighten($raven, 54%);
+  background: rgba(var(--color-text), 0.03);
   display: flex;
   padding: $global-spacing $global-spacing * 2;
   align-items: center;
-  border-radius: 0 0 10px 10px;
+  border-top: 1px solid rgba(var(--color-text), 0.05);
 }
 
 .similar-package-card__stat {
@@ -115,7 +150,8 @@
 }
 
 .similar-package-card__comparison--similar {
-  color: $raven;
+  color: var(--color-text);
+  opacity: 0.6;
 }
 
 .similar-package-card__label {
@@ -123,42 +159,39 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   line-height: 1.5;
-
-  .similar-package-card__size & {
-    color: $raven;
-  }
+  opacity: 0.5;
 }
 
 .similar-package-card__treeshake {
   height: $global-spacing * 2.5;
   width: auto;
   margin-left: auto;
+  opacity: 0.6;
 }
 
 .similar-package-card__shrink {
   font-size: 75%;
-  .similar-package-card__size & {
-    color: $raven;
-  }
 }
 
 .similar-package-card__github-icon {
   height: $global-spacing * 2;
   width: auto;
-  opacity: 0.5;
+  opacity: 0.4;
   transition: all 0.2s;
   vertical-align: middle;
 
   &:hover {
     opacity: 1;
+    transform: scale(1.1);
   }
 }
 
 .similar-package-card__plus {
-  width: 35%;
+  width: 40px;
   height: auto;
   margin-bottom: $global-spacing * 1.5;
   path {
-    fill: transparentize($raven, 0.7);
+    fill: var(--color-text);
+    opacity: 0.2;
   }
 }

@@ -92,6 +92,22 @@ export default class MyDocument extends Document {
           <meta name="application-name" content="Bundlephobia" />
           <meta name="theme-color" content="#212121" />
 
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  try {
+                    var theme = localStorage.getItem('bundlephobia-theme');
+                    var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+                    if (!theme && supportDarkMode) theme = 'dark';
+                    if (!theme) theme = 'light';
+                    document.documentElement.setAttribute('data-theme', theme);
+                  } catch (e) {}
+                })();
+              `,
+            }}
+          />
+
           <meta
             name="google-site-verification"
             content="XizU-iXvsrtQJG5G4DWEGhD57SRRA8x3Y9FnSwk53X0"

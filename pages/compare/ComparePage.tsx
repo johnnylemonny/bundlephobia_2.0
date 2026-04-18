@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react'
 import Head from 'next/head'
-import Router from 'next/router'
+import Router, { withRouter, NextRouter } from 'next/router'
 import Link from 'next/link'
 import isEmptyObject from 'is-empty-object'
 
@@ -9,82 +9,105 @@ import { AutocompleteInput } from '../../client/components/AutocompleteInput'
 import { parsePackageString } from '../../utils/common.utils'
 import API from '../../client/api'
 import { PackageResult } from '../../types'
+import Stat from '../../client/components/Stat'
+import { getTimeFromSize, DownloadSpeed } from '../../utils'
 
 // @ts-ignore
 import GithubLogo from '../../client/assets/github-logo.svg'
 
 interface State {
-  results: Partial<PackageResult>
-  resultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
-  resultsError: any
-  historicalResultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
-  inputInitialValue: string
-  historicalResults: any[]
+  package1: Partial<PackageResult> | null
+  package2: Partial<PackageResult> | null
+  loading1: boolean
+  loading2: boolean
+  error1: any
+  error2: any
 }
 
-export default class ComparePage extends PureComponent<{}, State> {
+interface Props {
+  router: NextRouter
+}
+
+class ComparePage extends PureComponent<Props, State> {
   state: State = {
-    results: {},
-    resultsPromiseState: null,
-    resultsError: null,
-    historicalResultsPromiseState: null,
-    inputInitialValue: '',
-    historicalResults: [],
+    package1: null,
+    package2: null,
+    loading1: false,
+    loading2: false,
+    error1: null,
+    error2: null,
   }
 
-  fetchResults = (packageString: string) => {
-    API.getInfo(packageString)
+  componentDidMount() {
+    const { p1, p2 } = this.props.router.query
+    if (p1) this.fetchPackage(1, p1 as string)
+    if (p2) this.fetchPackage(2, p2 as string)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { p1: prevP1, p2: prevP2 } = prevProps.router.query
+    const { p1, p2 } = this.props.router.query
+
+    if (p1 !== prevP1 && p1) this.fetchPackage(1, p1 as string)
+    if (p2 !== prevP2 && p2) this.fetchPackage(2, p2 as string)
+  }
+
+  fetchPackage = (index: 1 | 2, name: string) => {
+    const loadingKey = `loading${index}` as const
+    const packageKey = `package${index}` as const
+    const errorKey = `error${index}` as const
+
+    this.setState({ [loadingKey]: true, [errorKey]: null } as any)
+
+    API.getInfo(name)
       .then(results => {
-        const newPackageString = `${results.name}@${results.version}`
-        this.setState(
-          {
-            inputInitialValue: newPackageString,
-            results,
-          },
-          () => {
-            Router.replace(`/package/${newPackageString}`)
-          }
-        )
+        this.setState({ [packageKey]: results, [loadingKey]: false } as any)
       })
       .catch(err => {
-        this.setState({
-          resultsError: err,
-          resultsPromiseState: 'rejected',
-        })
-        console.error(err)
+        this.setState({ [errorKey]: err, [loadingKey]: false } as any)
       })
   }
 
-  fetchHistory = (packageString: string) => {
-    API.getHistory(packageString, 15)
-      .then(results => {
-        this.setState({
-          historicalResultsPromiseState: 'fulfilled',
-          historicalResults: results,
-        })
-      })
-      .catch(err => {
-        this.setState({ historicalResultsPromiseState: 'rejected' })
-        console.error(err)
-      })
-  }
-
-  handleSearchSubmit = (packageString: string) => {
-    this.setState({
-      results: {},
-      historicalResultsPromiseState: 'pending',
-      resultsPromiseState: 'pending',
-    })
-
+  handleSearchSubmit = (index: 1 | 2) => (packageString: string) => {
+    const { p1, p2 } = this.props.router.query
     const normalizedQuery = packageString.trim().toLowerCase()
+    
+    const newQuery = { ...this.props.router.query }
+    if (index === 1) newQuery.p1 = normalizedQuery
+    else newQuery.p2 = normalizedQuery
 
-    Router.push(`/package/${normalizedQuery}`)
+    Router.push({
+      pathname: '/compare',
+      query: newQuery,
+    })
+  }
 
-    this.fetchResults(normalizedQuery)
-    this.fetchHistory(normalizedQuery)
+  renderStatColumn = (pkg: Partial<PackageResult> | null, loading: boolean, error: any) => {
+    if (loading) return <div className="compare__column loading">Loading...</div>
+    if (error) return <div className="compare__column error">Error loading package</div>
+    if (!pkg) return <div className="compare__column empty">Select a package</div>
+
+    return (
+      <div className="compare__column">
+        <h2 className="compare__package-name">{pkg.name}<span>@{pkg.version}</span></h2>
+        <div className="compare__stats">
+          <Stat value={pkg.size!} type="size" label="Minified" compact />
+          <Stat value={pkg.gzip!} type="size" label="Minified + Gzipped" compact />
+          <Stat 
+            value={getTimeFromSize(pkg.gzip!).threeG} 
+            type="time" 
+            label="Slow 3G" 
+            compact 
+          />
+        </div>
+      </div>
+    )
   }
 
   render() {
+    const { package1, package2, loading1, loading2, error1, error2 } = this.state
+    const { p1, p2 } = this.props.router.query
+
     return (
       <Layout className="compare-page">
         <Head>
@@ -100,33 +123,27 @@ export default class ComparePage extends PureComponent<{}, State> {
                 </div>
               </Link>
             </section>
-            <section className="result-header--right-section">
-              <a
-                target="_blank"
-                href="https://github.com/pastelsky/bundlephobia"
-                rel="noreferrer"
-              >
-                <GithubLogo />
-              </a>
-            </section>
           </header>
-          <div className="compare__search-container">
-            <div className="compare__search-inputs">
-              <AutocompleteInput
-                key={''}
-                placeholder="package A"
-                initialValue={''}
-                onSearchSubmit={this.handleSearchSubmit}
-                hideSearchIcon
+
+          <div className="compare__content">
+            <div className="compare__search-bar">
+               <AutocompleteInput
+                initialValue={(p1 as string) || ''}
+                placeholder="Search package..."
+                onSearchSubmit={this.handleSearchSubmit(1)}
               />
               <div className="compare__vs">vs</div>
-              <AutocompleteInput
-                key={'2'}
-                placeholder="package B"
-                initialValue={''}
-                onSearchSubmit={this.handleSearchSubmit}
-                hideSearchIcon
+               <AutocompleteInput
+                initialValue={(p2 as string) || ''}
+                placeholder="Search package..."
+                onSearchSubmit={this.handleSearchSubmit(2)}
               />
+            </div>
+
+            <div className="compare__results">
+              {this.renderStatColumn(package1, loading1, error1)}
+              <div className="compare__divider" />
+              {this.renderStatColumn(package2, loading2, error2)}
             </div>
           </div>
         </div>
@@ -134,3 +151,5 @@ export default class ComparePage extends PureComponent<{}, State> {
     )
   }
 }
+
+export default withRouter(ComparePage)

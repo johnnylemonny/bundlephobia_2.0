@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { WithClassName } from '../../../types'
 import GithubLogo from '../../assets/github-logo.svg'
 
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
+
 type HeaderProps = WithClassName
 
 type HeaderState = {
@@ -84,7 +86,8 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                 </Link>
               </li>
             </ul>
-            <a target="_blank" href="https://github.com/pastelsky/bundlephobia">
+            <ThemeToggle />
+            <a target="_blank" href="https://github.com/pastelsky/bundlephobia" rel="noreferrer">
               <GithubLogo />
             </a>
           </section>

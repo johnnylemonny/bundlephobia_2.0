@@ -3,9 +3,15 @@
 
 .stat-container {
   margin: 0 24px;
+  position: relative;
+  transition: transform 0.2s;
 
   @media screen and (max-width: 40em) {
     margin: 0 $global-spacing;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
   }
 }
 
@@ -27,7 +33,7 @@
 .stat-container__value {
   @include font-size-xxl;
   font-weight: bold;
-  color: #212121;
+  color: var(--color-text);
   background: inherit;
   position: relative;
 
@@ -55,13 +61,54 @@
 
 .stat-container__unit {
   @include font-size-xl;
-  color: $raven;
+  color: var(--color-text);
+  opacity: 0.6;
   font-weight: bold;
   margin-left: 4px;
+  position: relative;
 
   .stat-container--compact & {
     @include font-size-sm;
     font-weight: $font-weight-thin;
+  }
+}
+
+.stat-container__copied-hint {
+  position: absolute;
+  top: -2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-text);
+  color: var(--color-bg);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  animation: fade-up-stat 0.3s ease-out;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid var(--color-text);
+  }
+}
+
+@keyframes fade-up-stat {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 5px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
   }
 }
 
@@ -78,7 +125,8 @@
 
 .stat-container__label {
   @include font-size-reg;
-  color: $raven;
+  color: var(--color-text);
+  opacity: 0.5;
   text-transform: uppercase;
   letter-spacing: 2px;
   text-align: center;
@@ -91,27 +139,24 @@
 
 .stat-container__info-text {
   margin-left: $global-spacing * 0.5;
-  border: 1px solid rgba(40, 40, 40, 0.5);
-  color: rgba(40, 40, 40, 0.5);
-  width: 12px;
-  height: 13px;
+  border: 1px solid var(--color-text);
+  color: var(--color-text);
+  opacity: 0.3;
+  width: 14px;
+  height: 14px;
   font-family: $font-family-code;
-  font-size: 12px;
+  font-size: 10px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2px;
-  transition: background 0.2s;
+  border-radius: 50%;
+  transition: all 0.2s;
   cursor: help;
 
   &:hover {
-    background: rgba(40, 40, 40, 0.6);
-    color: white;
-  }
-
-  &::after,
-  &::before {
-    font-family: $font-family-body;
+    opacity: 1;
+    background: var(--color-text);
+    color: var(--color-bg);
   }
 
   @media screen and (max-width: 40em) {

@@ -14,6 +14,8 @@ import { Press_Start_2P } from 'next/font/google'
 
 const pressStart2P = Press_Start_2P({ weight: '400', subsets: ['latin'] })
 
+import { RecentSearches } from '../client/components/RecentSearches/RecentSearches'
+
 const Logo = () => (
   <svg
     className="logo-graphic"
@@ -146,6 +148,7 @@ const Home = () => {
               <sup>beta</sup>
             </Link>
           </div>
+          <RecentSearches />
         </div>
       </div>
     </Layout>
