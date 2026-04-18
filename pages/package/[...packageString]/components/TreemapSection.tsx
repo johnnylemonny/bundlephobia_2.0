@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { formatSize } from '../../../../../utils'
-import colors from '../../../../../client/config/colors'
-import { Treemap, TreemapSquare } from '../../../../../client/components/Treemap'
+import { formatSize } from '../../../../utils'
+import colors from '../../../../client/config/colors'
+import { Treemap, TreemapSquare } from '../../../../client/components/Treemap'
 
 interface DependencySize {
   name: string
@@ -180,4 +180,3 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
 }
 
 export default TreemapSection
-旋

@@ -2,8 +2,22 @@ import React, { Component } from 'react'
 import Link from 'next/link'
 
 import API from '../../api'
-import Heart from '../../assets/heart.svg'
-import DigitalOceanLogo from '../../assets/digital-ocean-logo.svg'
+import HeartIcon from '../../assets/heart.svg'
+import DigitalOceanLogoIcon from '../../assets/digital-ocean-logo.svg'
+
+import { resolveComponent } from '../../../utils/resolveComponent'
+
+const Heart = resolveComponent(HeartIcon)
+const DigitalOceanLogo = resolveComponent(DigitalOceanLogoIcon)
+
+if (typeof window !== 'undefined') {
+  console.log('Layout SVG Debug (Client):', { 
+    HeartIconType: typeof HeartIcon, 
+    HeartType: typeof Heart,
+    DigitalOceanLogoType: typeof DigitalOceanLogo
+  })
+}
+
 import { AnnouncementBanner } from '../AnnouncementBanner'
 import { WithClassName } from '../../../types'
 

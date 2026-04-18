@@ -12,8 +12,6 @@ import { PackageResult } from '../../types'
 import Stat from '../../client/components/Stat'
 import { getTimeFromSize, DownloadSpeed } from '../../utils'
 
-// @ts-ignore
-import GithubLogo from '../../client/assets/github-logo.svg'
 
 interface State {
   package1: Partial<PackageResult> | null

@@ -3,10 +3,6 @@
 @import '../../../stylesheets/colors';
 @import '../../../stylesheets/variables';
 
-$bar-width: 1.6vw;
-$min-bar-width: 20px;
-$bar-grow-duration: 0.4s;
-
 .bar-graph-container {
   display: flex;
   flex-direction: column;

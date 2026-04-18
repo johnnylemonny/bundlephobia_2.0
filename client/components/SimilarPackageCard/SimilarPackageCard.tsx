@@ -6,10 +6,17 @@ import queryString from 'query-string'
 
 import { formatSize } from '../../../utils'
 import { sanitizeHTML, parsePackageString } from '../../../utils/common.utils'
-import TreeShakeIcon from '../../assets/tree-shake.svg'
-import PlusIcon from '../../assets/plus.svg'
-import GithubIcon from '../../assets/github-logo.svg'
-import GitIcon from '../../assets/git-logo.svg'
+import TreeShakeIconSVG from '../../assets/tree-shake.svg'
+import PlusIconSVG from '../../assets/plus.svg'
+import GithubIconSVG from '../../assets/github-logo.svg'
+import GitIconSVG from '../../assets/git-logo.svg'
+
+import { resolveComponent } from '../../../utils/resolveComponent'
+
+const TreeShakeIcon = resolveComponent(TreeShakeIconSVG)
+const PlusIcon = resolveComponent(PlusIconSVG)
+const GithubIcon = resolveComponent(GithubIconSVG)
+const GitIcon = resolveComponent(GitIconSVG)
 
 type SimilarPackageCardProps = { category?: string } & (
   | { pack: any; comparisonSizePercent: number }

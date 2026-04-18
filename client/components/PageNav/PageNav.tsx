@@ -1,6 +1,9 @@
 import Link from 'next/link'
 import React from 'react'
-import GithubLogo from '../../assets/github-logo.svg'
+import GithubLogoIcon from '../../assets/github-logo.svg'
+import { resolveComponent } from '../../../utils/resolveComponent'
+
+const GithubLogo = resolveComponent(GithubLogoIcon)
 
 type PageNavProps = {
   minimal?: boolean

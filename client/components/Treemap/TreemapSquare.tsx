@@ -1,9 +1,13 @@
 import React from 'react'
+import cx from 'classnames'
+import { WithClassName } from '../../../types'
 
 type TreemapSquareProps = {
   style: React.CSSProperties
   data?: any
+  value: number
 } & React.PropsWithChildren &
+  WithClassName &
   Pick<
     React.CSSProperties,
     'left' | 'top' | 'width' | 'height' | 'borderRadius'
@@ -18,10 +22,13 @@ function TreemapSquare({
   borderRadius,
   data,
   style,
+  value,
+  className,
   ...other
 }: TreemapSquareProps) {
   return (
     <div
+      className={cx(className)}
       data-vals={data.toString() + '...' + width + '...' + height}
       style={{
         position: 'absolute',

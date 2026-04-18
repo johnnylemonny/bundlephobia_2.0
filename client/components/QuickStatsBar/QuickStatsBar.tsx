@@ -1,12 +1,22 @@
 import React, { Component } from 'react'
 
 import { sanitizeHTML } from '../../../utils/common.utils'
-import TreeShakeIcon from '../../assets/tree-shake.svg'
-import SideEffectIcon from '../../assets/side-effect.svg'
-import DependencyIcon from '../../assets/dependency.svg'
-import GithubIcon from '../../assets/github-logo.svg'
-import NPMIcon from '../../assets/npm-logo.svg'
-import InfoIcon from '../../assets/info.svg'
+import TreeShakeIconSVG from '../../assets/tree-shake.svg'
+import SideEffectIconSVG from '../../assets/side-effect.svg'
+import DependencyIconSVG from '../../assets/dependency.svg'
+import GithubIconSVG from '../../assets/github-logo.svg'
+import NPMIconSVG from '../../assets/npm-logo.svg'
+import InfoIconSVG from '../../assets/info.svg'
+
+import { resolveComponent } from '../../../utils/resolveComponent'
+
+const TreeShakeIcon = resolveComponent(TreeShakeIconSVG)
+const SideEffectIcon = resolveComponent(SideEffectIconSVG)
+const DependencyIcon = resolveComponent(DependencyIconSVG)
+const GithubIcon = resolveComponent(GithubIconSVG)
+const NPMIcon = resolveComponent(NPMIconSVG)
+const InfoIcon = resolveComponent(InfoIconSVG)
+
 import { PackageInfo } from '../../../types'
 
 type QuickStatsBarProps = Partial<Pick<

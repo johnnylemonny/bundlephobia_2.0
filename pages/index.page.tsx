@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Link from 'next/link'
 
 import Analytics from '../client/analytics'
-import { AutocompleteInput } from '../client/components/AutocompleteInput'
+import AutocompleteInput from '../client/components/AutocompleteInput'
 import AutocompleteInputBox from '../client/components/AutocompleteInputBox/AutocompleteInputBox'
 import Layout from '../client/components/Layout'
 import MetaTags from '../client/components/MetaTags'
@@ -15,6 +15,17 @@ import { Press_Start_2P } from 'next/font/google'
 const pressStart2P = Press_Start_2P({ weight: '400', subsets: ['latin'] })
 
 import { RecentSearches } from '../client/components/RecentSearches/RecentSearches'
+
+if (typeof window !== 'undefined') {
+  console.log('Index Components Debug:', {
+    AutocompleteInput: typeof AutocompleteInput,
+    AutocompleteInputBox: typeof AutocompleteInputBox,
+    Layout: typeof Layout,
+    MetaTags: typeof MetaTags,
+    PageNav: typeof PageNav,
+    RecentSearches: typeof RecentSearches,
+  })
+}
 
 const Logo = () => (
   <svg

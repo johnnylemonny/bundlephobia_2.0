@@ -1,3 +1,4 @@
+@use "sass:color";
 @import '../../../../../stylesheets/variables';
 @import '../../../../../stylesheets/colors';
 @import '../../../../../stylesheets/mixins';
@@ -168,31 +169,31 @@
 }
 
 .export-analysis-section__pill-fill--low-1 {
-  background: lighten(#7ebf80, 15%);
+  background: color.adjust(#7ebf80, $lightness: 15%);
 }
 
 .export-analysis-section__pill-fill--low-2 {
-  background: lighten(#9bc26b, 15%);
+  background: color.adjust(#9bc26b, $lightness: 15%);
 }
 
 .export-analysis-section__pill-fill--med-1 {
-  background: lighten(#dee675, 10%);
+  background: color.adjust(#dee675, $lightness: 10%);
 }
 
 .export-analysis-section__pill-fill--med-2 {
-  background: lighten(#fff080, 0%);
+  background: color.adjust(#fff080, $lightness: 0%);
 }
 
 .export-analysis-section__pill-fill--med-3 {
-  background: lighten(#ffd966, 5%);
+  background: color.adjust(#ffd966, $lightness: 5%);
 }
 
 .export-analysis-section__pill-fill--high-1 {
-  background: lighten(#ffbf66, 10%);
+  background: color.adjust(#ffbf66, $lightness: 10%);
 }
 
 .export-analysis-section__pill-fill--high-2 {
-  background: lighten(#ff8a66, 15%);
+  background: color.adjust(#ff8a66, $lightness: 15%);
 }
 
 .export-analysis-section__pill-name {

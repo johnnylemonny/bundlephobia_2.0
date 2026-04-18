@@ -26,7 +26,9 @@ import InterLinksSection from './components/InterLinksSection'
 
 import TreemapSection from './components/TreemapSection'
 // @ts-ignore
-import EmptyBox from '../../../client/assets/empty-box.svg'
+import EmptyBoxIcon from '../../../client/assets/empty-box.svg'
+
+const EmptyBox = (EmptyBoxIcon as any).default || EmptyBoxIcon
 import SimilarPackagesSection from './components/SimilarPackagesSection'
 import ExportAnalysisSection from './components/ExportAnalysisSection'
 import QuickStatsBar from '../../../client/components/QuickStatsBar/QuickStatsBar'

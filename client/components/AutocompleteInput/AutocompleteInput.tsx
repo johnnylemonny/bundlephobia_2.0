@@ -1,6 +1,10 @@
 import React from 'react'
 import cx from 'classnames'
-import AutoComplete from 'react-autocomplete'
+import AutoCompleteComponent from 'react-autocomplete'
+
+import { resolveComponent } from '../../../utils/resolveComponent'
+
+const AutoComplete = resolveComponent(AutoCompleteComponent)
 
 import SearchIcon from '../Icons/SearchIcon'
 import { parsePackageString } from '../../../utils/common.utils'
@@ -19,7 +23,7 @@ type AutocompleteInputProps = {
   hideSearchIcon?: boolean
 }
 
-export const AutocompleteInput = ({
+const AutocompleteInput = ({
   initialValue = '',
   renderAsH1 = false,
   className,
@@ -29,7 +33,7 @@ export const AutocompleteInput = ({
   placeholder = 'find package',
   hideSearchIcon = false,
 }: AutocompleteInputProps) => {
-  const searchInput = React.useRef<AutoComplete | null>(null)
+  const searchInput = React.useRef<any>(null)
   const {
     value,
     isMenuVisible,
@@ -59,7 +63,7 @@ export const AutocompleteInput = ({
         })}
       >
         <AutoComplete
-          getItemValue={item => item.package.name}
+          getItemValue={(item: any) => item.package.name}
           inputProps={{
             placeholder: placeholder,
             className: cx('autocomplete-input', {
@@ -71,16 +75,16 @@ export const AutocompleteInput = ({
             spellCheck: false,
             style: { fontSize: searchFontSize! },
           }}
-          onMenuVisibilityChange={isOpen => setIsMenuVisible(isOpen)}
+          onMenuVisibilityChange={(isOpen: boolean) => setIsMenuVisible(isOpen)}
           onChange={handleInputChange}
           ref={searchInput}
           value={value}
           items={suggestions}
-          onSelect={(value, item) => {
+          onSelect={(value: string, item: any) => {
             setSuggestions([item])
             onSearchSubmit(value)
           }}
-          renderMenu={(items, value, inbuiltStyles) => {
+          renderMenu={(items: any, value: string, inbuiltStyles: any) => {
             return (
               <div
                 style={{ minWidth: inbuiltStyles.minWidth }}
@@ -95,7 +99,7 @@ export const AutocompleteInput = ({
             width: '100%',
             position: 'relative',
           }}
-          renderItem={(item, isHighlighted) => (
+          renderItem={(item: any, isHighlighted: boolean) => (
             <div key={item.package.name}>
               <SuggestionItem item={item} isHighlighted={isHighlighted} />
             </div>
@@ -138,3 +142,5 @@ export function PackageNameElement({
 }: PackageNameElementProps) {
   return isHeading ? <h1 {...props} /> : <span {...props} />
 }
+
+export default AutocompleteInput
