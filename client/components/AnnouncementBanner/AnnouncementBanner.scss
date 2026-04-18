@@ -61,13 +61,13 @@
     color: $cornflower-blue;
     font-weight: 500;
     text-decoration: underline;
-    text-decoration-color: rgba($cornflower-blue, 0.4);
+    text-decoration-color: rgba(var(--color-cornflower-blue-rgb), 0.4);
     text-underline-offset: 2px;
     transition: all 0.2s ease;
 
     &:hover {
       text-decoration-color: $cornflower-blue;
-      color: darken($cornflower-blue, 10%);
+      color: color-mix(in srgb, var(--color-cornflower-blue), black 10%);
     }
   }
 }
@@ -95,7 +95,7 @@
 
   &:hover {
     color: $dark-gulf-blue;
-    background: rgba($raven, 0.1);
+    background: rgba(var(--color-raven-rgb), 0.1);
   }
 
   &:focus {

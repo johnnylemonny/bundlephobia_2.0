@@ -45,7 +45,7 @@
   animation: move 2s alternate infinite;
 
   .logo-graphic:hover & {
-    stroke: desaturate($pastel-green, 30%);
+    stroke: color-mix(in srgb, var(--color-pastel-green), gray 30%);
   }
 }
 

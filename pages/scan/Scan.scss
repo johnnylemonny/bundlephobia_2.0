@@ -4,7 +4,7 @@
 @import '../../stylesheets/variables';
 
 .scan__dropzone {
-  border: 2px dashed lighten($raven, 20%);
+  border: 2px dashed color-mix(in srgb, var(--color-raven), white 20%);
   width: 50vw;
   height: 50vh;
   display: flex;
@@ -78,7 +78,7 @@
   @include font-size-xs;
   font-family: $font-family-code;
   margin-left: $global-spacing;
-  color: lighten($raven, 10%);
+  color: color-mix(in srgb, var(--color-raven), white 10%);
 }
 
 .scan__selection-header {

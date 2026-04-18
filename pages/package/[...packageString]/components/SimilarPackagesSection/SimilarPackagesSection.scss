@@ -13,7 +13,7 @@
 }
 
 .similar-packages-section__subheading {
-  color: lighten($raven, 15%);
+  color: color-mix(in srgb, var(--color-raven), white 15%);
   text-align: center;
   margin-top: $global-spacing;
 }

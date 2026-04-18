@@ -72,15 +72,15 @@ $bar-grow-duration: 0.4s;
   border-radius: 5px 5px 0 0;
 
   .bar-graph__bar-group:not(.bar-graph__bar-group--disabled):hover & {
-    background: darken($maya-blue, 5%);
+    background: color-mix(in srgb, var(--color-maya-blue), black 5%);
   }
 
   .bar-graph__bar-group--disabled & {
-    background: lighten($raven, 45%);
+    background: color-mix(in srgb, var(--color-raven), white 45%);
     border-radius: 5px;
 
     &:hover {
-      background: lighten($raven, 35%);
+      background: color-mix(in srgb, var(--color-raven), white 35%);
     }
   }
 }
@@ -92,7 +92,7 @@ $bar-grow-duration: 0.4s;
   border-radius: 0 0 5px 5px;
 
   .bar-graph__bar-group:hover & {
-    background: darken($cornflower-blue, 5%);
+    background: color-mix(in srgb, var(--color-cornflower-blue), black 5%);
   }
 }
 
@@ -109,7 +109,7 @@ $bar-grow-duration: 0.4s;
   display: flex;
   text-transform: uppercase;
   justify-content: center;
-  color: lighten($raven, 20%);
+  color: color-mix(in srgb, var(--color-raven), white 20%);
 }
 
 .bar-graph__legend__colorbox {

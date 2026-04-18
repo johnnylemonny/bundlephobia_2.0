@@ -31,7 +31,7 @@
   text-transform: uppercase;
 
   &:hover {
-    color: lighten($gulf-blue, 20%);
+    color: color-mix(in srgb, var(--color-gulf-blue), white 20%);
   }
 }
 
@@ -42,7 +42,7 @@
     margin: 0;
 
     &:hover {
-      color: lighten($gulf-blue, 10%);
+      color: color-mix(in srgb, var(--color-gulf-blue), white 10%);
     }
   }
 
@@ -52,17 +52,17 @@
 }
 
 .blog-post__preview-content {
-  color: darken($dark-raven, 10%);
+  color: color-mix(in srgb, var(--color-dark-raven), black 10%);
   line-height: 1.6;
   @include font-size-reg();
 
   a {
-    color: darken($maya-blue, 20%);
+    color: color-mix(in srgb, var(--color-maya-blue), black 20%);
     border-bottom: 1px solid $cornflower-blue;
     transition: all 0.2s;
 
     &:hover {
-      color: darken($maya-blue, 40%);
+      color: color-mix(in srgb, var(--color-maya-blue), black 40%);
       border-bottom: 1px dashed $cornflower-blue;
     }
   }

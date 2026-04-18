@@ -17,22 +17,22 @@ footer {
   align-items: center;
   justify-content: center;
   padding: 0 0 $global-spacing * 5;
-  color: lighten($raven, 27%);
+  color: color-mix(in srgb, var(--color-raven), white 27%);
   flex-direction: column;
 
   a {
-    color: lighten($raven, 27%);
+    color: color-mix(in srgb, var(--color-raven), white 27%);
     transition: color 0.2s;
 
     &:hover {
-      color: lighten($raven, 40%);
+      color: color-mix(in srgb, var(--color-raven), white 40%);
     }
   }
 }
 
 .footer__recent-search-bar {
   width: 100%;
-  background: darken($raven, 22%);
+  background: color-mix(in srgb, var(--color-raven), black 22%);
   padding: 0 $global-spacing * 2;
 }
 
@@ -45,7 +45,7 @@ footer {
 
   h4 {
     @include font-size-xs;
-    color: lighten($raven, 27%);
+    color: color-mix(in srgb, var(--color-raven), white 27%);
     margin: 0;
     line-height: 1.2;
   }
@@ -122,8 +122,8 @@ footer {
 
 .footer__hosting-credits {
   @include font-size-xs;
-  border-top: 1px solid darken($raven, 25%);
-  color: lighten($raven, 70%);
+  border-top: 1px solid color-mix(in srgb, var(--color-raven), black 25%);
+  color: color-mix(in srgb, var(--color-raven), white 70%);
   text-transform: uppercase;
   letter-spacing: 2px;
   padding-top: $global-spacing;
@@ -161,7 +161,7 @@ footer {
 
 .footer__description {
   @include font-size-xs;
-  color: lighten($raven, 20%);
+  color: color-mix(in srgb, var(--color-raven), white 20%);
   flex-basis: 66%;
 
   p {
@@ -186,7 +186,7 @@ footer {
   max-width: 100px;
 
   path {
-    fill: mix($raven, $maya-blue);
+    fill: color-mix(in srgb, var(--color-raven), var(--color-maya-blue));
   }
 
   &:hover {
@@ -198,19 +198,19 @@ footer {
 
 @keyframes pulse {
   0% {
-    fill: mix($raven, $maya-blue);
+    fill: color-mix(in srgb, var(--color-raven), var(--color-maya-blue));
   }
 
   25% {
-    fill: mix($raven, $cornflower-blue);
+    fill: color-mix(in srgb, var(--color-raven), var(--color-cornflower-blue));
   }
 
   50% {
-    fill: $raven;
+    fill: var(--color-raven);
   }
 
   75% {
-    fill: mix($raven, $maya-blue);
+    fill: color-mix(in srgb, var(--color-raven), var(--color-maya-blue));
   }
 }
 
@@ -218,20 +218,20 @@ footer {
   @include font-size-xs;
   cursor: pointer;
   margin-top: $global-spacing;
-  border: 2px solid lighten($raven, 30%);
+  border: 2px solid color-mix(in srgb, var(--color-raven), white 30%);
   background: transparent;
   border-radius: 10px;
   padding: math.div($global-spacing, 1.5) $global-spacing;
   display: block;
   transition: background 0.2s;
-  color: lighten($raven, 30%);
+  color: color-mix(in srgb, var(--color-raven), white 30%);
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-size: 10px;
   font-weight: $font-weight-bold;
 
   &:hover {
-    background: lighten($raven, 30%);
+    background: color-mix(in srgb, var(--color-raven), white 30%);
     color: #212121;
   }
 

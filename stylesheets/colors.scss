@@ -5,24 +5,37 @@
   --color-dark-gulf-blue: #152231;
   --color-neptune: #82b5b3;
   --color-cornflower-blue: #65a1f8;
+  --color-cornflower-blue-rgb: 101, 161, 248;
   --color-maya-blue: #65c3f8;
+  --color-maya-blue-rgb: 101, 195, 248;
   --color-pastel-green: #7cd690;
+  --color-pastel-green-rgb: 124, 214, 144;
   --color-dandelion: #fff3cf;
+  --color-dandelion-rgb: 255, 243, 207;
   --color-carrot-orange: #eb841f;
+  --color-carrot-orange-rgb: 235, 132, 31;
   --color-dark-raven: #5c5c66;
+  --color-dark-raven-rgb: 92, 92, 102;
   --color-raven: #666e78;
+  --color-raven-rgb: 102, 110, 120;
   --color-bg: white;
   --color-text: #212121;
+  --color-text-rgb: 33, 33, 33;
   --autocomplete-border-color: rgba(0, 0, 0, 0.07);
 }
 
 [data-theme='dark'] {
   --color-bg: #152231;
   --color-text: #f0f0f0;
+  --color-text-rgb: 240, 240, 240;
   --color-gulf-blue: #3d5179;
   --color-dark-gulf-blue: #0b1119;
   --color-dark-raven: #a0a0b0;
+  --color-dark-raven-rgb: 160, 160, 176;
   --color-raven: #8a94a0;
+  --color-raven-rgb: 138, 148, 160;
+  --color-dandelion: #4d442b;
+  --color-dandelion-rgb: 77, 68, 43;
   --autocomplete-border-color: rgba(255, 255, 255, 0.1);
 }
 

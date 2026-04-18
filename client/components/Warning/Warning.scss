@@ -3,11 +3,11 @@
 
 .warning-bar {
   @include font-size-xs;
-  background: lighten($dandelion, 5%);
+  background: color-mix(in srgb, var(--color-dandelion), white 5%);
   padding: $global-spacing * 0.5 $global-spacing;
   border-radius: 4px;
   margin-top: 2vh;
-  color: darken(desaturate($dandelion, 35%), 35%);
+  color: color-mix(in srgb, var(--color-dandelion), black 60%);
 
   a {
     @include font-size-xxs;

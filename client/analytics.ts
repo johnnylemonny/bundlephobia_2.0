@@ -122,4 +122,23 @@ export default class Analytics {
       timeTaken,
     })
   }
+
+  static performedCopyJSON(packageName: string) {
+    amplitude.getInstance().logEvent('Copy JSON Performed', {
+      package: packageName,
+    })
+  }
+
+  static performedShareImage(packageName: string) {
+    amplitude.getInstance().logEvent('Share Image Performed', {
+      package: packageName,
+    })
+  }
+
+  static performedCopyStat(packageName: string, statLabel: string) {
+    amplitude.getInstance().logEvent('Copy Stat Performed', {
+      package: packageName,
+      stat: statLabel,
+    })
+  }
 }
