@@ -3,7 +3,7 @@ import { resolvePackage } from '../../../utils/server.utils'
 import { parsePackageString } from '../../../utils/common.utils'
 import gitURLParse from 'git-url-parse'
 import { debug, logger } from '../../init'
-import now from 'performance-now'
+const now = () => performance.now()
 
 async function resolvePackageMiddleware(ctx: Context, next: Next) {
   const { package: packageString } = ctx.query as { package: string }

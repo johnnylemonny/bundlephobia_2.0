@@ -69,8 +69,8 @@ const Logo = () => (
       />
       <g
         className="logo__skeleton-group"
-        opacity=".15"
-        transform="matrix(-1 0 0 1 33.225 25.807)"
+        fill="var(--color-skeleton)"
+        fillRule="nonzero"
       >
         <circle className="logo__skeleton" cx="23.51" cy="4.78" r="4.78" />
         <circle className="logo__skeleton" cx="6.18" cy="87.47" r="5.92" />

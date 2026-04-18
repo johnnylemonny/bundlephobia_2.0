@@ -3,7 +3,6 @@ import axios from 'axios'
 import { remark } from 'remark'
 import remarkStrip from 'strip-markdown'
 import natural from 'natural'
-import flatten from 'flatten'
 import { categories } from './fixtures'
 import { parsePackageString } from '../../../utils/common.utils'
 import logger from '../../Logger'
@@ -191,14 +190,12 @@ async function getCategory(packageName: string) {
   }
 
   Object.keys(categories).forEach(label => {
-    const categoryTokens = flatten(
-      categories[label].tags.map(tagObj =>
-        tokenizer.tokenize(tagObj.tag).map((tokenizedTag: string) => ({
-          tag: (natural as any).PorterStemmer.stem(tokenizedTag).toLowerCase(),
-          weight: tagObj.weight,
-        }))
-      )
-    )
+    const categoryTokens = categories[label].tags.map(tagObj =>
+      tokenizer.tokenize(tagObj.tag).map((tokenizedTag: string) => ({
+        tag: (natural as any).PorterStemmer.stem(tokenizedTag).toLowerCase(),
+        weight: tagObj.weight,
+      }))
+    ).flat()
 
     const score = getScore(categoryTokens as any, packageTokens)
     if (score > maxScoreCategory.score) {

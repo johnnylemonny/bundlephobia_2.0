@@ -43,6 +43,7 @@
 
 .logo__skeleton {
   animation: move 2s alternate infinite;
+  stroke: var(--color-skeleton);
 
   .logo-graphic:hover & {
     stroke: color-mix(in srgb, var(--color-pastel-green), gray 30%);

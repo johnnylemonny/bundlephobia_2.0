@@ -1,7 +1,7 @@
 import { Context, Next } from 'koa'
 // @ts-ignore
 import arrayToSentence from 'array-to-sentence'
-import now from 'performance-now'
+const now = () => performance.now()
 import { failureCache } from '../../init'
 import config from '../../config'
 import debugFactory from 'debug'

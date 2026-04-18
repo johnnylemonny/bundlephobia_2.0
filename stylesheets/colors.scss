@@ -22,6 +22,11 @@
   --color-text: #212121;
   --color-text-rgb: 33, 33, 33;
   --autocomplete-border-color: rgba(0, 0, 0, 0.07);
+  --color-skeleton: rgba(0, 0, 0, 0.15);
+  circle {
+    fill: var(--color-text);
+    transform-box: view-box;
+  }
 }
 
 [data-theme='dark'] {
@@ -37,6 +42,7 @@
   --color-dandelion: #4d442b;
   --color-dandelion-rgb: 77, 68, 43;
   --autocomplete-border-color: rgba(255, 255, 255, 0.1);
+  --color-skeleton: rgba(255, 255, 255, 0.2);
 }
 
 $gulf-blue: var(--color-gulf-blue);

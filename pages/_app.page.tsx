@@ -3,7 +3,13 @@ import Head from 'next/head'
 import { AppProps } from 'next/app'
 import '../stylesheets/index.scss'
 
+import { getInitialTheme, setTheme } from '../client/utils/theme'
+
 function App({ Component, pageProps }: AppProps) {
+  React.useEffect(() => {
+    setTheme(getInitialTheme())
+  }, [])
+
   return (
     <>
       <Head>

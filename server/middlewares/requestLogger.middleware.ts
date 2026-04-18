@@ -1,6 +1,6 @@
 import { Context, Next } from 'koa'
 import logger from '../Logger'
-import now from 'performance-now'
+const now = () => performance.now()
 
 async function requestLoggerMiddleware(ctx: Context, next: Next) {
   if (!ctx.request.url.includes('/api/')) {

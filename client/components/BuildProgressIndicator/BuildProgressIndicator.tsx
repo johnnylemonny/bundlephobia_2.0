@@ -48,10 +48,13 @@ export default class BuildProgressIndicator extends Component<
   }
 
   shouldComponentUpdate(
-    props: BuildProgressIndicatorProps,
+    nextProps: BuildProgressIndicatorProps,
     nextState: BuildProgressIndicatorState
   ) {
-    return this.state.progressText !== nextState.progressText
+    return (
+      this.state.progressText !== nextState.progressText ||
+      this.props.isDone !== nextProps.isDone
+    )
   }
 
   componentWillUnmount() {

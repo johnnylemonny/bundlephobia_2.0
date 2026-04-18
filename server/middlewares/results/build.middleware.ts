@@ -2,7 +2,7 @@ import { Context } from 'koa'
 import semver from 'semver'
 import config from '../../config'
 import firebaseUtils from '../../../utils/firebase.utils'
-import now from 'performance-now'
+const now = () => performance.now()
 import logger from '../../Logger'
 import Cache from '../../../utils/cache.utils'
 import BuildService from '../../api/BuildService'

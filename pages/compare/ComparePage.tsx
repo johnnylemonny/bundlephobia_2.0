@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react'
 import Head from 'next/head'
 import Router, { withRouter, NextRouter } from 'next/router'
 import Link from 'next/link'
-import isEmptyObject from 'is-empty-object'
 
 import Layout from '../../client/components/Layout'
 import { AutocompleteInput } from '../../client/components/AutocompleteInput'

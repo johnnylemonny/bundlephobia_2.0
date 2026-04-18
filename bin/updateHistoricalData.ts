@@ -11,8 +11,6 @@ import createDebug from 'debug'
 // @ts-ignore
 import GithubAPI from 'github'
 // @ts-ignore
-import isEmptyObject from 'is-empty-object'
-// @ts-ignore
 import promiseSeries from 'promise.series'
 import dotenv from 'dotenv'
 
@@ -109,7 +107,7 @@ async function getVersionsToBuild(name: string): Promise<string[]> {
   const versionInfo = (await res.json()) as Record<string, any>
 
   Object.keys(versionInfo).forEach(version => {
-    if (isEmptyObject(versionInfo[version])) {
+    if (Object.keys(versionInfo[version]).length === 0) {
       versionsToBuild.push(version)
     }
   })

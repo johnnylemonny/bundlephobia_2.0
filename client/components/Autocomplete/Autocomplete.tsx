@@ -4,7 +4,7 @@ import cx from 'classnames'
 interface AutocompleteProps {
   items: any[]
   value: string
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  onChange: (e: React.ChangeEvent<HTMLInputElement>, value: string) => void
   onSelect: (value: string, item: any) => void
   getItemValue: (item: any) => string
   renderItem: (item: any, isHighlighted: boolean) => React.ReactNode
@@ -86,7 +86,7 @@ const Autocomplete = React.forwardRef<HTMLInputElement, AutocompleteProps>((prop
         ref={inputRef}
         value={value}
         onChange={e => {
-          onChange(e)
+          onChange(e, e.target.value)
           setIsOpen(true)
         }}
         onFocus={() => setIsOpen(true)}
