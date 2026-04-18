@@ -6,7 +6,7 @@ type ProgressHexProps = {
 }
 
 class ProgressHex extends Component<ProgressHexProps> {
-  svgRef: React.RefObject<SVGSVGElement>
+  svgRef: React.RefObject<SVGSVGElement | null>
   animator?: ProgressHexAnimator
   timeline?: ReturnType<ProgressHexAnimator['createTimeline']>
 

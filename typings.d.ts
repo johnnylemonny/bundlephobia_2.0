@@ -20,3 +20,4 @@ declare module 'pacote';
 declare module 'git-url-parse';
 declare module 'got';
 declare module 'lru-cache';
+declare module "*.scss";

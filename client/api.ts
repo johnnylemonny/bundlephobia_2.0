@@ -1,4 +1,4 @@
-import fetch from 'unfetch'
+
 import { PackageResult, RecentSearch, PackageSuggestion } from '../types'
 
 export default class API {
@@ -10,10 +10,10 @@ export default class API {
     if (isInternal) {
       headers['X-Bundlephobia-User'] = 'bundlephobia website'
     }
-    return fetch(url, { headers }).then(res => {
+    return fetch(url, { headers }).then((res: any) => {
       if (!res.ok) {
         try {
-          return res.json().then(err => Promise.reject(err))
+          return res.json().then((err: any) => Promise.reject(err))
         } catch (e) {
           if (res.status === 503) {
             return Promise.reject({
@@ -97,7 +97,7 @@ export default class API {
     return API.get<PackageSuggestion[]>(
       `https://api.npms.io/v2/search/suggestions?q=${query}`,
       false
-    ).then(result => result.sort(suggestionSort))
+    ).then((result: PackageSuggestion[]) => result.sort(suggestionSort))
 
     //backup when npms.io is down
 

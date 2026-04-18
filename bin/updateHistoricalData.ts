@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 // @ts-ignore
 import firebaseUtils from '../utils/firebase.utils'
 // @ts-ignore
@@ -105,7 +106,7 @@ async function getVersionsToBuild(name: string): Promise<string[]> {
   const res = await fetch(
     `http://localhost:${port}/api/package-history?package=${name}`
   )
-  const versionInfo: Record<string, any> = await res.json()
+  const versionInfo = (await res.json()) as Record<string, any>
 
   Object.keys(versionInfo).forEach(version => {
     if (isEmptyObject(versionInfo[version])) {

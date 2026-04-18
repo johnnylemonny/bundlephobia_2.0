@@ -36,7 +36,7 @@ export interface QueueOptions {
  * for priorities, concurrency control, job de-duplication,
  * and more.
  */
-export default class Queue {
+export class Queue {
   private jobs: Job[] = []
   private options: Required<QueueOptions>
   private executorMap: Record<string, (params: any) => any | Promise<any>> = {}
@@ -269,3 +269,5 @@ export default class Queue {
     })
   }
 }
+
+export default Queue

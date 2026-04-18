@@ -1,4 +1,5 @@
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 import { encodeFirebaseKey, decodeFirebaseKey } from '../utils/index'
 import fs from 'fs'
 import path from 'path'

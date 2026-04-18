@@ -3,7 +3,7 @@ import os from 'os'
 
 const dev = process.env.NODE_ENV === 'development'
 
-const config = {
+export const config = {
   tmp: path.join(__dirname, '..', 'tmp-build'),
 
   MAX_WORKERS: os.cpus().length,

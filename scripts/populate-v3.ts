@@ -306,7 +306,7 @@ async function processBatch(
         withAbortableTimeout(
           signal => buildPackage(packageName, version, signal),
           TIMEOUT_MS + 5000,
-          { success: false, error: 'Operation timeout (aborted)' }
+          { success: false, error: 'Operation timeout (aborted)', v2: null }
         ).then(res => {
           sizeResult = res
         })
@@ -317,7 +317,7 @@ async function processBatch(
         withAbortableTimeout(
           signal => buildExports(packageName, version, signal),
           TIMEOUT_MS + 5000,
-          { success: false, error: 'Operation timeout (aborted)' }
+          { success: false, error: 'Operation timeout (aborted)', v2: null }
         ).then(res => {
           exportsResult = res
         })

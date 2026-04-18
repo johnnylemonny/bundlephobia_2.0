@@ -1,13 +1,13 @@
-import LRU from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 import workerpool from 'workerpool'
-import Queue from './Queue'
+import { Queue } from './Queue'
 import logger from './Logger'
-import config from './config'
+import { config } from './config'
 import debugFactory from 'debug'
 
 const debug = debugFactory('bp:request')
 
-const failureCache = new LRU({
+const failureCache = new LRUCache({
   max: config.MAX_FAILURE_CACHE_ENTRIES,
   ttl: 6 * 1000 * 60 * 60, // lru-cache v7+ uses ttl instead of maxAge
 })

@@ -4,8 +4,8 @@ import Analytics from '../../client/analytics'
 import FlipMove from 'react-flip-move'
 import cx from 'classnames'
 
-const PromiseQueue = require('p-queue')
-const queryString = require('query-string')
+import PQueue from 'p-queue'
+import queryString from 'query-string'
 import Stat from '../../client/components/Stat'
 import Link from 'next/link'
 import ResultLayout from '../../client/components/ResultLayout'
@@ -17,14 +17,14 @@ import { getTimeFromSize } from '../../utils'
 interface Result {
   size: number
   gzip: number
-  version?: string
+  version?: string | null
 }
 
 interface ScanPackage {
   promiseState: 'pending' | 'fulfilled' | 'rejected'
   packageString: string
   name: string
-  version?: string
+  version?: string | null
   result?: Result
   error?: {
     code: string
@@ -165,7 +165,7 @@ class ScanResults extends Component<ScanResultsProps, ScanResultsState> {
 
   componentDidMount() {
     const { packages } = this.state
-    const queue = new PromiseQueue({ concurrency: 3 })
+    const queue = new PQueue({ concurrency: 3 })
     const startTime = Date.now()
 
     Analytics.pageView('scan results')

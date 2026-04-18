@@ -125,20 +125,23 @@ export default class Scan extends Component<{}, State> {
       content = (
         <div>
           <Dropzone
-            // @ts-ignore - react-dropzone types might differ between versions
-            className="scan__dropzone"
             onDropAccepted={this.handleDropAccepted}
             onDropRejected={this.handleDropRejected}
             multiple={false}
-            accept="application/json"
+            accept={{ 'application/json': ['.json'] }}
           >
-            <p>
-              Drop a <code> package.json </code> file here
-            </p>
-            <Separator />
-            <button className="scan__btn">
-              Upload <code> package.json </code>
-            </button>
+            {({ getRootProps, getInputProps }) => (
+              <div {...getRootProps({ className: 'scan__dropzone' })}>
+                <input {...getInputProps()} />
+                <p>
+                  Drop a <code> package.json </code> file here
+                </p>
+                <Separator />
+                <button className="scan__btn">
+                  Upload <code> package.json </code>
+                </button>
+              </div>
+            )}
           </Dropzone>
         </div>
       )
@@ -156,7 +159,9 @@ export default class Scan extends Component<{}, State> {
           </header>
           <ul
             className="scan__package-container"
-            ref={pc => (this.packageSelectionContainer = pc)}
+            ref={pc => {
+              this.packageSelectionContainer = pc
+            }}
           >
             {packages.map(({ name, versionRange, resolvedVersion }) => (
               <li className="scan__package-item" key={name}>

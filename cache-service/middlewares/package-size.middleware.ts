@@ -1,5 +1,6 @@
 import 'dotenv-defaults/config'
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 import LRU from 'lru-cache'
 import createDebug from 'debug'
 import { encodeFirebaseKey } from '../cache.utils'

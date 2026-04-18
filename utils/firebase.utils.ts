@@ -1,7 +1,8 @@
 import { decodeFirebaseKey, encodeFirebaseKey } from './index'
 import semver from 'semver'
 import axios from 'axios'
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 import debugFactory from 'debug'
 
 const debug = debugFactory('bp:firebase-util')

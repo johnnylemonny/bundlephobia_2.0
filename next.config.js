@@ -29,6 +29,12 @@ module.exports = {
       ],
     })
 
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      client: path.resolve(__dirname, 'client'),
+      utils: path.resolve(__dirname, 'utils'),
+    }
+
     return config
   },
 }

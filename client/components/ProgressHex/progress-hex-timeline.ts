@@ -1,4 +1,5 @@
-import anime, { AnimeAnimParams } from 'animejs'
+import { animate, Timeline, stagger, random } from 'animejs'
+import type { AnimationParams } from 'animejs'
 
 import colors from '../../config/colors'
 import { randomFromArray, zeroToN } from '../../../utils'
@@ -71,56 +72,54 @@ export default class ProgressHexAnimator {
   }
 
   createTimeline() {
-    const fadeInTimeline = anime.timeline({
+    const fadeInTimeline = new Timeline({
       duration: DURATION,
       autoplay: false,
       loop: false,
     })
 
-    const quakeTimeline = anime.timeline({
+    const quakeTimeline = new Timeline({
       duration: DURATION,
       autoplay: false,
       loop: true,
     })
 
-    const fadeInRings = {
-      targets: this.rings,
+    fadeInTimeline.add(this.rings, {
       opacity: [0, 1],
-      delay: anime.stagger(DURATION / 5, { from: 'last' }),
+      delay: stagger(DURATION / 5, { from: 'last' }),
       duration: DURATION / 2,
       easing: 'linear',
-    }
+    })
 
-    const quakeCircles = {
-      targets: this.circles,
-      scale: (el: SVGCircleElement) =>
+    quakeTimeline.add(this.circles, {
+      scale: (el: any) =>
         this.circlesMap.get(el)!.ringNumber === 0 ? 3 : 1.5,
-      translateY: (circle: SVGCircleElement) =>
+      translateY: (circle: any) =>
         this.getTranslation(circle, 4).y,
-      translateX: (circle: SVGCircleElement) =>
+      translateX: (circle: any) =>
         this.getTranslation(circle, 4).x,
-      delay: ((el: SVGCircleElement) =>
+      delay: ((el: any) =>
         (Math.pow(this.circlesMap.get(el)!.ringNumber, 0.6) * DURATION) / 4 +
         (this.circlesMap.get(el)!.ringNumber > 0
           ? DURATION / 2.5
-          : 0)) as unknown as AnimeAnimParams['delay'],
+          : 0)) as any,
       duration: DURATION,
       easing: () => (t: number) => Math.sin(t * Math.PI),
       changeBegin: () => this.trailBlaze.start(),
-    }
-
-    fadeInTimeline.add(fadeInRings)
-    quakeTimeline.add(quakeCircles)
+    })
 
     return {
-      ...quakeTimeline,
       play: () => {
         fadeInTimeline.play()
         setTimeout(() => {
           quakeTimeline.play()
         }, DURATION)
       },
-    }
+      pause: () => {
+        fadeInTimeline.pause()
+        quakeTimeline.pause()
+      },
+    } as any
   }
 }
 
@@ -213,7 +212,10 @@ class Trailblaze {
   getDashOffset = (element: SVGElement | HTMLElement | null) => {
     if (!element) return 0
     try {
-      return anime.setDashoffset(element)
+      if ('getTotalLength' in element) {
+        return (element as any).getTotalLength()
+      }
+      return 0
     } catch (err) {
       // Called before the element was rendered
       console.error(err)
@@ -240,16 +242,15 @@ class Trailblaze {
       )
     })
 
-    anime({
-      targets: this.lines,
+    animate(this.lines, {
       opacity: [1, 0.9, 0],
-      strokeDashoffset: [(el: SVGLineElement) => this.getDashOffset(el), 0],
-      x1: (el: SVGLineElement) => lineMap.get(el)!.source.cx,
-      x2: (el: SVGLineElement) => lineMap.get(el)!.destination.cx,
-      y1: (el: SVGLineElement) => lineMap.get(el)!.source.cy,
-      y2: (el: SVGLineElement) => lineMap.get(el)!.destination.cy,
+      strokeDashoffset: (el: any) => [this.getDashOffset(el), 0],
+      x1: (el: any) => lineMap.get(el)!.source.cx,
+      x2: (el: any) => lineMap.get(el)!.destination.cx,
+      y1: (el: any) => lineMap.get(el)!.source.cy,
+      y2: (el: any) => lineMap.get(el)!.destination.cy,
       duration: 500,
-      delay: () => anime.random(0, DURATION / 5),
+      delay: () => random(0, DURATION / 5),
       easing: 'easeOutCubic',
     })
   }

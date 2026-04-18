@@ -1,6 +1,6 @@
 import { Context } from 'koa'
 import { drawStatsImg } from '../../utils/draw.utils'
-import Cache from '../../utils/cache.utils'
+import { Cache } from '../../utils/cache.utils'
 import send from 'koa-send'
 import queryString from 'query-string'
 import { resolvePackage } from '../../utils/server.utils'

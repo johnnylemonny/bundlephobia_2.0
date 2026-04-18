@@ -1,7 +1,7 @@
 require('dotenv-defaults').config()
 
 import next from 'next'
-import exec from 'execa'
+import { execa as exec } from 'execa'
 import { parse } from 'url'
 
 import Koa, { Context } from 'koa'
@@ -15,7 +15,7 @@ import auth from 'koa-basic-auth'
 import bodyParser from 'koa-bodyparser'
 import invariant from 'ts-invariant'
 
-import Cache from './utils/cache.utils'
+import { Cache } from './utils/cache.utils'
 import { parsePackageString } from './utils/common.utils'
 import firebaseUtils from './utils/firebase.utils'
 import logger from './server/Logger'
@@ -34,7 +34,7 @@ import generateImgMiddleware from './server/middlewares/generateImg.middleware'
 
 import jsonCacheMiddleware from './server/middlewares/jsonCache.middleware'
 
-import config from './server/config'
+import { config } from './server/config'
 
 function getEnv(env: Record<string, string | undefined | null>) {
   invariant(
@@ -209,7 +209,7 @@ export const initServer = async () => {
     auth({ name: 'bundlephobia', pass: env.basicAuthPassword }),
     async (ctx, next) => {
       try {
-        const { stdout, stderr } = await exec.command('pm2 reload all')
+        const { stdout, stderr } = await exec('pm2 reload all', { shell: true })
         ctx.body = 'Server restarted' + stdout
       } catch (err) {
         console.error('Failed to restart', err)
@@ -226,7 +226,7 @@ export const initServer = async () => {
       ctx.status = 500
       ctx.body = 'Failed to restart'
     } else {
-      const { stdout, stderr } = await exec.command('pm2 reload all')
+      const { stdout, stderr } = await exec('pm2 reload all', { shell: true })
       ctx.body = 'Server restarted' + stdout
       console.error(stderr)
     }
@@ -237,8 +237,9 @@ export const initServer = async () => {
     auth({ name: 'bundlephobia', pass: env.basicAuthPassword }),
     async (ctx, next) => {
       try {
-        const { stdout } = await exec.command(
-          'rm -rf /tmp/tmp-build/cache/_cacache /tmp/tmp-build/packages/'
+        const { stdout } = await exec(
+          'rm -rf /tmp/tmp-build/cache/_cacache /tmp/tmp-build/packages/',
+          { shell: true }
         )
         ctx.body = 'Cache cleared' + stdout
       } catch (err) {
@@ -258,7 +259,7 @@ export const initServer = async () => {
     ctx.status = 301
   })
 
-  router.get('(.*)', async ctx => {
+  router.get(/.*/, async ctx => {
     invariant(ctx.req.url, 'url is missing')
     const parsedUrl = parse(ctx.req.url, true)
     await handle(ctx.req, ctx.res, parsedUrl)

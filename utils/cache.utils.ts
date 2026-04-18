@@ -14,7 +14,7 @@ interface PackageKey {
   version: string
 }
 
-class Cache {
+export class Cache {
   async getPackageSize({ name, version }: PackageKey) {
     try {
       const result = await API.get('/package-cache', {

@@ -1,5 +1,6 @@
 import 'dotenv-defaults/config'
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 import fastifyFactory from 'fastify'
 import {
   getPackageSizeMiddlware,

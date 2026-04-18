@@ -1,6 +1,7 @@
 import 'dotenv-defaults/config'
 import LRU from 'lru-cache'
-import firebase from 'firebase'
+import firebase from 'firebase/compat/app'
+import 'firebase/compat/database'
 import createDebug from 'debug'
 import { encodeFirebaseKey } from '../cache.utils'
 import { FastifyRequest, FastifyReply } from 'fastify'
