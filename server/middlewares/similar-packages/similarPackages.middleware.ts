@@ -1,7 +1,7 @@
 import { Context } from 'koa'
-import got from 'got'
-import remark from 'remark'
-import strip from 'strip-markdown'
+import axios from 'axios'
+import { remark } from 'remark'
+import remarkStrip from 'strip-markdown'
 import natural from 'natural'
 import flatten from 'flatten'
 import { categories } from './fixtures'
@@ -45,13 +45,12 @@ const prefixURL = (url: string, { base, user, project, head, path }: { base: str
 
 async function getPackageDetails(packageName: string): Promise<PackageDetails> {
   let readme = ''
-  const response = await got(
+  const response = await axios.get(
     `https://ofcncog2cu-dsn.algolia.net/1/indexes/npm-search/${encodeURIComponent(
       packageName
-    )}?x-algolia-application-id=OFCNCOG2CU&x-algolia-api-key=f54e21fa3a2a0160595bb058179bfb1e`,
-    { json: true }
+    )}?x-algolia-application-id=OFCNCOG2CU&x-algolia-api-key=f54e21fa3a2a0160595bb058179bfb1e`
   )
-  const body = response.body as any
+  const body = response.data
 
   if ('readme' in body && body.readme.trim()) {
     readme = await stripMarkdown(body.readme)
@@ -73,7 +72,7 @@ async function getReadme(repository: Repository): Promise<string> {
   const { host, user, project, branch, path } = repository
   if (host === 'github.com') {
     const getGithubFile = async (fileName: string) =>
-      await got(
+      await axios.get(
         prefixURL(fileName, {
           base: 'https://raw.githubusercontent.com',
           user,
@@ -84,14 +83,14 @@ async function getReadme(repository: Repository): Promise<string> {
       )
 
     try {
-      const { body } = await getGithubFile('README.md')
+      const { data: body } = await getGithubFile('README.md')
       return body
     } catch (e) {
       try {
-        const { body } = await getGithubFile('readme.md')
+        const { data: body } = await getGithubFile('readme.md')
         return body
       } catch (e) {
-        const { body } = await getGithubFile('Readme.md')
+        const { data: body } = await getGithubFile('Readme.md')
         return body
       }
     }
@@ -100,7 +99,7 @@ async function getReadme(repository: Repository): Promise<string> {
       const apiUrl = `https://gitlab.com/api/v4/projects/${user}%2F${project}/repository/files/${encodeURIComponent(
         filePath
       )}?ref=${branch}`
-      const { body } = await got(apiUrl, { json: true }) as any
+      const { data: body } = await axios.get(apiUrl)
 
       if (body.encoding === 'base64') {
         return Buffer.from(body.content, 'base64').toString()
@@ -116,7 +115,7 @@ async function getReadme(repository: Repository): Promise<string> {
       filePath: `${path}/README.md`,
     })
   } else if (host === 'bitbucket.org') {
-    const { body } = await got(
+    const { data: body } = await axios.get(
       `https://bitbucket.org/${user}/${project}${
         path ? path.replace('src', 'raw') : `/raw/${branch}`
       }/README.md`
@@ -130,7 +129,7 @@ async function stripMarkdown(readme: string): Promise<string> {
   return new Promise((resolve, reject) => {
     // @ts-ignore
     remark()
-      .use(strip)
+      .use(remarkStrip)
       .process(readme, function (err: any, file: any) {
         if (err) reject(err)
         resolve(
@@ -265,7 +264,7 @@ async function similarPackagesMiddleware(ctx: Context) {
     console.error(err)
     ctx.status = 500
     ctx.body = {
-      error: err,
+      error: err instanceof Error ? { name: err.name, message: err.message, stack: err.stack } : err,
     }
 
     logger.error(

@@ -40,8 +40,8 @@ export default class BuildProgressIndicator extends Component<
     }, OptimisticLoadTimeout)
   }
 
-  componentWillReceiveProps(nextProps: BuildProgressIndicatorProps) {
-    if (nextProps.isDone) {
+  componentDidUpdate(prevProps: BuildProgressIndicatorProps) {
+    if (this.props.isDone && !prevProps.isDone) {
       this.stage = 3
       this.props.onDone()
     }

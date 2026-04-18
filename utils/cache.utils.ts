@@ -16,28 +16,34 @@ interface PackageKey {
 
 export class Cache {
   async getPackageSize({ name, version }: PackageKey) {
+    if (!API.defaults.baseURL) {
+      return undefined
+    }
     try {
       const result = await API.get('/package-cache', {
         params: { name, version },
       })
       return result.data
     } catch (err: any) {
-      console.error(err.statusText)
+      console.error(err.response?.statusText || err.message)
     }
   }
 
   async setPackageSize({ name, version }: PackageKey, result: any) {
+    if (!API.defaults.baseURL) {
+      return
+    }
     debug('set package %O to %O', { name, version }, result)
     try {
       await API.post('/package-cache', { name, version, result })
     } catch (err: any) {
-      console.error(err.data)
+      console.error(err.response?.data || err.message)
       logger.error(
         'CACHE_SET_ERROR',
         {
           name,
           version,
-          error: err.data,
+          error: err.response?.data || err.message,
         },
         `CACHE ERROR for package ${name}@${version}`
       )
@@ -45,6 +51,9 @@ export class Cache {
   }
 
   async getExportsSize({ name, version }: PackageKey) {
+    if (!API.defaults.baseURL) {
+      return undefined
+    }
     debug('get exports %s@%s', name, version)
     try {
       const result = await API.get('/exports-cache', {
@@ -56,17 +65,20 @@ export class Cache {
   }
 
   async setExportsSize({ name, version }: PackageKey, result: any) {
+    if (!API.defaults.baseURL) {
+      return
+    }
     debug('set exports %O to %O', { name, version }, result)
     try {
       await API.post('/exports-cache', { name, version, result })
     } catch (err: any) {
-      console.error(err.data)
+      console.error(err.response?.data || err.message)
       logger.error(
         'CACHE_SET_ERROR',
         {
           name,
           version,
-          error: err.data,
+          error: err.response?.data || err.message,
         },
         `CACHE ERROR for package exports ${name}@${version}`
       )

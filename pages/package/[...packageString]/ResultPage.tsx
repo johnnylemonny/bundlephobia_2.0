@@ -25,10 +25,10 @@ import MetaTags, {
 import InterLinksSection from './components/InterLinksSection'
 
 import TreemapSection from './components/TreemapSection'
-// @ts-ignore
 import EmptyBoxIcon from '../../../client/assets/empty-box.svg'
+import { resolveComponent } from '../../../utils/resolveComponent'
 
-const EmptyBox = (EmptyBoxIcon as any).default || EmptyBoxIcon
+const EmptyBox = resolveComponent(EmptyBoxIcon)
 import SimilarPackagesSection from './components/SimilarPackagesSection'
 import ExportAnalysisSection from './components/ExportAnalysisSection'
 import QuickStatsBar from '../../../client/components/QuickStatsBar/QuickStatsBar'

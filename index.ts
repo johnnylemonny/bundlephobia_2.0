@@ -1,4 +1,4 @@
-require('dotenv-defaults').config()
+require('dotenv-defaults').config()   
 
 import next from 'next'
 import { execa as exec } from 'execa'
@@ -124,6 +124,8 @@ export const initServer = async () => {
 
   router.get(
     '/api/size',
+    errorMiddleware,
+    resolvePackageMiddleware,
     jsonCacheMiddleware({
       get: (key: Key) => cache.getPackageSize(key),
       set: (key: Key, value: string) => cache.setPackageSize(key, value),
@@ -132,8 +134,6 @@ export const initServer = async () => {
         version: ctx.state.resolved.version,
       }),
     }),
-    errorMiddleware,
-    resolvePackageMiddleware,
     blockBlacklistMiddleware,
     cachedResponseMiddleware,
     buildMiddleware
@@ -149,6 +149,8 @@ export const initServer = async () => {
 
   router.get(
     '/api/exports-sizes',
+    errorMiddleware,
+    resolvePackageMiddleware,
     jsonCacheMiddleware({
       get: (key: Key) => cache.getExportsSize(key),
       set: (key: Key, value: string) => cache.setExportsSize(key, value),
@@ -157,8 +159,6 @@ export const initServer = async () => {
         version: ctx.state.resolved.version,
       }),
     }),
-    errorMiddleware,
-    resolvePackageMiddleware,
     blockBlacklistMiddleware,
     cachedResponseMiddleware,
     exportsSizesMiddlware

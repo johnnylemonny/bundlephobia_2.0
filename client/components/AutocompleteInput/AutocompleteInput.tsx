@@ -1,10 +1,6 @@
 import React from 'react'
 import cx from 'classnames'
-import AutoCompleteComponent from 'react-autocomplete'
-
-import { resolveComponent } from '../../../utils/resolveComponent'
-
-const AutoComplete = resolveComponent(AutoCompleteComponent)
+import AutoComplete from '../Autocomplete/Autocomplete'
 
 import SearchIcon from '../Icons/SearchIcon'
 import { parsePackageString } from '../../../utils/common.utils'

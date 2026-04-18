@@ -37,10 +37,11 @@ export default class ProgressHexAnimator {
       const cx = parseFloat(circle.getAttribute('cx')!)
       const cy = parseFloat(circle.getAttribute('cy')!)
       circle.style.transformOrigin = `${cx}px ${cy}px`
+      const match = circle.parentElement?.id.match(/.+(\d+)/)
       this.circlesMap.set(circle, {
         cx,
         cy,
-        ringNumber: parseInt(circle.parentElement!.id.match(/.+(\d+)/)![1]) - 1,
+        ringNumber: match ? parseInt(match[1]) - 1 : 0,
       })
     })
 
@@ -84,27 +85,27 @@ export default class ProgressHexAnimator {
       loop: true,
     })
 
-    fadeInTimeline.add(this.rings, {
+    fadeInTimeline.add(Array.from(this.rings), {
       opacity: [0, 1],
       delay: stagger(DURATION / 5, { from: 'last' }),
       duration: DURATION / 2,
       easing: 'linear',
     })
 
-    quakeTimeline.add(this.circles, {
+    quakeTimeline.add(Array.from(this.circles), {
       scale: (el: any) =>
         this.circlesMap.get(el)!.ringNumber === 0 ? 3 : 1.5,
       translateY: (circle: any) =>
         this.getTranslation(circle, 4).y,
       translateX: (circle: any) =>
         this.getTranslation(circle, 4).x,
-      delay: ((el: any) =>
+      delay: (el: any) =>
         (Math.pow(this.circlesMap.get(el)!.ringNumber, 0.6) * DURATION) / 4 +
         (this.circlesMap.get(el)!.ringNumber > 0
           ? DURATION / 2.5
-          : 0)) as any,
+          : 0),
       duration: DURATION,
-      easing: () => (t: number) => Math.sin(t * Math.PI),
+      easing: (t: number) => Math.sin(t * Math.PI),
       changeBegin: () => this.trailBlaze.start(),
     })
 
@@ -242,7 +243,7 @@ class Trailblaze {
       )
     })
 
-    animate(this.lines, {
+    animate(Array.from(this.lines), {
       opacity: [1, 0.9, 0],
       strokeDashoffset: (el: any) => [this.getDashOffset(el), 0],
       x1: (el: any) => lineMap.get(el)!.source.cx,
