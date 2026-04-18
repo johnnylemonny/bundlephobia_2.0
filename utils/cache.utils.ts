@@ -16,7 +16,7 @@ interface PackageKey {
 
 export class Cache {
   async getPackageSize({ name, version }: PackageKey) {
-    if (!API.defaults.baseURL) {
+    if (!API.defaults.baseURL || !API.defaults.baseURL.startsWith('http')) {
       return undefined
     }
     try {
@@ -51,7 +51,7 @@ export class Cache {
   }
 
   async getExportsSize({ name, version }: PackageKey) {
-    if (!API.defaults.baseURL) {
+    if (!API.defaults.baseURL || !API.defaults.baseURL.startsWith('http')) {
       return undefined
     }
     debug('get exports %s@%s', name, version)

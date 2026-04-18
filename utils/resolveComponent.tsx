@@ -22,5 +22,10 @@ export const resolveComponent = (comp: any): React.ComponentType<any> => {
   const firstFunction = Object.values(comp).find(val => typeof val === 'function') as React.ComponentType<any>
   if (firstFunction) return firstFunction
 
+  // Directly a string (URL)
+  if (typeof comp === 'string') {
+    return (props: any) => <img src={comp} {...props} />
+  }
+
   return () => null
 }

@@ -21,6 +21,8 @@ export function useRecentSearches() {
         } catch (e) {
           console.error('Failed to parse recent searches', e)
         }
+      } else {
+        setRecentSearches([])
       }
     }
 

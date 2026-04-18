@@ -44,7 +44,7 @@ async function buildMiddleware(ctx: Context) {
       packageString,
       time,
     },
-    `BUILD: ${packageString} built in ${time.toFixed()}s and is ${
+    `BUILD: ${packageString} built in ${time.toFixed(0)}ms and is ${
       result.size
     } bytes`
   )

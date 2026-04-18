@@ -35,11 +35,16 @@ const prefixURL = (url: string, { base, user, project, head, path }: { base: str
   if (url.includes('//')) {
     return url
   } else {
-    return new URL(
-      (path ? path.replace(/^\//, '') + '/' : '') +
-        url.replace(/^(\.?\/?)/, ''),
-      `${base}/${user}/${project}/${path ? '' : `${head}/`}`
-    ).toString()
+    try {
+      return new URL(
+        (path ? path.replace(/^\//, '') + '/' : '') +
+          url.replace(/^(\.?\/?)/, ''),
+        `${base}/${user}/${project}/${path ? '' : `${head}/`}`
+      ).toString()
+    } catch (e) {
+      console.error('Invalid URL in prefixURL:', url, base, user, project)
+      return url
+    }
   }
 }
 
