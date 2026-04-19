@@ -13,9 +13,9 @@ import GitIconSVG from '../../assets/git-logo.svg'
 
 import { resolveComponent } from '../../../utils/resolveComponent'
 
+import { GitHubIcon } from '../Icons/GitHubIcon'
 const TreeShakeIcon = resolveComponent(TreeShakeIconSVG)
 const PlusIcon = resolveComponent(PlusIconSVG)
-const GithubIcon = resolveComponent(GithubIconSVG)
 const GitIcon = resolveComponent(GitIconSVG)
 
 type SimilarPackageCardProps = { category?: string } & (
@@ -161,7 +161,7 @@ export default class SimilarPackageCard extends Component<SimilarPackageCardProp
                   }}
                 >
                   {pack.repository.includes('github.com') ? (
-                    <GithubIcon className="similar-package-card__github-icon" />
+                    <GitHubIcon className="similar-package-card__github-icon" />
                   ) : (
                     <GitIcon className="similar-package-card__github-icon" />
                   )}

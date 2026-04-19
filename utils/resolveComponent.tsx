@@ -7,26 +7,23 @@ import React from 'react'
 export const resolveComponent = (comp: any): React.ComponentType<any> => {
   if (!comp) return () => null
   
-  // Directly a function
+  // 1. Handle SVGR (Direct component or .ReactComponent)
   if (typeof comp === 'function') return comp
+  if (comp.ReactComponent) return comp.ReactComponent
   
-  // Default export is a function
-  if (comp.default && typeof comp.default === 'function') return comp.default
-  
-  // Nested default export (sometimes seen with some loader configurations)
-  if (comp.default && comp.default.default && typeof comp.default.default === 'function') {
-    return comp.default.default
+  // 2. Handle ES Modules with .default
+  if (comp.default) {
+    if (typeof comp.default === 'function') return comp.default
+    if (comp.default.ReactComponent) return comp.default.ReactComponent
   }
   
-  // Try to find any function in the object (fallback)
-  const firstFunction = Object.values(comp).find(val => typeof val === 'function') as React.ComponentType<any>
-  if (firstFunction) return firstFunction
-
-  // Directly a string (URL) or an asset object
-  if (typeof comp === 'string' || (comp && comp.src)) {
-    const src = typeof comp === 'string' ? comp : comp.src
+  // 3. Handle Static Assets (Next.js / Webpack file-loader)
+  // If it's a string, it's a URL. If it's an object with .src, it's an asset.
+  const src = typeof comp === 'string' ? comp : (comp && comp.src)
+  if (typeof src === 'string') {
     return (props: any) => <img src={src} {...props} />
   }
 
+  // Fallback
   return () => null
 }

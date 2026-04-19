@@ -8,7 +8,8 @@ import { AutocompleteInput } from '../../client/components/AutocompleteInput'
 import { parsePackageString } from '../../utils/common.utils'
 import API from '../../client/api'
 import { PackageResult } from '../../types'
-import Stat from '../../client/components/Stat'
+import { GitHubIcon } from '../../client/components/Icons/GitHubIcon'
+import { ThemeToggle } from '../../client/components/ThemeToggle/ThemeToggle'
 import { getTimeFromSize, DownloadSpeed } from '../../utils'
 
 
@@ -111,14 +112,28 @@ class ComparePage extends PureComponent<Props, State> {
           <title>Compare Packages | Bundlephobia</title>
         </Head>
         <div className="page-container">
-          <header className="result-header">
-            <section className="result-header--left-section">
-              <Link href="/">
-                <div className="logo-small">
-                  <span>Bundle</span>
-                  <span className="logo-small__alt">Phobia</span>
-                </div>
-              </Link>
+          <header className="page-header">
+            <Link href="/">
+              <div className="logo-small">
+                <span>Bundle</span>
+                <span className="logo-small__alt">Phobia</span>
+              </div>
+            </Link>
+            <section className="page-header--right-section">
+              <ul className="page-header__quicklinks">
+                <li>
+                  <Link href="/scan">Scan</Link>
+                </li>
+              </ul>
+              <ThemeToggle />
+              <a
+                href="https://github.com/pastelsky/bundlephobia"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="github-link"
+              >
+                <GitHubIcon />
+              </a>
             </section>
           </header>
 

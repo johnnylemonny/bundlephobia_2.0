@@ -267,9 +267,7 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
           GZIP sizes of individual exports
         </p>
         <div className="export-analysis-section__actions">
-          {normalizedExports.length > 15 && (
-            <InputExportFilter onChange={setFilterText} />
-          )}
+          <InputExportFilter onChange={setFilterText} />
           <button 
             className="export-analysis-section__copy-btn" 
             onClick={handleCopyJSON}

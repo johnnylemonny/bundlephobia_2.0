@@ -367,7 +367,18 @@ class ResultPage extends PureComponent<Props, State> {
           }
           repository={results.repository || ''}
           name={results.name || ''}
-        />
+        >
+           <button 
+              className="result-page__share-btn"
+              onClick={this.exportToImage}
+              title="Share as Image"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/>
+              </svg>
+              <span>Share Image</span>
+            </button>
+        </QuickStatsBar>
       )
 
     return (
@@ -417,15 +428,10 @@ class ResultPage extends PureComponent<Props, State> {
             {resultsPromiseState === 'fulfilled' && (
               <div className="content-split-container" ref={this.statsContainerRef}>
                 <div className="stats-container">
-                  <button 
-                    className="result-page__export-btn"
-                    onClick={this.exportToImage}
-                    title="Export as Image"
-                  >
-                    Share Image
-                  </button>
                   <div className="size-container">
-                    <h3> Bundle Size </h3>
+                    <div className="size-container__header">
+                      <h3> Bundle Size </h3>
+                    </div>
                     <div className="size-stats">
                       <Stat
                         value={results.size!}

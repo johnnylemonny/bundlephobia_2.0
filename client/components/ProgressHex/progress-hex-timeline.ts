@@ -233,7 +233,13 @@ class Trailblaze {
     this.lines.forEach(line => {
       const { source, destination } = this.getRandomConnection()
       lineMap.set(line, { source, destination })
-      line.setAttribute('stroke', randomFromArray(colors))
+      const monochromeColors = [
+        'var(--color-raven)',
+        'rgba(var(--color-raven-rgb), 0.6)',
+        'rgba(var(--color-raven-rgb), 0.4)',
+        '#65a1f8' // Subtle brand color accent
+      ]
+      line.setAttribute('stroke', randomFromArray(monochromeColors))
       this.setLineCoords(
         line,
         source.cx,

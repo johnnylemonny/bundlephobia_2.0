@@ -10,10 +10,10 @@ import InfoIconSVG from '../../assets/info.svg'
 
 import { resolveComponent } from '../../../utils/resolveComponent'
 
+import { GitHubIcon } from '../Icons/GitHubIcon'
 const TreeShakeIcon = resolveComponent(TreeShakeIconSVG)
 const SideEffectIcon = resolveComponent(SideEffectIconSVG)
 const DependencyIcon = resolveComponent(DependencyIconSVG)
-const GithubIcon = resolveComponent(GithubIconSVG)
 const NPMIcon = resolveComponent(NPMIconSVG)
 const InfoIcon = resolveComponent(InfoIconSVG)
 
@@ -129,10 +129,15 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <GithubIcon className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon quick-stats-bar__logo-icon--github" />
+            <GitHubIcon className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon--github" />
             </a>
           )}
         </div>
+        {this.props.children && (
+           <div className="quick-stats-bar__right">
+             {this.props.children}
+           </div>
+        )}
       </div>
     )
   }

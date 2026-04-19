@@ -12,7 +12,9 @@ export function getInitialTheme(): Theme {
   return prefersDark ? 'dark' : 'light'
 }
 
-export function setTheme(theme: Theme) {
+export function setTheme(theme: Theme, save = true) {
   document.documentElement.setAttribute('data-theme', theme)
-  localStorage.setItem(STORAGE_KEY, theme)
+  if (save) {
+    localStorage.setItem(STORAGE_KEY, theme)
+  }
 }

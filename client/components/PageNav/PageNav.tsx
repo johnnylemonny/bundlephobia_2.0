@@ -1,9 +1,8 @@
 import Link from 'next/link'
 import React from 'react'
-import GithubLogoIcon from '../../assets/github-logo.svg'
-import { resolveComponent } from '../../../utils/resolveComponent'
+import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
 
-const GithubLogo = resolveComponent(GithubLogoIcon)
+import { GitHubIcon } from '../Icons/GitHubIcon'
 
 type PageNavProps = {
   minimal?: boolean
@@ -50,8 +49,15 @@ const PageNav = ({ minimal }: PageNavProps) => (
           </li>
         )}
       </ul>
-      <a target="_blank" href="https://github.com/pastelsky/bundlephobia">
-        <GithubLogo />
+      <ThemeToggle />
+      <a
+        target="_blank"
+        rel="noreferrer noopener"
+        href="https://github.com/pastelsky/bundlephobia"
+        className="github-link"
+        title="GitHub Repository"
+      >
+        <GitHubIcon />
       </a>
     </section>
   </header>

@@ -41,3 +41,7 @@
 {"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
 {"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
 {"level":"error","message":"CACHE ERROR for package undefined@undefined","type":"CACHE_SET_ERROR"}
+{"level":"error","message":"BlocklistedPackageError next@16.2.4","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError lucide-react@1.8.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError lucide-react@1.8.0","type":"BUILD_ERROR"}
+{"level":"error","message":"BuildError react-query@3.39.3","type":"BUILD_ERROR"}

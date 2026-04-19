@@ -80,19 +80,21 @@
   position: relative;
   column-width: $global-spacing * 25;
   column-gap: $global-spacing;
-  padding: 0;
+  padding: $global-spacing;
   max-height: 80vh;
   margin: 0;
   list-style-type: none;
   overflow-y: scroll;
   height: 100%;
-  margin-top: $global-spacing * 3;
+  margin-top: $global-spacing * 2;
+  border: 1px solid rgba(var(--color-raven-rgb), 0.1);
+  background: rgba(var(--color-bg), 0.5);
+  border-radius: 8px;
 }
 
 .export-analysis-section__filter-input-container {
-  position: absolute;
-  margin-right: auto;
-  right: 0;
+  position: relative;
+  margin-left: auto;
 
   @media screen and (max-width: 48em) {
     display: none;
@@ -119,7 +121,7 @@
   @include font-size-sm;
   font-family: $font-family-code;
   padding-right: $global-spacing * 3;
-  width: 15vw;
+  width: 250px;
   transition: all 0.1s ease-in-out;
   will-change: transform;
   contain: strict;
@@ -127,7 +129,7 @@
   background: rgba(var(--color-raven-rgb), 0.1);
 
   &:focus {
-    width: 23vw;
+    width: 300px;
     background: var(--color-bg);
     border: 1px solid var(--color-neptune);
   }

@@ -118,17 +118,17 @@
 
 .content-split-container {
   display: flex;
-  justify-content: space-around;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 4rem;
   width: 100%;
   margin-top: 10vh;
 
-  @media screen and (max-width: 48em) {
+  @media screen and (max-width: 64em) {
     flex-direction: column;
+    align-items: center;
+    gap: 2rem;
     margin-top: 5vh;
-  }
-
-  @media screen and (max-width: 40em) {
-    padding: 0 $global-spacing * 2;
   }
 }
 
@@ -177,47 +177,10 @@
   }
 }
 
-.result-page__export-btn {
-  position: absolute;
-  top: -2rem;
-  right: 1rem;
-  background: rgba(var(--color-text), 0.05);
-  border: 1px solid rgba(var(--color-text), 0.1);
-  color: var(--color-text);
-  padding: 0.4rem 0.8rem;
-  border-radius: 20px;
-  font-size: 0.7rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
-  z-index: 5;
-
-  &:hover {
-    background: rgba(var(--color-text), 0.15);
-    border-color: rgba(var(--color-text), 0.3);
-    transform: translateY(-1px);
-  }
-
-  &:active {
-    transform: translateY(0);
-  }
-
-  @media screen and (max-width: 48em) {
-    top: -1.5rem;
-    right: 0;
-  }
-}
-
-.time-container {
-  border-top: 1px solid rgba(var(--color-text), 0.1);
-  padding-top: 5vh;
-
-  @media screen and (max-width: 48em) {
-    padding-top: 3vh;
-  }
-}
-
 .size-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   margin-bottom: 5vh;
 
   @media screen and (max-width: 48em) {
@@ -225,11 +188,45 @@
   }
 }
 
-.size-container,
-.time-container {
+.size-container__header {
   display: flex;
   align-items: center;
-  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  position: relative;
+  margin-bottom: $global-spacing * 2;
+  border-bottom: 1px solid rgba(var(--color-text), 0.05);
+  padding-bottom: $global-spacing;
+
+  h3 {
+    margin: 0 !important;
+  }
+}
+
+.result-page__share-btn {
+  background: transparent;
+  border: none;
+  color: $raven;
+  opacity: 0.55;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  padding: 0;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 1px;
+  font-weight: $font-weight-bold;
+  margin-left: $global-spacing;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  svg {
+    stroke-width: 2.5px;
+  }
 }
 
 .size-container h3,
@@ -297,8 +294,9 @@
 
 .treemap {
   @include font-size-sm;
-  color: var(--color-text);
-  opacity: 0.6;
+  color: white;
+  opacity: 0.95;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 }
 
 .treemap__square {
@@ -342,15 +340,15 @@
   display: block;
   font-weight: $font-weight-bold;
   letter-spacing: -1px;
-  color: var(--color-text);
-  opacity: 0.5;
+  color: white;
+  opacity: 1;
 
   .treemap__square:hover & {
     color: rgba(0, 0, 0, 0.8);
   }
 
   //color: black;
-  mix-blend-mode: soft-light;
+  mix-blend-mode: normal;
 
   // Disabling this for mobiles and tablets
   // since text seems to glitch due to it

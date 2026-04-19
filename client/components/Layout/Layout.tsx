@@ -7,7 +7,11 @@ import DigitalOceanLogoIcon from '../../assets/digital-ocean-logo.svg'
 
 import { resolveComponent } from '../../../utils/resolveComponent'
 
-const Heart = resolveComponent(HeartIcon)
+const Heart = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg width="24" height="24" viewBox="0 0 428 364" fill="currentColor" {...props}>
+    <path d="M402.8 43.48C339.3-38.96 214.33 9.68 214.33 93.4c0-83.72-124.96-132.36-188.46-49.92C-19 101.74-2.95 189.95 72.22 267.33c34.77 35.8 82.2 69.28 142.12 96.4C403.74 278 468.42 128.7 402.8 43.5z" fillRule="evenodd"/>
+  </svg>
+)
 const DigitalOceanLogo = resolveComponent(DigitalOceanLogoIcon)
 
 if (typeof window !== 'undefined') {
@@ -50,6 +54,20 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
         <section className={className}>{children}</section>
 
         <footer>
+          <div className="footer__recent-search-bar">
+            <div className="footer__recent-search-bar__wrap">
+              <h4>Recent Searches</h4>
+              <ul className="footer__recent-search-list">
+                {(recentSearches.length > 0 ? recentSearches : ['react', 'lodash', 'next', 'axios', 'express']).map(search => (
+                  <li key={search}>
+                    <Link href={`/package/${search}`}>
+                      {search}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
           <section className="footer__split">
             <div className="footer__description">
               <h3> What does Bundlephobia do? </h3>
