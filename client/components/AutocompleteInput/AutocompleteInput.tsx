@@ -1,6 +1,8 @@
 import React from 'react'
 import cx from 'classnames'
-import AutoComplete from '../Autocomplete/Autocomplete'
+import AutoCompleteComponent from 'react-autocomplete'
+
+const AutoComplete = (AutoCompleteComponent as any).default || AutoCompleteComponent
 
 import SearchIcon from '../Icons/SearchIcon'
 import { parsePackageString } from '../../../utils/common.utils'
@@ -19,7 +21,7 @@ type AutocompleteInputProps = {
   hideSearchIcon?: boolean
 }
 
-const AutocompleteInput = ({
+export const AutocompleteInput = ({
   initialValue = '',
   renderAsH1 = false,
   className,
@@ -138,5 +140,3 @@ export function PackageNameElement({
 }: PackageNameElementProps) {
   return isHeading ? <h1 {...props} /> : <span {...props} />
 }
-
-export default AutocompleteInput

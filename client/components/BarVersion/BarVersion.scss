@@ -1,28 +1,24 @@
-@import '../../../stylesheets/colors';
-@import '../../../stylesheets/variables';
+@use 'globals' as *;
+@use '../../../stylesheets/colors' as *;
+@use '../../../stylesheets/variables' as *;
 
 .bar-graph__bar-version {
   @include font-size-xs;
   z-index: 33;
   font-weight: $font-weight-light;
-  transform: rotate(-90deg);
-  transform-origin: center center;
+  transform: rotate(-90deg) translateX(#{-$global-spacing * 1.5});
   font-variant-numeric: tabular-nums;
   color: color-mix(in srgb, var(--color-raven), white 15%);
   transition: opacity 0.2s, color 0.2s;
   font-family: $font-family-code;
-  letter-spacing: -0.5px;
+  letter-spacing: -1px;
   line-height: 1;
   cursor: pointer;
-  height: auto;
-  width: 100%;
-  text-align: center;
+  height: $bar-width;
+  text-align: end;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
-  position: absolute;
-  bottom: -$global-spacing * 4;
-  left: 0;
 
   .bar-graph-container:hover & {
     color: $raven;

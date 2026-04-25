@@ -5,20 +5,21 @@ import API from '../../api'
 import HeartIcon from '../../assets/heart.svg'
 import DigitalOceanLogoIcon from '../../assets/digital-ocean-logo.svg'
 
-import { resolveComponent } from '../../../utils/resolveComponent'
-
-const Heart = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg width="24" height="24" viewBox="0 0 428 364" fill="currentColor" {...props}>
-    <path d="M402.8 43.48C339.3-38.96 214.33 9.68 214.33 93.4c0-83.72-124.96-132.36-188.46-49.92C-19 101.74-2.95 189.95 72.22 267.33c34.77 35.8 82.2 69.28 142.12 96.4C403.74 278 468.42 128.7 402.8 43.5z" fillRule="evenodd"/>
-  </svg>
-)
-const DigitalOceanLogo = resolveComponent(DigitalOceanLogoIcon)
+const Heart = (HeartIcon as any).default || HeartIcon
+const DigitalOceanLogo = (DigitalOceanLogoIcon as any).default || DigitalOceanLogoIcon
 
 if (typeof window !== 'undefined') {
   console.log('Layout SVG Debug (Client):', { 
-    HeartIconType: typeof HeartIcon, 
-    HeartType: typeof Heart,
-    DigitalOceanLogoType: typeof DigitalOceanLogo
+    HeartIcon: typeof HeartIcon, 
+    HeartIconKeys: typeof HeartIcon === 'object' ? Object.keys(HeartIcon as any) : 'n/a',
+    Heart: typeof Heart,
+    DigitalOceanLogoIcon: typeof DigitalOceanLogoIcon,
+    DigitalOceanLogo: typeof DigitalOceanLogo
+  })
+} else {
+  console.log('Layout SVG Debug (Server):', { 
+    HeartIcon: typeof HeartIcon, 
+    Heart: typeof Heart,
   })
 }
 
@@ -56,13 +57,11 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
         <footer>
           <div className="footer__recent-search-bar">
             <div className="footer__recent-search-bar__wrap">
-              <h4>Recent Searches</h4>
+              <h4>Recent searches</h4>
               <ul className="footer__recent-search-list">
-                {(recentSearches.length > 0 ? recentSearches : ['react', 'lodash', 'next', 'axios', 'express']).map(search => (
+                {recentSearches.map(search => (
                   <li key={search}>
-                    <Link href={`/package/${search}`}>
-                      {search}
-                    </Link>
+                    <Link href={`/package/${search}`}>{search}</Link>
                   </li>
                 ))}
               </ul>
