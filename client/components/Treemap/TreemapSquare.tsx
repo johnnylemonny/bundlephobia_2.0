@@ -3,7 +3,9 @@ import React from 'react'
 type TreemapSquareProps = {
   style: React.CSSProperties
   data?: any
+  value?: number
 } & React.PropsWithChildren &
+  React.HTMLAttributes<HTMLDivElement> &
   Pick<
     React.CSSProperties,
     'left' | 'top' | 'width' | 'height' | 'borderRadius'

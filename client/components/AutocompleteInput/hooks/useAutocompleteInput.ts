@@ -1,6 +1,5 @@
 import React from 'react'
 import debounce from 'debounce'
-
 import { parsePackageString } from '../../../../utils/common.utils'
 import API from '../../../api'
 
@@ -20,12 +19,12 @@ export function useAutocompleteInput({
 
   const getSuggestions = React.useMemo(
     () =>
-      debounce((value: string) => {
-        API.getSuggestions(value).then(result => {
+      debounce((query: string) => {
+        API.getSuggestions(query).then(result => {
           setSuggestions(result)
         })
       }, 150),
-    []
+    [],
   )
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -38,10 +37,7 @@ export function useAutocompleteInput({
     }
   }
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    value: string
-  ) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(false)
     setValue(e.target.value)
     const trimmedValue = e.target.value.trim()
@@ -67,4 +63,3 @@ export function useAutocompleteInput({
     setSuggestions,
   }
 }
-

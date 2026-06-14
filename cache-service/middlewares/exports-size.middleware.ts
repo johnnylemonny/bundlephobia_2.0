@@ -1,5 +1,5 @@
 import 'dotenv-defaults/config'
-import LRU from 'lru-cache'
+import { LRUCache } from 'lru-cache'
 import firebase from 'firebase/compat/app'
 import 'firebase/compat/database'
 import createDebug from 'debug'
@@ -7,7 +7,7 @@ import { encodeFirebaseKey } from '../cache.utils'
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 const debug = createDebug('bp:cache')
-const LRUCache = new LRU({ max: 3000 })
+const cache = new LRUCache<string, any>({ max: 3000 })
 
 // Configurable Firebase keys for read/write operations
 const FIREBASE_READ_KEY_EXPORTS =
@@ -19,7 +19,7 @@ debug(
   'Firebase config (exports): READ from %s (with fallback: %s), WRITE to %s',
   FIREBASE_READ_KEY_EXPORTS,
   FIREBASE_READ_KEY_EXPORTS === 'exports-v3' ? 'yes, to exports' : 'no',
-  FIREBASE_WRITE_KEY_EXPORTS
+  FIREBASE_WRITE_KEY_EXPORTS,
 )
 
 interface PackageInfo {
@@ -27,7 +27,10 @@ interface PackageInfo {
   version: string
 }
 
-async function getPackageResultFromKey(key: string, { name, version }: PackageInfo) {
+async function getPackageResultFromKey(
+  key: string,
+  { name, version }: PackageInfo,
+) {
   const ref = firebase
     .database()
     .ref()
@@ -84,7 +87,12 @@ async function setPackageResult({ name, version, result }: SetPackageParams) {
     .set(result)
 }
 
-export async function getExportsSizeMiddlware(req: FastifyRequest<{ Querystring: { name: string; version: string; readKey?: string } }>, res: FastifyReply) {
+export async function getExportsSizeMiddlware(
+  req: FastifyRequest<{
+    Querystring: { name: string; version: string; readKey?: string }
+  }>,
+  res: FastifyReply,
+) {
   const name = decodeURIComponent(req.query.name)
   const version = decodeURIComponent(req.query.version)
   const readKey = req.query.readKey
@@ -96,7 +104,7 @@ export async function getExportsSizeMiddlware(req: FastifyRequest<{ Querystring:
 
   // Use memory cache only if no explicit readKey is provided
   if (!readKey) {
-    const lruCacheEntry = LRUCache.get(`${name}@${version}`)
+    const lruCacheEntry = cache.get(`${name}@${version}`)
     if (lruCacheEntry) {
       debug('cache hit: memory')
       return res.code(200).send(lruCacheEntry)
@@ -107,7 +115,7 @@ export async function getExportsSizeMiddlware(req: FastifyRequest<{ Querystring:
   if (result) {
     debug('cache hit: firebase')
     if (!readKey) {
-      LRUCache.set(`${name}@${version}`, result)
+      cache.set(`${name}@${version}`, result)
     }
     return res.code(200).send(result)
   }
@@ -115,13 +123,16 @@ export async function getExportsSizeMiddlware(req: FastifyRequest<{ Querystring:
   return res.code(404).send()
 }
 
-export async function postExportsSizeMiddleware(req: FastifyRequest<{ Body: { name: string; version: string; result: any } }>, res: FastifyReply) {
+export async function postExportsSizeMiddleware(
+  req: FastifyRequest<{ Body: { name: string; version: string; result: any } }>,
+  res: FastifyReply,
+) {
   const { name, version, result } = req.body
 
   if (!name || !version || !result) return res.code(422).send()
 
   debug('set exports %O to %O', { name, version }, result)
-  LRUCache.set(`${name}@${version}`, result)
+  cache.set(`${name}@${version}`, result)
   try {
     await setPackageResult({ name, version, result })
     return res.code(201).send()

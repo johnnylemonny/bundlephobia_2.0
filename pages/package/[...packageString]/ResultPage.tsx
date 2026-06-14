@@ -41,7 +41,7 @@ interface State {
   resultsError: any
   historicalResultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
   inputInitialValue: string
-  historicalResults: any[]
+  historicalResults: Record<string, any>
   similarPackages: any[]
   similarPackagesCategory: string
 }
@@ -59,13 +59,13 @@ class ResultPage extends PureComponent<Props, State> {
     resultsError: null,
     historicalResultsPromiseState: null,
     inputInitialValue: this.getPackageString(this.props.router) || '',
-    historicalResults: [],
+    historicalResults: {},
     similarPackages: [],
     similarPackagesCategory: '',
   }
 
   getPackageString(router: NextRouter): string {
-    return (router.query.packageString as string[] || []).join('/')
+    return ((router.query.packageString as string[]) || []).join('/')
   }
 
   componentDidMount() {
@@ -114,7 +114,7 @@ class ResultPage extends PureComponent<Props, State> {
           },
           () => {
             Router.replace(`/package/${newPackageString}`)
-          }
+          },
         )
 
         Analytics.searchSuccess({
@@ -171,7 +171,10 @@ class ResultPage extends PureComponent<Props, State> {
             this.setState({
               similarPackagesCategory: result.category.label,
               similarPackages: results
-                .filter((result): result is PromiseFulfilledResult<any> => result.status === 'fulfilled')
+                .filter(
+                  (result): result is PromiseFulfilledResult<any> =>
+                    result.status === 'fulfilled',
+                )
                 .map(result => result.value),
             })
           })
@@ -194,7 +197,7 @@ class ResultPage extends PureComponent<Props, State> {
         resultsPromiseState: 'pending',
         inputInitialValue: normalizedQuery,
         similarPackages: [],
-        historicalResults: [],
+        historicalResults: {},
       },
       () => {
         Router.push(`/package/${normalizedQuery}`)
@@ -202,7 +205,7 @@ class ResultPage extends PureComponent<Props, State> {
         this.activeQuery = normalizedQuery
         this.fetchResults(normalizedQuery)
         this.fetchHistory(normalizedQuery)
-      }
+      },
     )
   }
 
@@ -214,7 +217,7 @@ class ResultPage extends PureComponent<Props, State> {
 
   formatHistoricalResults = () => {
     const { results, historicalResults } = this.state
-    const totalVersions: Record<string, any> = {
+    const totalVersions = {
       ...historicalResults,
       [results.version!]: results,
     }
@@ -235,7 +238,7 @@ class ResultPage extends PureComponent<Props, State> {
       }
     })
     const sorted = formattedResults.sort((packageA, packageB) =>
-      semver.compare(packageA.version, packageB.version)
+      semver.compare(packageA.version, packageB.version),
     )
     return typeof window !== 'undefined' && window.innerWidth < 640
       ? sorted.slice(-10)
@@ -258,7 +261,10 @@ class ResultPage extends PureComponent<Props, State> {
   getMetaTags = () => {
     const { router } = this.props
     const { resultsPromiseState, results } = this.state
-    let name: string, version: string | undefined, formattedSizeText: string, formattedGZIPSizeText: string
+    let name: string,
+      version: string | undefined,
+      formattedSizeText: string,
+      formattedGZIPSizeText: string
 
     if (resultsPromiseState === 'fulfilled') {
       name = results.name!
@@ -335,6 +341,8 @@ class ResultPage extends PureComponent<Props, State> {
         />
       )
 
+    const EmptyBoxIcon = EmptyBox
+
     return (
       <ResultLayout>
         {this.getMetaTags()}
@@ -406,7 +414,7 @@ class ResultPage extends PureComponent<Props, State> {
                         label="Slow 3G"
                         infoText={referenceSpeedInfoText(
                           DownloadSpeed.THREE_G,
-                          'kB/s'
+                          'kB/s',
                         )}
                       />
                       <Stat
@@ -415,7 +423,7 @@ class ResultPage extends PureComponent<Props, State> {
                         label="Emerging 4G"
                         infoText={referenceSpeedInfoText(
                           DownloadSpeed.FOUR_G,
-                          'kB/s'
+                          'kB/s',
                         )}
                       />
                     </div>
@@ -435,7 +443,7 @@ class ResultPage extends PureComponent<Props, State> {
 
           {resultsPromiseState === 'rejected' && (
             <div className="result-error">
-              <EmptyBox className="result-error__img" />
+              <EmptyBoxIcon className="result-error__img" />
               <h2 className="result-error__code">{errorName}</h2>
               <p
                 className="result-error__message"
@@ -467,15 +475,16 @@ class ResultPage extends PureComponent<Props, State> {
             </div>
           )}
 
-          {resultsPromiseState === 'fulfilled' && similarPackages.length > 0 && (
-            <div className="content-container">
-              <SimilarPackagesSection
-                category={similarPackagesCategory}
-                packs={similarPackages}
-                comparisonGzip={results.gzip!}
-              />
-            </div>
-          )}
+          {resultsPromiseState === 'fulfilled' &&
+            similarPackages.length > 0 && (
+              <div className="content-container">
+                <SimilarPackagesSection
+                  category={similarPackagesCategory}
+                  packs={similarPackages}
+                  comparisonGzip={results.gzip!}
+                />
+              </div>
+            )}
 
           {resultsPromiseState === 'fulfilled' &&
             parsePackageString(results.name!).scoped && (

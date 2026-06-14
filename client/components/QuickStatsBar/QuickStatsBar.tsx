@@ -9,15 +9,17 @@ import NPMIcon from '../../assets/npm-logo.svg'
 import InfoIcon from '../../assets/info.svg'
 import { PackageInfo } from '../../../types'
 
-type QuickStatsBarProps = Partial<Pick<
-  PackageInfo,
-  | 'name'
-  | 'description'
-  | 'repository'
-  | 'dependencyCount'
-  | 'isTreeShakeable'
-  | 'hasSideEffects'
->>
+type QuickStatsBarProps = Partial<
+  Pick<
+    PackageInfo,
+    | 'name'
+    | 'description'
+    | 'repository'
+    | 'dependencyCount'
+    | 'isTreeShakeable'
+    | 'hasSideEffects'
+  >
+>
 
 class QuickStatsBar extends Component<QuickStatsBarProps> {
   static defaultProps = {
@@ -55,13 +57,20 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
     const statItemCount = this.getStatItemCount()
     const description = this.getTrimmedDescription()
 
+    const GithubIconComp = GithubIcon
+    const NpmIconComp = NPMIcon
+    const TreeShakeIconComp = TreeShakeIcon
+    const SideEffectIconComp = SideEffectIcon
+    const DependencyIconComp = DependencyIcon
+    const InfoIconComp = InfoIcon
+
     return (
       <div className="quick-stats-bar">
         <div
           className="quick-stats-bar__stat quick-stats-bar__stat--description "
           title={description}
         >
-          <InfoIcon />
+          <InfoIconComp />
           {statItemCount < 2 && (
             <span
               className="quick-stats-bar__stat--description-content"
@@ -75,14 +84,14 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
 
         {isTreeShakeable && (
           <div className="quick-stats-bar__stat">
-            <TreeShakeIcon className="quick-stats-bar__stat-icon" />{' '}
+            <TreeShakeIconComp className="quick-stats-bar__stat-icon" />{' '}
             <span>tree-shakeable</span>
           </div>
         )}
 
         {!(hasSideEffects === true) && (
           <div className="quick-stats-bar__stat">
-            <SideEffectIcon className="quick-stats-bar__stat-icon" />{' '}
+            <SideEffectIconComp className="quick-stats-bar__stat-icon" />{' '}
             <span>
               {Array.isArray(hasSideEffects) && hasSideEffects.length
                 ? 'some side-effects'
@@ -91,7 +100,7 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
           </div>
         )}
         <div className="quick-stats-bar__stat quick-stats-bar__stat--optional">
-          <DependencyIcon className="quick-stats-bar__stat-icon" />
+          <DependencyIconComp className="quick-stats-bar__stat-icon" />
           <span>
             {(dependencyCount || 0) === 0 ? (
               'no dependencies'
@@ -110,7 +119,7 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <NPMIcon className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon--npm" />
+            <NpmIconComp className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon--npm" />
           </a>
           {repository && (
             <a
@@ -119,7 +128,7 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <GithubIcon className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon quick-stats-bar__logo-icon--github" />
+              <GithubIconComp className="quick-stats-bar__logo-icon quick-stats-bar__logo-icon--github" />
             </a>
           )}
         </div>

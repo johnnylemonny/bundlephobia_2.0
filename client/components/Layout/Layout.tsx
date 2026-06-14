@@ -30,6 +30,11 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
     const { children, className } = this.props
     const { recentSearches } = this.state
 
+    console.log('Layout rendering SVG check:', { Heart, DigitalOceanLogo })
+
+    const HeartIcon = Heart
+    const DOLogo = DigitalOceanLogo
+
     return (
       <section className="layout">
         <AnnouncementBanner />
@@ -75,12 +80,12 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
               <div className="footer__hosting-credits">
                 Hosted on
                 <a href="https://digitalocean.com" target="_blank">
-                  <DigitalOceanLogo className="footer__sponsor-logo" />
+                  <DOLogo className="footer__sponsor-logo" />
                 </a>
               </div>
             </div>
             <div className="footer__credits">
-              <Heart className="footer__credits__heart" />️
+              <HeartIcon className="footer__credits__heart" />️
               <a
                 className="footer__credits-profile"
                 target="_blank"

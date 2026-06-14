@@ -55,7 +55,7 @@ export default class ProgressHexAnimator {
       cy,
       this.width / 2,
       this.height / 2,
-      distance
+      distance,
     )
 
     return { x: x - cx, y: y - cy }
@@ -92,19 +92,14 @@ export default class ProgressHexAnimator {
     })
 
     quakeTimeline.add(this.circles, {
-      scale: (el: any) =>
-        this.circlesMap.get(el)!.ringNumber === 0 ? 3 : 1.5,
-      translateY: (circle: any) =>
-        this.getTranslation(circle, 4).y,
-      translateX: (circle: any) =>
-        this.getTranslation(circle, 4).x,
+      scale: (el: any) => (this.circlesMap.get(el)!.ringNumber === 0 ? 3 : 1.5),
+      translateY: (circle: any) => this.getTranslation(circle, 4).y,
+      translateX: (circle: any) => this.getTranslation(circle, 4).x,
       delay: ((el: any) =>
         (Math.pow(this.circlesMap.get(el)!.ringNumber, 0.6) * DURATION) / 4 +
-        (this.circlesMap.get(el)!.ringNumber > 0
-          ? DURATION / 2.5
-          : 0)) as any,
+        (this.circlesMap.get(el)!.ringNumber > 0 ? DURATION / 2.5 : 0)) as any,
       duration: DURATION,
-      easing: () => (t: number) => Math.sin(t * Math.PI),
+      easing: (t: number) => Math.sin(t * Math.PI),
       changeBegin: () => this.trailBlaze.start(),
     })
 
@@ -183,18 +178,18 @@ class Trailblaze {
     const sourceCircle = randomFromArray(eligibleSourceCircles)
 
     const eligibleDestinationCircles = this.getCirclesInRing(
-      destinationRingNumber
+      destinationRingNumber,
     )
 
     const destinationCircleDistances = eligibleDestinationCircles.map(
       (circle, index) => ({
         index,
         distance: this.distanceBetweenCircles(sourceCircle, circle),
-      })
+      }),
     )
 
     const eligibleDistancesMin = Math.min(
-      ...destinationCircleDistances.map(a => a.distance)
+      ...destinationCircleDistances.map(a => a.distance),
     )
     const eligibleDestinationIndexes = destinationCircleDistances
       .filter(c => Math.abs(eligibleDistancesMin - c.distance) < 2)
@@ -238,7 +233,7 @@ class Trailblaze {
         source.cx,
         destination.cx,
         source.cy,
-        destination.cy
+        destination.cy,
       )
     })
 
@@ -251,7 +246,7 @@ class Trailblaze {
       y2: (el: any) => lineMap.get(el)!.destination.cy,
       duration: 500,
       delay: () => random(0, DURATION / 5),
-      easing: 'easeOutCubic',
+      easing: 'outCubic',
     })
   }
 }

@@ -88,7 +88,7 @@ async function getFirebaseStoreFromNetwork() {
 }
 
 export async function getResults() {
-  let firebaseStore = getFirebaseStoreFromDisk()
+  const firebaseStore = getFirebaseStoreFromDisk()
   if (!firebaseStore) return []
   
   console.log('loaded firebase store')
@@ -100,7 +100,7 @@ export async function getResults() {
 }
 
 export async function getPackages() {
-  let firebaseStore =
+  const firebaseStore =
     getFirebaseStoreFromDisk() || (await getFirebaseStoreFromNetwork())
   const packages = Object.keys(firebaseStore).map(
     packageName => firebaseStore[packageName]

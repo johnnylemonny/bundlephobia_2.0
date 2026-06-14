@@ -2,11 +2,8 @@ import React, { PureComponent } from 'react'
 import Head from 'next/head'
 import Router from 'next/router'
 import Link from 'next/link'
-import isEmptyObject from 'is-empty-object'
-
 import Layout from '../../client/components/Layout'
 import { AutocompleteInput } from '../../client/components/AutocompleteInput'
-import { parsePackageString } from '../../utils/common.utils'
 import API from '../../client/api'
 import { PackageResult } from '../../types'
 
@@ -19,7 +16,7 @@ interface State {
   resultsError: any
   historicalResultsPromiseState: 'pending' | 'fulfilled' | 'rejected' | null
   inputInitialValue: string
-  historicalResults: any[]
+  historicalResults: Record<string, any>
 }
 
 export default class ComparePage extends PureComponent<{}, State> {
@@ -29,7 +26,7 @@ export default class ComparePage extends PureComponent<{}, State> {
     resultsError: null,
     historicalResultsPromiseState: null,
     inputInitialValue: '',
-    historicalResults: [],
+    historicalResults: {},
   }
 
   fetchResults = (packageString: string) => {
@@ -43,7 +40,7 @@ export default class ComparePage extends PureComponent<{}, State> {
           },
           () => {
             Router.replace(`/package/${newPackageString}`)
-          }
+          },
         )
       })
       .catch(err => {
@@ -85,6 +82,8 @@ export default class ComparePage extends PureComponent<{}, State> {
   }
 
   render() {
+    const GithubLogoIcon = GithubLogo
+
     return (
       <Layout className="compare-page">
         <Head>
@@ -106,7 +105,7 @@ export default class ComparePage extends PureComponent<{}, State> {
                 href="https://github.com/pastelsky/bundlephobia"
                 rel="noreferrer"
               >
-                <GithubLogo />
+                <GithubLogoIcon />
               </a>
             </section>
           </header>

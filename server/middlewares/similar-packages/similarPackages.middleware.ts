@@ -1,9 +1,8 @@
 import { Context } from 'koa'
 import got from 'got'
-import remark from 'remark'
+import { remark } from 'remark'
 import strip from 'strip-markdown'
 import natural from 'natural'
-import flatten from 'flatten'
 import { categories } from './fixtures'
 import { parsePackageString } from '../../../utils/common.utils'
 import logger from '../../Logger'
@@ -31,14 +30,29 @@ interface PackageDetails {
   [key: string]: any
 }
 
-const prefixURL = (url: string, { base, user, project, head, path }: { base: string; user: string; project: string; head: string; path: string }) => {
-  if (url.includes('//')) {
+const prefixURL = (
+  url: string = '',
+  {
+    base,
+    user,
+    project,
+    head,
+    path,
+  }: {
+    base: string
+    user: string
+    project: string
+    head: string
+    path: string
+  },
+) => {
+  if (url && url.includes('//')) {
     return url
   } else {
     return new URL(
       (path ? path.replace(/^\//, '') + '/' : '') +
         url.replace(/^(\.?\/?)/, ''),
-      `${base}/${user}/${project}/${path ? '' : `${head}/`}`
+      `${base}/${user}/${project}/${path ? '' : `${head}/`}`,
     ).toString()
   }
 }
@@ -47,18 +61,18 @@ async function getPackageDetails(packageName: string): Promise<PackageDetails> {
   let readme = ''
   const response = await got(
     `https://ofcncog2cu-dsn.algolia.net/1/indexes/npm-search/${encodeURIComponent(
-      packageName
+      packageName,
     )}?x-algolia-application-id=OFCNCOG2CU&x-algolia-api-key=f54e21fa3a2a0160595bb058179bfb1e`,
-    { json: true }
+    { responseType: 'json' },
   )
   const body = response.body as any
 
-  if ('readme' in body && body.readme.trim()) {
+  if (body && 'readme' in body && body.readme && body.readme.trim()) {
     readme = await stripMarkdown(body.readme)
   } else {
     try {
-      if (body.repository) {
-        let readmeMD = await getReadme(body.repository)
+      if (body && body.repository) {
+        const readmeMD = await getReadme(body.repository)
         readme = await stripMarkdown(readmeMD)
       }
     } catch (e) {
@@ -79,8 +93,8 @@ async function getReadme(repository: Repository): Promise<string> {
           user,
           project,
           head: branch,
-          path: path.replace(/\/tree\//, ''),
-        })
+          path: path ? path.replace(/\/tree\//, '') : '',
+        }),
       )
 
     try {
@@ -96,11 +110,22 @@ async function getReadme(repository: Repository): Promise<string> {
       }
     }
   } else if (host === 'gitlab.com') {
-    const getGitlabFile = async ({ user, project, branch, filePath }: { user: string; project: string; branch: string; filePath: string }) => {
+    const getGitlabFile = async ({
+      user,
+      project,
+      branch,
+      filePath,
+    }: {
+      user: string
+      project: string
+      branch: string
+      filePath: string
+    }) => {
       const apiUrl = `https://gitlab.com/api/v4/projects/${user}%2F${project}/repository/files/${encodeURIComponent(
-        filePath
+        filePath,
       )}?ref=${branch}`
-      const { body } = await got(apiUrl, { json: true }) as any
+      const response = await got(apiUrl, { responseType: 'json' })
+      const body = response.body as any
 
       if (body.encoding === 'base64') {
         return Buffer.from(body.content, 'base64').toString()
@@ -119,7 +144,7 @@ async function getReadme(repository: Repository): Promise<string> {
     const { body } = await got(
       `https://bitbucket.org/${user}/${project}${
         path ? path.replace('src', 'raw') : `/raw/${branch}`
-      }/README.md`
+      }/README.md`,
     )
     return body
   }
@@ -127,23 +152,24 @@ async function getReadme(repository: Repository): Promise<string> {
 }
 
 async function stripMarkdown(readme: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    // @ts-ignore
-    remark()
-      .use(strip)
-      .process(readme, function (err: any, file: any) {
-        if (err) reject(err)
-        resolve(
-          String(file).replace(
-            /\b(npm|code|library|Node|example|project|license|MIT)\b/gi,
-            ''
-          )
-        )
-      })
-  })
+  if (!readme) return ''
+  try {
+    const file = await remark().use(strip).process(readme)
+
+    return String(file).replace(
+      /\b(npm|code|library|Node|example|project|license|MIT)\b/gi,
+      '',
+    )
+  } catch (err) {
+    console.error('stripMarkdown error:', err)
+    return readme
+  }
 }
 
-function getScore(categoryTokens: { tag: string; weight: number }[], packageTokens: string[]) {
+function getScore(
+  categoryTokens: { tag: string; weight: number }[],
+  packageTokens: string[],
+) {
   const packageTokenWithoutDupes = Array.from(new Set(packageTokens))
   return packageTokenWithoutDupes.reduce((acc, curToken) => {
     const match = categoryTokens.find(token => token.tag === curToken)
@@ -157,8 +183,8 @@ function getScore(categoryTokens: { tag: string; weight: number }[], packageToke
 function getInCategoryMap(packageName: string) {
   return Object.keys(categories).find(label =>
     categories[label].similar.some(
-      similarPackage => similarPackage === packageName
-    )
+      similarPackage => similarPackage === packageName,
+    ),
   )
 }
 
@@ -171,15 +197,20 @@ async function getCategory(packageName: string) {
     }
   }
 
-  const { description, keywords } = await getPackageDetails(packageName)
+  const details = await getPackageDetails(packageName)
+  const description = details?.description || ''
+  const keywords = details?.keywords || []
+
   const tokenizer = new (natural as any).WordTokenizer()
   const tokenString =
-    (await stripMarkdown(description)) + ' ' + (keywords || []).join(' ')
+    (await stripMarkdown(description)) + ' ' + keywords.join(' ')
   const packageTokens = tokenizer
     .tokenize(tokenString)
     .map((token: string) => token.toLowerCase())
     .map((natural as any).PorterStemmer.stem)
-    .concat(tokenizer.tokenize(packageName).map((natural as any).PorterStemmer.stem))
+    .concat(
+      tokenizer.tokenize(packageName).map((natural as any).PorterStemmer.stem),
+    )
 
   let maxScoreCategory = {
     label: '',
@@ -187,13 +218,11 @@ async function getCategory(packageName: string) {
   }
 
   Object.keys(categories).forEach(label => {
-    const categoryTokens = flatten(
-      categories[label].tags.map(tagObj =>
-        tokenizer.tokenize(tagObj.tag).map((tokenizedTag: string) => ({
-          tag: (natural as any).PorterStemmer.stem(tokenizedTag).toLowerCase(),
-          weight: tagObj.weight,
-        }))
-      )
+    const categoryTokens = categories[label].tags.flatMap(tagObj =>
+      tokenizer.tokenize(tagObj.tag).map((tokenizedTag: string) => ({
+        tag: (natural as any).PorterStemmer.stem(tokenizedTag).toLowerCase(),
+        weight: tagObj.weight,
+      })),
     )
 
     const score = getScore(categoryTokens as any, packageTokens)
@@ -209,8 +238,8 @@ async function getCategory(packageName: string) {
 }
 
 export async function test() {
-  Object.keys(categories).forEach(label => {
-    categories[label].similar.forEach(async pack => {
+  for (const label of Object.keys(categories)) {
+    for (const pack of categories[label].similar) {
       const actualCategory = await getCategory(pack)
 
       if (
@@ -222,15 +251,22 @@ export async function test() {
           'Package %s. Category expected: %s, got: %o',
           pack,
           label,
-          actualCategory
+          actualCategory,
         )
       }
-    })
-  })
+    }
+  }
 }
 
 async function similarPackagesMiddleware(ctx: Context) {
-  const { name } = parsePackageString(ctx.query.package as string)
+  const packageQuery = ctx.query.package as string
+  if (!packageQuery) {
+    ctx.status = 400
+    ctx.body = { error: 'package query param is required' }
+    return
+  }
+
+  const { name } = parsePackageString(packageQuery)
 
   try {
     const matchedCategory = await getCategory(name)
@@ -265,7 +301,7 @@ async function similarPackagesMiddleware(ctx: Context) {
     console.error(err)
     ctx.status = 500
     ctx.body = {
-      error: err,
+      error: String(err),
     }
 
     logger.error(
@@ -276,7 +312,7 @@ async function similarPackagesMiddleware(ctx: Context) {
         name,
         details: err,
       },
-      `SIMILAR PACKAGES FAILED: ${name}`
+      `SIMILAR PACKAGES FAILED: ${name}`,
     )
   }
 }

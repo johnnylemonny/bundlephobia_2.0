@@ -1,4 +1,4 @@
-@use "sass:math";
+@use 'sass:math';
 
 @import '../../../stylesheets/variables';
 @import '../../../stylesheets/base';
@@ -181,9 +181,8 @@ footer {
 }
 
 .footer__credits__heart {
-  width: 8vw;
-  height: 8vw;
-  max-width: 100px;
+  height: 14px;
+  width: 14px;
 
   path {
     fill: mix($raven, $maya-blue);

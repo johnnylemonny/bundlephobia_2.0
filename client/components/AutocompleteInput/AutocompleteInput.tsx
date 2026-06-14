@@ -1,12 +1,13 @@
 import React from 'react'
 import cx from 'classnames'
-import AutoComplete from 'react-autocomplete'
+import { useCombobox } from 'downshift'
+import debounce from 'debounce'
 
 import SearchIcon from '../Icons/SearchIcon'
 import { parsePackageString } from '../../../utils/common.utils'
-import { useAutocompleteInput } from './hooks/useAutocompleteInput'
 import { SuggestionItem } from './components/SuggestionItem'
 import { useFontSize } from './hooks/useFontSize'
+import API from '../../api'
 
 type AutocompleteInputProps = {
   initialValue?: string
@@ -29,23 +30,69 @@ export const AutocompleteInput = ({
   placeholder = 'find package',
   hideSearchIcon = false,
 }: AutocompleteInputProps) => {
-  const searchInput = React.useRef<AutoComplete | null>(null)
+  const [suggestions, setSuggestions] = React.useState<any[]>([])
+  const [error, setError] = React.useState(false)
+
+  const getSuggestions = React.useMemo(
+    () =>
+      debounce((query: string) => {
+        API.getSuggestions(query)
+          .then(result => {
+            setSuggestions(result || [])
+          })
+          .catch(() => {
+            setSuggestions([])
+          })
+      }, 150),
+    [],
+  )
+
   const {
-    value,
-    isMenuVisible,
-    suggestions,
-    error,
-    handleSubmit,
-    handleInputChange,
-    setIsMenuVisible,
-    setSuggestions,
-  } = useAutocompleteInput({ initialValue, onSubmit: onSearchSubmit })
-  const { searchFontSize } = useFontSize({ value })
+    isOpen,
+    getMenuProps,
+    getInputProps,
+    getItemProps,
+    highlightedIndex,
+    inputValue,
+  } = useCombobox({
+    items: suggestions,
+    initialInputValue: initialValue,
+    itemToString: item => (item ? item.package.name : ''),
+    onInputValueChange: ({ inputValue: newInputValue = '' }) => {
+      setError(false)
+      const trimmedValue = newInputValue.trim()
+      const { name } = parsePackageString(trimmedValue)
+
+      if (trimmedValue.length > 1) {
+        getSuggestions(name)
+      } else {
+        setSuggestions([])
+      }
+    },
+    onSelectedItemChange: ({ selectedItem }) => {
+      if (selectedItem) {
+        setSuggestions([selectedItem])
+        onSearchSubmit(selectedItem.package.name)
+      }
+    },
+  })
+
+  const { searchFontSize } = useFontSize({ value: inputValue || '' })
 
   const { name, version } = React.useMemo(
-    () => parsePackageString(value),
-    [value]
+    () => parsePackageString(inputValue || ''),
+    [inputValue],
   )
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (inputValue && inputValue.trim()) {
+      setError(false)
+      onSearchSubmit(inputValue)
+    } else {
+      setError(true)
+    }
+  }
 
   return (
     <form
@@ -55,54 +102,46 @@ export const AutocompleteInput = ({
       <div
         className={cx('autocomplete-input__container', className, {
           'autocomplete-input__container--menu-visible':
-            isMenuVisible && !!suggestions.length,
+            isOpen && !!suggestions.length,
         })}
       >
-        <AutoComplete
-          getItemValue={item => item.package.name}
-          inputProps={{
-            placeholder: placeholder,
-            className: cx('autocomplete-input', {
-              'autocomplete-input--error': error,
-            }),
-            autoCorrect: 'off',
-            autoFocus: autoFocus,
-            autoCapitalize: 'off',
-            spellCheck: false,
-            style: { fontSize: searchFontSize! },
-          }}
-          onMenuVisibilityChange={isOpen => setIsMenuVisible(isOpen)}
-          onChange={handleInputChange}
-          ref={searchInput}
-          value={value}
-          items={suggestions}
-          onSelect={(value, item) => {
-            setSuggestions([item])
-            onSearchSubmit(value)
-          }}
-          renderMenu={(items, value, inbuiltStyles) => {
-            return (
-              <div
-                style={{ minWidth: inbuiltStyles.minWidth }}
-                className="autocomplete-input__suggestions-menu"
-              >
-                {items as any}
-              </div>
-            )
-          }}
-          wrapperStyle={{
+        <div
+          style={{
             display: 'inline-block',
             width: '100%',
             position: 'relative',
           }}
-          renderItem={(item, isHighlighted) => (
-            <div key={item.package.name}>
-              <SuggestionItem item={item} isHighlighted={isHighlighted} />
-            </div>
-          )}
-        />
+        >
+          <input
+            {...getInputProps({
+              placeholder: placeholder,
+              className: cx('autocomplete-input', {
+                'autocomplete-input--error': error,
+              }),
+              autoCorrect: 'off',
+              autoFocus: autoFocus,
+              autoCapitalize: 'off',
+              spellCheck: false,
+              style: { fontSize: searchFontSize || '16px' },
+            })}
+          />
+          <div
+            {...getMenuProps()}
+            className="autocomplete-input__suggestions-menu"
+          >
+            {isOpen &&
+              suggestions.map((item, index) => (
+                <div key={item.package.name} {...getItemProps({ item, index })}>
+                  <SuggestionItem
+                    item={item}
+                    isHighlighted={highlightedIndex === index}
+                  />
+                </div>
+              ))}
+          </div>
+        </div>
         <div
-          style={{ fontSize: searchFontSize! }}
+          style={{ fontSize: searchFontSize || '16px' }}
           className="autocomplete-input__dummy-input"
         >
           <PackageNameElement
