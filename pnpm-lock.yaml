@@ -21,6 +21,9 @@ importers:
       '@contentful/rich-text-types':
         specifier: ^17.2.7
         version: 17.2.7
+      '@firebase/app-compat':
+        specifier: ^0.5.13
+        version: 0.5.13
       '@koa/router':
         specifier: ^15.6.0
         version: 15.6.0(koa@3.2.1)
@@ -2450,6 +2453,13 @@ packages:
         integrity: sha512-LssbyKHlwLeiV8GBATyOyjmHcMpX/tFjzRUCS1jnwGAew1VsBB4fJowyS5Ud5LdFbYpJeS+IQoC+RQxpK7eH3Q==,
       }
     engines: { node: '>=18.0.0' }
+
+  '@firebase/app-compat@0.5.13':
+    resolution:
+      {
+        integrity: sha512-pn3FvXwUR34kWPccDQfCKsNZcM2wD1OS+J1jeEgzM1ZNXoxR2NaF6e5DjDuRrnTwR6LN2XQQt0IqE6yKmgpCQg==,
+      }
+    engines: { node: '>=20.0.0' }
 
   '@firebase/app-types@0.9.3':
     resolution:
@@ -18534,6 +18544,14 @@ snapshots:
       '@firebase/component': 0.6.18
       '@firebase/logger': 0.4.4
       '@firebase/util': 1.12.1
+      tslib: 2.8.1
+
+  '@firebase/app-compat@0.5.13':
+    dependencies:
+      '@firebase/app': 0.10.15
+      '@firebase/component': 0.7.3
+      '@firebase/logger': 0.5.1
+      '@firebase/util': 1.15.1
       tslib: 2.8.1
 
   '@firebase/app-types@0.9.3': {}
