@@ -122,7 +122,7 @@ export const AutocompleteInput = ({
               autoFocus: autoFocus,
               autoCapitalize: 'off',
               spellCheck: false,
-              style: { fontSize: searchFontSize || '16px' },
+              style: searchFontSize ? { fontSize: searchFontSize } : {},
             })}
           />
           <div
@@ -141,7 +141,7 @@ export const AutocompleteInput = ({
           </div>
         </div>
         <div
-          style={{ fontSize: searchFontSize || '16px' }}
+          style={searchFontSize ? { fontSize: searchFontSize } : {}}
           className="autocomplete-input__dummy-input"
         >
           <PackageNameElement
