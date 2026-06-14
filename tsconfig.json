@@ -18,5 +18,11 @@
     "types": ["node", "react", "react-dom"]
   },
   "include": ["next-env.d.ts", "typings.d.ts", "**/*.ts", "**/*.tsx"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "scripts",
+    "scratch",
+    "build-service",
+    "cache-service"
+  ]
 }

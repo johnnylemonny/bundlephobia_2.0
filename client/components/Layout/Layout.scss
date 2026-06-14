@@ -181,8 +181,9 @@ footer {
 }
 
 .footer__credits__heart {
-  height: 14px;
-  width: 14px;
+  width: 8vw;
+  height: 8vw;
+  max-width: 100px;
 
   path {
     fill: mix($raven, $maya-blue);
