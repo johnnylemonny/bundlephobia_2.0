@@ -1,6 +1,6 @@
-@use 'globals' as *;
 @import '../stylesheets/base';
 @import '../stylesheets/variables';
+@import '../stylesheets/colors';
 
 .homepage {
   height: 100vh;
@@ -158,7 +158,7 @@
   .global-recent-searches__item {
     background: white;
     border-color: rgba(var(--color-neptune-rgb), 0.2);
-    
+
     &:hover {
       background: var(--color-neptune);
       color: white;
@@ -215,7 +215,7 @@
   justify-content: center;
   gap: 1rem;
   margin-bottom: 1.5rem;
-  
+
   h3 {
     margin: 0;
     border: none;

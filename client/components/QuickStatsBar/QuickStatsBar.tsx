@@ -29,7 +29,9 @@ type QuickStatsBarProps = Partial<
     | 'isTreeShakeable'
     | 'hasSideEffects'
   >
->
+> & {
+  children?: React.ReactNode
+}
 
 class QuickStatsBar extends Component<QuickStatsBarProps> {
   static defaultProps = {
@@ -67,7 +69,6 @@ class QuickStatsBar extends Component<QuickStatsBarProps> {
     const statItemCount = this.getStatItemCount()
     const description = this.getTrimmedDescription()
 
-    const GithubIconComp = GithubIcon
     const NpmIconComp = NPMIcon
     const TreeShakeIconComp = TreeShakeIcon
     const SideEffectIconComp = SideEffectIcon

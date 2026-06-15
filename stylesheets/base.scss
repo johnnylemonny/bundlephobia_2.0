@@ -1,7 +1,7 @@
-@use './colors' as *;
-@use './variables' as *;
-@use '../node_modules/normalize.css/normalize';
-@use '../node_modules/balloon-css/balloon';
+@import './colors';
+@import './variables';
+@import '../node_modules/normalize.css/normalize';
+@import '../node_modules/balloon-css/balloon';
 
 * > * {
   box-sizing: border-box;
@@ -57,7 +57,9 @@ input {
   background: transparent;
   line-height: 1;
   border: 1px solid $autocomplete-border-color;
-  transition: border-top-left-radius 0.1s, border-top-right-radius 0.1s;
+  transition:
+    border-top-left-radius 0.1s,
+    border-top-right-radius 0.1s;
   border-radius: 0.3em;
   padding: $global-spacing * 0.5 $global-spacing;
 
