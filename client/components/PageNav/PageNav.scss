@@ -173,3 +173,31 @@
   background: var(--color-background-primary);
   border: 1px solid var(--color-border-subtle);
 }
+
+.github-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--color-icon-secondary);
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+  border: 1px solid transparent;
+  flex-shrink: 0;
+
+  &:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-border-primary);
+  }
+
+  svg {
+    display: block;
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+  }
+}

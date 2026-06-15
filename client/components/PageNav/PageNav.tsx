@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import React from 'react'
 import ThemeToggle from '../ThemeToggle'
+import McpNavPopup from '../McpNavPopup/McpNavPopup'
 import { GitHubIcon } from '../Icons/GitHubIcon'
 
 type PageNavProps = {
@@ -49,6 +50,7 @@ const PageNav = ({ minimal }: PageNavProps) => {
             </li>
           )}
         </ul>
+        <McpNavPopup />
         <ThemeToggle />
         <a
           target="_blank"
