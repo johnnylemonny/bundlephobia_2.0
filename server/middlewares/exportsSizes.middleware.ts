@@ -15,7 +15,11 @@ async function exportSizesMiddleware(ctx: Context) {
   let result: any,
     priority = getRequestPriority(ctx)
   const { name, version, packageString } = ctx.state.resolved
-  const { force, peek, package: packageQuery } = ctx.query as { force?: string; peek?: string; package: string }
+  const {
+    force,
+    peek,
+    package: packageQuery,
+  } = ctx.query as { force?: string; peek?: string; package: string }
 
   if (peek) {
     ctx.body = { name, version, peekSuccess: false }
@@ -31,8 +35,8 @@ async function exportSizesMiddleware(ctx: Context) {
     maxAge: force
       ? 0
       : semver.valid(parsePackageString(packageQuery).version)
-      ? config.CACHE.SIZE_API_HAS_VERSION
-      : config.CACHE.SIZE_API_DEFAULT,
+        ? config.CACHE.SIZE_API_HAS_VERSION
+        : config.CACHE.SIZE_API_DEFAULT,
   }
 
   const body = { name, version, ...result }
@@ -47,11 +51,11 @@ async function exportSizesMiddleware(ctx: Context) {
       packageString,
       time,
     },
-    `BUILD EXPORTS SIZES: ${packageString} built in ${time.toFixed()}s`
+    `BUILD EXPORTS SIZES: ${packageString} built in ${time.toFixed()}s`,
   )
 
   if (force === 'true') {
-    cache.setExportsSize({ name, version }, body)
+    cache.setExportsSize({ name, version: version as string }, body)
   }
 }
 

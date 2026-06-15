@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
-import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
+import ThemeToggle from '../ThemeToggle'
 import { GitHubIcon } from '../Icons/GitHubIcon'
 
 type PageNavProps = {

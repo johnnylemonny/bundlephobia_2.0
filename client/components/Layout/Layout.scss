@@ -11,28 +11,28 @@ $footer-content-max-width: 800px;
 }
 
 footer {
-  background: #222;
+  background: var(--color-bg-footer);
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 0 0 $global-spacing * 5;
-  color: color-mix(in srgb, var(--color-raven), white 27%);
+  color: var(--color-footer-text);
   flex-direction: column;
 
   a {
-    color: color-mix(in srgb, var(--color-raven), white 27%);
+    color: var(--color-footer-text);
     transition: color 0.2s;
 
     &:hover {
-      color: color-mix(in srgb, var(--color-raven), white 40%);
+      color: var(--color-footer-text-hover);
     }
   }
 }
 
 .footer__recent-search-bar {
   width: 100%;
-  background: color-mix(in srgb, var(--color-raven), black 22%);
+  background: var(--color-footer-search-bg);
   padding: 0 $global-spacing * 2;
 }
 
@@ -45,7 +45,7 @@ footer {
 
   h4 {
     @include font-size-xs;
-    color: color-mix(in srgb, var(--color-raven), white 27%);
+    color: var(--color-footer-text);
     margin: 0;
     line-height: 1.2;
   }
@@ -122,8 +122,8 @@ footer {
 
 .footer__hosting-credits {
   @include font-size-xs;
-  border-top: 1px solid color-mix(in srgb, var(--color-raven), black 25%);
-  color: color-mix(in srgb, var(--color-raven), white 70%);
+  border-top: 1px solid var(--color-footer-border);
+  color: var(--color-footer-credits);
   text-transform: uppercase;
   letter-spacing: 2px;
   padding-top: $global-spacing;
@@ -161,7 +161,7 @@ footer {
 
 .footer__description {
   @include font-size-xs;
-  color: color-mix(in srgb, var(--color-raven), white 20%);
+  color: var(--color-footer-description);
   flex-basis: 66%;
 
   p {
@@ -186,7 +186,7 @@ footer {
   max-width: 100px;
 
   path {
-    fill: #65a1f8 !important;
+    fill: var(--color-neptune); // mix($raven, $maya-blue) ≈ teal
   }
 
   &:hover {
@@ -198,11 +198,11 @@ footer {
 
 @keyframes pulse {
   0% {
-    fill: color-mix(in srgb, var(--color-raven), var(--color-maya-blue));
+    fill: var(--color-neptune);
   }
 
   25% {
-    fill: color-mix(in srgb, var(--color-raven), var(--color-cornflower-blue));
+    fill: var(--color-cornflower-blue);
   }
 
   50% {
@@ -210,7 +210,7 @@ footer {
   }
 
   75% {
-    fill: color-mix(in srgb, var(--color-raven), var(--color-maya-blue));
+    fill: var(--color-neptune);
   }
 }
 
@@ -218,21 +218,21 @@ footer {
   @include font-size-xs;
   cursor: pointer;
   margin-top: $global-spacing;
-  border: 2px solid white;
+  border: 2px solid var(--color-footer-btn-border);
   background: transparent;
-  border-radius: 20px;
+  border-radius: 10px;
   padding: math.div($global-spacing, 1.5) $global-spacing;
   display: block;
-  transition: all 0.2s;
-  color: white;
+  transition: background 0.2s;
+  color: var(--color-footer-btn-border);
   text-transform: uppercase;
   letter-spacing: 1.5px;
   font-size: 10px;
   font-weight: $font-weight-bold;
 
   &:hover {
-    background: color-mix(in srgb, var(--color-raven), white 30%);
-    color: #212121;
+    background: var(--color-footer-btn-border);
+    color: var(--color-bg-footer);
   }
 
   @media screen and (max-width: 48em) {
@@ -248,9 +248,6 @@ footer {
 
 .footer__sponsor-logo {
   margin-top: $global-spacing;
-  height: 24px;
-  width: auto;
-  display: block;
 }
 
 footer {

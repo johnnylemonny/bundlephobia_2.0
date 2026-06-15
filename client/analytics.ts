@@ -17,6 +17,18 @@ type HasSuccessRatio = {
 }
 
 type HasPackageNameAndTimeTaken = HasPackageName & HasTimeTaken
+type HasOpen = {
+  open: boolean
+}
+type HasToolCount = {
+  toolCount: number
+}
+type HasToolName = {
+  toolName: string
+}
+type HasAction = {
+  action: string
+}
 
 function safeLogEvent(eventName: string, data?: Record<string, any>) {
   try {
@@ -136,21 +148,53 @@ export default class Analytics {
   }
 
   static performedCopyJSON(packageName: string) {
-    amplitude.getInstance().logEvent('Copy JSON Performed', {
+    safeLogEvent('Copy JSON Performed', {
       package: packageName,
     })
   }
 
   static performedShareImage(packageName: string) {
-    amplitude.getInstance().logEvent('Share Image Performed', {
+    safeLogEvent('Share Image Performed', {
       package: packageName,
     })
   }
 
   static performedCopyStat(packageName: string, statLabel: string) {
-    amplitude.getInstance().logEvent('Copy Stat Performed', {
+    safeLogEvent('Copy Stat Performed', {
       package: packageName,
       stat: statLabel,
     })
+  }
+
+  static mcpHeaderClicked({ open }: HasOpen) {
+    safeLogEvent('MCP Header Clicked', {
+      open,
+    })
+  }
+
+  static mcpToolsListed({ toolCount }: HasToolCount) {
+    safeLogEvent('MCP Tools Listed', {
+      toolCount,
+    })
+  }
+
+  static mcpToolCalled({ toolName }: HasToolName) {
+    safeLogEvent('MCP Tool Called', {
+      toolName,
+    })
+  }
+
+  static mcpActionFailed({ action }: HasAction) {
+    safeLogEvent('MCP Action Failed', {
+      action,
+    })
+  }
+
+  static mcpSetupSnippetCopied() {
+    safeLogEvent('MCP Setup Snippet Copied')
+  }
+
+  static mcpDocsOpened() {
+    safeLogEvent('MCP Docs Opened')
   }
 }

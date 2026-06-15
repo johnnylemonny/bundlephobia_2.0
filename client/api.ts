@@ -1,5 +1,40 @@
-
 import { PackageResult, RecentSearch, PackageSuggestion } from '../types'
+import type {
+  PackageBuildInfo,
+  PackageBuildInfoSnapshot,
+  PackageExportAsset,
+  PackageIdentity,
+} from '../types/package-domain'
+
+// Re-export domain types that client code imports from this module.
+export type {
+  PackageBuildInfo,
+  PackageBuildInfoSnapshot,
+  PackageExportAsset,
+  PackageSuggestion,
+  RecentSearch,
+}
+
+export type PackageHistoryResponse = Record<string, PackageBuildInfoSnapshot>
+
+/** Package name + version pair used in the dependencies endpoint. */
+export type PackageDependencyInfo = PackageIdentity
+
+export type SimilarPackagesResponse = {
+  category: {
+    label?: string
+    score: number
+    similar: string[]
+  }
+}
+
+export type PackageExportsResponse = {
+  exports: Record<string, string>
+}
+
+export type PackageExportSizesResponse = {
+  assets: PackageExportAsset[]
+}
 
 export default class API {
   static get<T = unknown>(url: string, isInternal = true): Promise<T> {
@@ -38,52 +73,87 @@ export default class API {
     })
   }
 
+  static post<T = unknown>(
+    url: string,
+    body: Record<string, unknown>,
+  ): Promise<T> {
+    const headers: Record<string, string> = {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-Bundlephobia-User': 'bundlephobia website',
+    }
+
+    return fetch(url, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+    }).then((res: any) => {
+      if (!res.ok) {
+        try {
+          return res.json().then((err: any) => Promise.reject(err))
+        } catch (e) {
+          return Promise.reject({
+            error: {
+              code: 'BuildError',
+              message:
+                "Oops, something went wrong and we don't have an appropriate error for this. Open an issue maybe?",
+            },
+          })
+        }
+      }
+      return res.json()
+    })
+  }
+
   static getInfo(packageString: string) {
-    return API.get<PackageResult>(`/api/size?package=${packageString}&record=true`)
+    return API.get<PackageBuildInfo>(
+      `/api/size?package=${packageString}&record=true`,
+    )
   }
 
   static getExports(packageString: string) {
-    return API.get<{
-      name: string
-      version: string
-      exports: Record<string, string>
-    }>(`/api/exports?package=${packageString}`)
+    return API.get<PackageExportsResponse>(
+      `/api/exports?package=${packageString}`,
+    )
   }
 
   static getExportsSizes(packageString: string) {
-    return API.get<{
-      name: string
-      version: string
-      assets: { name: string; size: number; gzip: number; type: string }[]
-    }>(`/api/exports-sizes?package=${packageString}`)
+    return API.get<PackageExportSizesResponse>(
+      `/api/exports-sizes?package=${packageString}`,
+    )
+  }
+
+  static getDependencies(packageString: string) {
+    return API.get<PackageDependencyInfo[]>(
+      `/api/dependencies?package=${packageString}`,
+    )
   }
 
   static getHistory(packageString: string, limit: number) {
-    return API.get<PackageResult[]>(
-      `/api/package-history?package=${packageString}&limit=${limit}`
+    return API.get<PackageHistoryResponse>(
+      `/api/package-history?package=${packageString}&limit=${limit}`,
     )
   }
 
   static getRecentSearches(limit: number) {
-    return API.get<RecentSearch[]>(`/api/recent?limit=${limit}`)
+    return API.get<RecentSearch>(`/api/recent?limit=${limit}`)
   }
 
   static getSimilar(packageName: string) {
-    return API.get<{
-      category: { label: string; score: number; similar: string[] }
-    }>(`/api/similar-packages?package=${packageName}`)
+    return API.get<SimilarPackagesResponse>(
+      `/api/similar-packages?package=${packageName}`,
+    )
   }
 
-  static getSuggestions(query: string) {
+  static getSuggestions(query: string): Promise<PackageSuggestion[]> {
     const suggestionSort = (
       packageA: PackageSuggestion,
-      packageB: PackageSuggestion
+      packageB: PackageSuggestion,
     ) => {
-      // Rank closely matching packages followed
-      // by most popular ones
+      // Rank closely matching packages followed by most popular ones.
       if (
         Math.abs(
-          Math.log(packageB.searchScore) - Math.log(packageA.searchScore)
+          Math.log(packageB.searchScore) - Math.log(packageA.searchScore),
         ) > 1
       ) {
         return packageB.searchScore - packageA.searchScore
@@ -96,35 +166,37 @@ export default class API {
 
     return API.get<PackageSuggestion[]>(
       `https://api.npms.io/v2/search/suggestions?q=${query}`,
-      false
-    ).then((result: PackageSuggestion[]) => result.sort(suggestionSort))
+      false,
+    )
+      .then((result: PackageSuggestion[]) => result.sort(suggestionSort))
+      .catch(() => {
+        //backup when npms.io is down
+        return API.get<{ objects: any[] }>(`/-/search?text=${query}`).then(
+          (result: any) =>
+            result.objects.sort(suggestionSort).map((suggestion: any) => {
+              const name = suggestion.package.name
+              const hasMatch = name.includes(query)
+              const startIndex = name.indexOf(query)
+              const endIndex = startIndex + query.length
+              let highlight
 
-    //backup when npms.io is down
+              if (hasMatch) {
+                highlight =
+                  name.substring(0, startIndex) +
+                  '<em>' +
+                  name.substring(startIndex, endIndex) +
+                  '</em>' +
+                  name.substring(endIndex)
+              } else {
+                highlight = name
+              }
 
-    //return API.get(`/-/search?text=${query}`)
-    //  .then(result => result.objects
-    //    .sort(suggestionSort)
-    //    .map(suggestion => {
-    //      const name = suggestion.package.name
-    //      const hasMatch = name.includes(query)
-    //      const startIndex = name.indexOf(query)
-    //      const endIndex = startIndex + query.length
-    //      let highlight
-    //
-    //      if (hasMatch) {
-    //        highlight =
-    //          name.substring(0, startIndex) +
-    //          '<em>' + name.substring(startIndex, endIndex) + '</em>' +
-    //          name.substring(endIndex)
-    //      } else {
-    //        highlight = name
-    //      }
-    //
-    //      return {
-    //        ...suggestion,
-    //        highlight,
-    //      }
-    //    }),
-    //  )
+              return {
+                ...suggestion,
+                highlight,
+              }
+            }),
+        )
+      })
   }
 }

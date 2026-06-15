@@ -7,7 +7,7 @@ import GithubLogoIcon from '../../assets/github-logo.svg'
 import { resolveComponent } from '../../../utils/resolveComponent'
 const GithubLogo = resolveComponent(GithubLogoIcon)
 
-import { ThemeToggle } from '../ThemeToggle/ThemeToggle'
+import ThemeToggle from '../ThemeToggle'
 
 type HeaderProps = WithClassName
 
@@ -89,7 +89,11 @@ export default class Header extends Component<HeaderProps, HeaderState> {
               </li>
             </ul>
             <ThemeToggle />
-            <a target="_blank" href="https://github.com/pastelsky/bundlephobia" rel="noreferrer">
+            <a
+              target="_blank"
+              href="https://github.com/pastelsky/bundlephobia"
+              rel="noreferrer"
+            >
               <GithubLogo />
             </a>
           </section>

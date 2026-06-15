@@ -204,7 +204,7 @@ class ResultPage extends PureComponent<Props, State> {
             if (this.activeQuery !== packageString) return
 
             this.setState({
-              similarPackagesCategory: result.category.label,
+              similarPackagesCategory: result.category.label || '',
               similarPackages: results
                 .filter(
                   (result): result is PromiseFulfilledResult<any> =>

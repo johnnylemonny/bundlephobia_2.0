@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
     new winston.transports.Console({
       format: winston.format.simple(),
       handleExceptions: true,
-    })
+    }),
   )
 }
 
@@ -39,6 +39,11 @@ const logger = {
       stack: err?.stack,
     })
   },
+  increment(_label: string): void {},
+  decrement(_label: string): void {},
+  histogram(_label: string, _value: number): void {},
+  set(_label: string, _value: string | number): void {},
+  timing(_label: string, _value: number): void {},
 }
 
 export default logger

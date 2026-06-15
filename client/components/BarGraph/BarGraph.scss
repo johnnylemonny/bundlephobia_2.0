@@ -1,7 +1,11 @@
-@use "sass:math";
+@use 'sass:math';
 
 @import '../../../stylesheets/colors';
 @import '../../../stylesheets/variables';
+
+$bar-width: 1.6vw;
+$min-bar-width: 20px;
+$bar-grow-duration: 0.4s;
 
 .bar-graph-container {
   display: flex;
@@ -68,15 +72,15 @@
   border-radius: 5px 5px 0 0;
 
   .bar-graph__bar-group:not(.bar-graph__bar-group--disabled):hover & {
-    background: color-mix(in srgb, var(--color-maya-blue), black 5%);
+    background: darken($maya-blue, 5%);
   }
 
   .bar-graph__bar-group--disabled & {
-    background: color-mix(in srgb, var(--color-raven), white 45%);
+    background: var(--color-bar-disabled);
     border-radius: 5px;
 
     &:hover {
-      background: color-mix(in srgb, var(--color-raven), white 35%);
+      background: var(--color-bar-disabled-hover);
     }
   }
 }
@@ -88,7 +92,7 @@
   border-radius: 0 0 5px 5px;
 
   .bar-graph__bar-group:hover & {
-    background: color-mix(in srgb, var(--color-cornflower-blue), black 5%);
+    background: darken($cornflower-blue, 5%);
   }
 }
 
@@ -105,7 +109,7 @@
   display: flex;
   text-transform: uppercase;
   justify-content: center;
-  color: color-mix(in srgb, var(--color-raven), white 20%);
+  color: var(--color-bar-legend);
 }
 
 .bar-graph__legend__colorbox {

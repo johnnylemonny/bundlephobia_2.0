@@ -17,7 +17,11 @@ async function buildMiddleware(ctx: Context) {
     priority = getRequestPriority(ctx)
   const { scoped, name, version, description, repository, packageString } =
     ctx.state.resolved
-  const { force, record, package: packageQuery } = ctx.query as { force?: string; record?: string; package: string }
+  const {
+    force,
+    record,
+    package: packageQuery,
+  } = ctx.query as { force?: string; record?: string; package: string }
 
   const buildStart = now()
   result = await buildService.getPackageBuildStats(packageString, priority)
@@ -27,8 +31,8 @@ async function buildMiddleware(ctx: Context) {
     maxAge: force
       ? 0
       : semver.valid(version)
-      ? config.CACHE.SIZE_API_HAS_VERSION
-      : config.CACHE.SIZE_API_DEFAULT,
+        ? config.CACHE.SIZE_API_HAS_VERSION
+        : config.CACHE.SIZE_API_DEFAULT,
   }
 
   const body = { scoped, name, version, description, repository, ...result }
@@ -46,15 +50,15 @@ async function buildMiddleware(ctx: Context) {
     },
     `BUILD: ${packageString} built in ${time.toFixed(0)}ms and is ${
       result.size
-    } bytes`
+    } bytes`,
   )
 
   if (record === 'true') {
-    firebaseUtils.setRecentSearch(name, { name, version })
+    firebaseUtils.setRecentSearch(name, { name, version: version as string })
   }
 
   if (force === 'true') {
-    cache.setPackageSize({ name, version }, body)
+    cache.setPackageSize({ name, version: version as string }, body)
   }
 }
 

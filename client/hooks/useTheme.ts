@@ -1,0 +1,40 @@
+import { useEffect, useState } from 'react'
+
+export type Theme = 'light' | 'dark'
+
+export const useTheme = () => {
+  const [theme, setTheme] = useState<Theme>(() => {
+    // Server-side: default to light (FOUC script in _document handles the
+    // actual pre-hydration value on the client).
+    return 'light'
+  })
+
+  const apply = (next: Theme) => {
+    document.documentElement.setAttribute('data-theme', next)
+    localStorage.setItem('theme', next)
+    setTheme(next)
+  }
+
+  useEffect(() => {
+    // Read the value already applied by the FOUC script
+    const applied = document.documentElement.getAttribute(
+      'data-theme',
+    ) as Theme | null
+    if (applied === 'dark' || applied === 'light') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setTheme(applied)
+      return
+    }
+    // Fallback: no FOUC script result
+    const stored = localStorage.getItem('theme') as Theme | null
+    if (stored === 'dark' || stored === 'light') {
+      apply(stored)
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      apply('dark')
+    }
+  }, [])
+
+  const toggleTheme = () => apply(theme === 'light' ? 'dark' : 'light')
+
+  return { theme, toggleTheme }
+}

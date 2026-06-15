@@ -1,4 +1,4 @@
-@use "sass:math";
+@use 'sass:math';
 
 @import '../../../../../../stylesheets/colors';
 @import '../../../../../../stylesheets/variables';
@@ -17,8 +17,8 @@
   &:hover {
     transform: scale(1.03);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.06);
-    border: 1px solid var(--autocomplete-border-color);
-    background: rgba(var(--color-text-rgb), 0.05);
+    border: 1px solid $raven;
+    background: rgba(200, 200, 200, 0.07);
   }
 
   @media screen and (max-width: 64em) {
@@ -73,8 +73,8 @@
 
 .interlinks-card__publish-date {
   @include font-size-xs;
-  color: color-mix(in srgb, var(--color-raven), white 15%);
-  border-top: 1px dashed rgba(var(--color-raven-rgb), 0.2);
+  color: var(--color-text-muted);
+  border-top: 1px dashed var(--color-border-primary);
   padding-top: $global-spacing * 0.5;
   margin-top: $global-spacing * 0.5;
 }

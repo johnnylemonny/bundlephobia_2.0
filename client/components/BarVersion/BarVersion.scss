@@ -1,5 +1,5 @@
-@use '../../../stylesheets/colors' as *;
-@use '../../../stylesheets/variables' as *;
+@import '../../../stylesheets/colors';
+@import '../../../stylesheets/variables';
 
 .bar-graph__bar-version {
   @include font-size-xs;
@@ -7,7 +7,7 @@
   font-weight: $font-weight-light;
   transform: rotate(-90deg) translateX(#{-$global-spacing * 1.5});
   font-variant-numeric: tabular-nums;
-  color: color-mix(in srgb, var(--color-raven), white 15%);
+  color: var(--color-bar-version);
   transition:
     opacity 0.2s,
     color 0.2s;
@@ -22,10 +22,10 @@
   align-items: center;
 
   .bar-graph-container:hover & {
-    color: $raven;
+    color: var(--color-bar-version-hover);
   }
 
   .bar-graph__bar-group:hover & {
-    color: color-mix(in srgb, var(--color-raven), black 20%);
+    color: var(--color-bar-version-active);
   }
 }

@@ -7,7 +7,7 @@ import { AutocompleteInput } from '../../client/components/AutocompleteInput'
 import API from '../../client/api'
 import { PackageResult } from '../../types'
 import { GitHubIcon } from '../../client/components/Icons/GitHubIcon'
-import { ThemeToggle } from '../../client/components/ThemeToggle/ThemeToggle'
+import ThemeToggle from '../../client/components/ThemeToggle'
 import { getTimeFromSize } from '../../utils'
 import Stat from '../../client/components/Stat/Stat'
 

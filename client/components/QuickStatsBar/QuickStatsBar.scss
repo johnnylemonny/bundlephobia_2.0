@@ -7,11 +7,10 @@
   display: flex;
   align-content: center;
   @include font-size-xs;
-  color: color-mix(in srgb, var(--color-raven), white 20%);
-  background: rgba(var(--color-raven-rgb), 0.1);
+  color: var(--color-stats-bar-text);
+  background: var(--color-stats-bar-bg);
   border-radius: 0 0 10px 10px;
   overflow: hidden;
-  border-top: 1px solid #f2f2f2;
 }
 
 .quick-stats-bar__stat {
@@ -33,11 +32,16 @@
     width: 1px;
     height: 60%;
     position: absolute;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--color-stats-bar-border);
     top: 0;
     bottom: 0;
     margin: auto;
     left: 0;
+  }
+
+  &:first-of-type,
+  &:last-of-type {
+    //padding-left: $global-spacing;
   }
 }
 
@@ -84,19 +88,18 @@
 
   path {
     transition: fill 0.2s;
-    fill: color-mix(in srgb, var(--color-raven), white 15%);
+    fill: var(--color-stats-bar-text);
   }
 }
 
 .quick-stats-bar__link {
   margin: auto $global-spacing * 0.5;
 
-  display: flex;
-  align-items: center;
-
   &:hover {
     .quick-stats-bar__logo-icon--github {
-      opacity: 1;
+      path {
+        fill: var(--color-icon-hover);
+      }
     }
     .quick-stats-bar__logo-icon--npm {
       path {
@@ -106,9 +109,17 @@
   }
 }
 
-.quick-stats-bar__right {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-  padding-right: $global-spacing;
+// ── Icon dark mode overrides ──────────────────────────────────────────────────
+[data-theme='dark'] {
+  .dep-icon__node {
+    fill: var(--color-icon-muted);
+  }
+
+  .dep-icon__dot {
+    fill: var(--color-bg-base);
+  }
+
+  .info-icon__body {
+    fill: var(--color-icon-muted);
+  }
 }

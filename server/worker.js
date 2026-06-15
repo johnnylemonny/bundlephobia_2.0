@@ -1,13 +1,7 @@
-const workerpool = require('workerpool')
-const {
-  getPackageStats,
-  getAllPackageExports,
-  getPackageExportSizes,
-} = require('package-build-stats')
-
-// create a worker and register public functions
-workerpool.worker({
-  getPackageStats,
-  getAllPackageExports,
-  getPackageExportSizes,
+const { register } = require('esbuild-register/dist/node')
+const tsconfig = require('../tsconfig.server.json')
+register({
+  tsconfigRaw: tsconfig,
+  target: tsconfig.compilerOptions.target,
 })
+require('./worker.ts')
