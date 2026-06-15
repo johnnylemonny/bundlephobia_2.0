@@ -10,3 +10,6 @@ test-packages
 scripts
 bin
 types
+*.log
+lint_output.txt
+upstream_ResultPage.js

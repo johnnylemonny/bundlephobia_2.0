@@ -91,3 +91,13 @@ input {
     }
   }
 }
+
+.no-animations {
+  &,
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

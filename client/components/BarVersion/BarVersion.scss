@@ -16,10 +16,8 @@
   line-height: 1;
   cursor: pointer;
   height: $bar-width;
-  text-align: end;
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+  text-align: right;
+  display: block;
 
   .bar-graph-container:hover & {
     color: var(--color-bar-version-hover);

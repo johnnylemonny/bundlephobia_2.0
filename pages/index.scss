@@ -43,15 +43,16 @@
 
 .logo__skeleton {
   animation: move 2s alternate infinite;
-
-  .logo-graphic:hover & {
-    stroke: var(--color-accent);
-  }
+  stroke: var(--color-accent);
 }
 
 .logo-graphic {
   width: 137px * 0.9;
   height: 157px * 0.9;
+
+  > g {
+    stroke: var(--color-logo-primary);
+  }
 
   @media screen and (max-width: 40em) {
     width: 137px * 0.8;

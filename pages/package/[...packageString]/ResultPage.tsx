@@ -167,21 +167,31 @@ class ResultPage extends PureComponent<Props, State> {
       const fileName = `bundlephobia-${results.name || 'package'}.png`
 
       try {
+        node.classList.add('no-animations')
+        // Force style recalculation and wait for the next animation frames
+        void node.offsetHeight
+        await new Promise(resolve => requestAnimationFrame(resolve))
+        await new Promise(resolve => requestAnimationFrame(resolve))
+
         const dataUrl = await toPng(node, {
           backgroundColor:
             document.documentElement.getAttribute('data-theme') === 'dark'
               ? '#1a1a1a'
               : '#ffffff',
+          width: node.offsetWidth + 40,
+          height: node.offsetHeight + 40,
           style: {
             padding: '20px',
             borderRadius: '12px',
           },
         })
+        node.classList.remove('no-animations')
         const link = document.createElement('a')
         link.download = fileName
         link.href = dataUrl
         link.click()
       } catch (err) {
+        node.classList.remove('no-animations')
         console.error('oops, something went wrong!', err)
       }
     }

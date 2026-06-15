@@ -88,7 +88,6 @@ $bar-grow-duration: 0.4s;
 .bar-graph__bar2 {
   background: $cornflower-blue;
   z-index: 1;
-  pointer-events: none;
   border-radius: 0 0 5px 5px;
 
   .bar-graph__bar-group:hover & {
@@ -99,7 +98,7 @@ $bar-grow-duration: 0.4s;
 .bar-graph__bar-version,
 .bar-graph__bar-symbols,
 .bar-graph__legend {
-  animation: fade-in 0.5s $bar-grow-duration * 0.9 both
+  animation: bar-graph-fade-in 0.5s $bar-grow-duration * 0.9 both
     cubic-bezier(0.305, 0.42, 0.205, 1.2);
 }
 
@@ -147,7 +146,7 @@ $bar-grow-duration: 0.4s;
   }
 }
 
-@keyframes fade-in {
+@keyframes bar-graph-fade-in {
   from {
     opacity: 0;
   }

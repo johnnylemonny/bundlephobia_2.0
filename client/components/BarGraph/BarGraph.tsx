@@ -73,6 +73,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
         className="bar-graph__bar"
         style={{ height: `${50}%` }}
         aria-label="Unknown | Click 👆 to build"
+        data-balloon-pos="up"
       />
       <BarVersion version={reading.version} />
     </div>
@@ -133,11 +134,13 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
             height: `${((reading.size || 0) - (reading.gzip || 0)) * scale}%`,
           }}
           aria-label={getTooltipMessage(reading)}
+          data-balloon-pos="up"
         />
         <div
           className="bar-graph__bar2"
           style={{ height: `${(reading.gzip || 0) * scale}%` }}
           aria-label={getTooltipMessage(reading)}
+          data-balloon-pos="up"
         />
         <BarVersion version={reading.version} />
       </div>

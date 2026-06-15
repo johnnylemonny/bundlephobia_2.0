@@ -11,7 +11,7 @@ export const useTheme = () => {
 
   const apply = (next: Theme) => {
     document.documentElement.setAttribute('data-theme', next)
-    localStorage.setItem('theme', next)
+    localStorage.setItem('bundlephobia-theme', next)
     setTheme(next)
   }
 
@@ -26,7 +26,7 @@ export const useTheme = () => {
       return
     }
     // Fallback: no FOUC script result
-    const stored = localStorage.getItem('theme') as Theme | null
+    const stored = localStorage.getItem('bundlephobia-theme') as Theme | null
     if (stored === 'dark' || stored === 'light') {
       apply(stored)
     } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {

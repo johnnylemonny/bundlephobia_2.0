@@ -33,7 +33,7 @@ class FirebaseUtils {
 
   setRecentSearch(
     name: string,
-    packageInfo: { name: string; version: string }
+    packageInfo: { name: string; version: string },
   ) {
     if (!this.firebase) {
       return
@@ -69,10 +69,6 @@ class FirebaseUtils {
   }
 
   async getPackageHistory(name: string, limit = 15) {
-    if (!this.firebase) {
-      return {}
-    }
-
     debug('package history %s', name)
     const packageHistory: Record<string, any> = {}
 
@@ -108,17 +104,19 @@ class FirebaseUtils {
       return null
     })()
 
+    const algoliaAppId = process.env.ALGOLIA_APP_ID || 'OFCNCOG2CU'
+    const algoliaApiKey =
+      process.env.ALGOLIA_API_KEY || 'f54e21fa3a2a0160595bb058179bfb1e'
+
     const yarnPromise = axios.get(
-      `https://${
-        process.env.ALGOLIA_APP_ID
-      }-dsn.algolia.net/1/indexes/npm-search/${encodeURIComponent(name)}`,
+      `https://${algoliaAppId}-dsn.algolia.net/1/indexes/npm-search/${encodeURIComponent(name)}`,
       {
         params: {
           'x-algolia-agent': 'bundlephobia',
-          'x-algolia-application-id': process.env.ALGOLIA_APP_ID,
-          'x-algolia-api-key': process.env.ALGOLIA_API_KEY,
+          'x-algolia-application-id': algoliaAppId,
+          'x-algolia-api-key': algoliaApiKey,
         },
-      }
+      },
     )
 
     let firebaseHistory: any, versions: string[]
@@ -138,7 +136,7 @@ class FirebaseUtils {
       console.error(err)
       firebaseHistory = await firebasePromise
       versions = Object.keys(firebaseHistory || {}).map(version =>
-        decodeFirebaseKey(version)
+        decodeFirebaseKey(version),
       )
     }
 
@@ -148,7 +146,7 @@ class FirebaseUtils {
       .sort((versionA, versionB) => semver.compare(versionA, versionB))
 
     const limitedVersions = filteredVersions.splice(
-      filteredVersions.length - limit
+      filteredVersions.length - limit,
     )
     debug('last npm  %d %s versions %o', limit, name, limitedVersions)
 

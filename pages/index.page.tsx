@@ -35,9 +35,15 @@ const Logo = () => (
     viewBox="0 0 137 157"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g stroke="#000" strokeWidth="1.5" fill="none" fillRule="evenodd">
+    <g
+      stroke="var(--color-logo-primary)"
+      strokeWidth="1.5"
+      fill="none"
+      fillRule="evenodd"
+    >
       <g transform="translate(37.21 45.73)">
         <rect
+          className="logo__pocket"
           fill="#C0C0C0"
           x="25.1"
           y="56.58"
@@ -46,8 +52,8 @@ const Logo = () => (
           rx="7.97"
         />
         <rect x="25.1" y="40.64" width="16.74" height="31.88" rx="8.37" />
-        <ellipse cx="7.13" cy="8.49" rx="7.13" ry="8.45" />
-        <ellipse cx="56.54" cy="8.49" rx="7.13" ry="8.45" />
+        <ellipse cx="7.13" cy="8.49" rx="7.13" ry="8.45" fill="#fff" />
+        <ellipse cx="56.54" cy="8.49" rx="7.13" ry="8.45" fill="#fff" />
       </g>
       <g
         className="logo__skeleton-group"
