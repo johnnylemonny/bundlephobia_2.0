@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react'
 
 const STORAGE_KEY = 'bundlephobia_rspack_banner_dismissed'

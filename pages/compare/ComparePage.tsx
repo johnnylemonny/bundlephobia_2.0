@@ -2,16 +2,14 @@ import React, { PureComponent } from 'react'
 import Head from 'next/head'
 import Router, { withRouter, NextRouter } from 'next/router'
 import Link from 'next/link'
-
 import Layout from '../../client/components/Layout'
 import { AutocompleteInput } from '../../client/components/AutocompleteInput'
-import { parsePackageString } from '../../utils/common.utils'
 import API from '../../client/api'
 import { PackageResult } from '../../types'
 import { GitHubIcon } from '../../client/components/Icons/GitHubIcon'
 import { ThemeToggle } from '../../client/components/ThemeToggle/ThemeToggle'
-import { getTimeFromSize, DownloadSpeed } from '../../utils'
-
+import { getTimeFromSize } from '../../utils'
+import Stat from '../../client/components/Stat/Stat'
 
 interface State {
   package1: Partial<PackageResult> | null
@@ -69,7 +67,7 @@ class ComparePage extends PureComponent<Props, State> {
   handleSearchSubmit = (index: 1 | 2) => (packageString: string) => {
     const { p1, p2 } = this.props.router.query
     const normalizedQuery = packageString.trim().toLowerCase()
-    
+
     const newQuery = { ...this.props.router.query }
     if (index === 1) newQuery.p1 = normalizedQuery
     else newQuery.p2 = normalizedQuery
@@ -80,22 +78,37 @@ class ComparePage extends PureComponent<Props, State> {
     })
   }
 
-  renderStatColumn = (pkg: Partial<PackageResult> | null, loading: boolean, error: any) => {
-    if (loading) return <div className="compare__column loading">Loading...</div>
-    if (error) return <div className="compare__column error">Error loading package</div>
-    if (!pkg) return <div className="compare__column empty">Select a package</div>
+  renderStatColumn = (
+    pkg: Partial<PackageResult> | null,
+    loading: boolean,
+    error: any,
+  ) => {
+    if (loading)
+      return <div className="compare__column loading">Loading...</div>
+    if (error)
+      return <div className="compare__column error">Error loading package</div>
+    if (!pkg)
+      return <div className="compare__column empty">Select a package</div>
 
     return (
       <div className="compare__column">
-        <h2 className="compare__package-name">{pkg.name}<span>@{pkg.version}</span></h2>
+        <h2 className="compare__package-name">
+          {pkg.name}
+          <span>@{pkg.version}</span>
+        </h2>
         <div className="compare__stats">
           <Stat value={pkg.size!} type="size" label="Minified" compact />
-          <Stat value={pkg.gzip!} type="size" label="Minified + Gzipped" compact />
-          <Stat 
-            value={getTimeFromSize(pkg.gzip!).threeG} 
-            type="time" 
-            label="Slow 3G" 
-            compact 
+          <Stat
+            value={pkg.gzip!}
+            type="size"
+            label="Minified + Gzipped"
+            compact
+          />
+          <Stat
+            value={getTimeFromSize(pkg.gzip!).threeG}
+            type="time"
+            label="Slow 3G"
+            compact
           />
         </div>
       </div>
@@ -103,7 +116,8 @@ class ComparePage extends PureComponent<Props, State> {
   }
 
   render() {
-    const { package1, package2, loading1, loading2, error1, error2 } = this.state
+    const { package1, package2, loading1, loading2, error1, error2 } =
+      this.state
     const { p1, p2 } = this.props.router.query
 
     return (
@@ -139,13 +153,13 @@ class ComparePage extends PureComponent<Props, State> {
 
           <div className="compare__content">
             <div className="compare__search-bar">
-               <AutocompleteInput
+              <AutocompleteInput
                 initialValue={(p1 as string) || ''}
                 placeholder="Search package..."
                 onSearchSubmit={this.handleSearchSubmit(1)}
               />
               <div className="compare__vs">vs</div>
-               <AutocompleteInput
+              <AutocompleteInput
                 initialValue={(p2 as string) || ''}
                 placeholder="Search package..."
                 onSearchSubmit={this.handleSearchSubmit(2)}

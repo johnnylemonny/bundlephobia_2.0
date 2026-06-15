@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2018",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,15 +18,16 @@
     "paths": {
       "client/*": ["client/*"],
       "utils/*": ["utils/*"]
-    }
+    },
+    "rootDir": ".",
+    "types": ["node", "react", "react-dom"]
   },
-  "include": [
-    "next-env.d.ts",
-    "typings.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
+  "include": ["next-env.d.ts", "typings.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "scripts",
+    "scratch",
+    "build-service",
+    "cache-service"
   ]
 }

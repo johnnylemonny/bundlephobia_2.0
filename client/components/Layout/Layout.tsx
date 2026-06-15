@@ -6,19 +6,21 @@ import HeartIcon from '../../assets/heart.svg'
 import DigitalOceanLogoIcon from '../../assets/digital-ocean-logo.svg'
 
 const Heart = (HeartIcon as any).default || HeartIcon
-const DigitalOceanLogo = (DigitalOceanLogoIcon as any).default || DigitalOceanLogoIcon
+const DigitalOceanLogo =
+  (DigitalOceanLogoIcon as any).default || DigitalOceanLogoIcon
 
 if (typeof window !== 'undefined') {
-  console.log('Layout SVG Debug (Client):', { 
-    HeartIcon: typeof HeartIcon, 
-    HeartIconKeys: typeof HeartIcon === 'object' ? Object.keys(HeartIcon as any) : 'n/a',
+  console.log('Layout SVG Debug (Client):', {
+    HeartIcon: typeof HeartIcon,
+    HeartIconKeys:
+      typeof HeartIcon === 'object' ? Object.keys(HeartIcon as any) : 'n/a',
     Heart: typeof Heart,
     DigitalOceanLogoIcon: typeof DigitalOceanLogoIcon,
-    DigitalOceanLogo: typeof DigitalOceanLogo
+    DigitalOceanLogo: typeof DigitalOceanLogo,
   })
 } else {
-  console.log('Layout SVG Debug (Server):', { 
-    HeartIcon: typeof HeartIcon, 
+  console.log('Layout SVG Debug (Server):', {
+    HeartIcon: typeof HeartIcon,
     Heart: typeof Heart,
   })
 }
@@ -48,6 +50,11 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
   render() {
     const { children, className } = this.props
     const { recentSearches } = this.state
+
+    console.log('Layout rendering SVG check:', { Heart, DigitalOceanLogo })
+
+    const HeartIcon = Heart
+    const DOLogo = DigitalOceanLogo
 
     return (
       <section className="layout">
@@ -94,12 +101,12 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
               <div className="footer__hosting-credits">
                 Hosted on
                 <a href="https://digitalocean.com" target="_blank">
-                  <DigitalOceanLogo className="footer__sponsor-logo" />
+                  <DOLogo className="footer__sponsor-logo" />
                 </a>
               </div>
             </div>
             <div className="footer__credits">
-              <Heart className="footer__credits__heart" />️
+              <HeartIcon className="footer__credits__heart" />️
               <a
                 className="footer__credits-profile"
                 target="_blank"

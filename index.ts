@@ -1,4 +1,4 @@
-require('dotenv-defaults').config()   
+require('dotenv-defaults').config()
 
 import next from 'next'
 import { execa as exec } from 'execa'
@@ -39,7 +39,7 @@ import { config } from './server/config'
 function getEnv(env: Record<string, string | undefined | null>) {
   invariant(
     env.BASIC_AUTH_PASSWORD,
-    'Environment variable BASIC_AUTH_PASSWORD is required'
+    'Environment variable BASIC_AUTH_PASSWORD is required',
   )
   invariant(env.NODE_ENV, 'Environment variable NODE_ENV is required')
 
@@ -55,7 +55,7 @@ const env = getEnv(process.env)
 const cache = new Cache()
 const port = env.port
 const dev = env.nodeEnv !== 'production'
-const app = next({ dev })
+const app = next({ dev, webpack: true })
 const handle = app.getRequestHandler()
 
 const server = new Koa()
@@ -74,7 +74,7 @@ export const initServer = async () => {
         duration: 1000 * 60 * 5, //  5 mins
         max: 60,
         whiteList: ['127.0.0.1', '::1'],
-      })
+      }),
     )
   }
 
@@ -101,20 +101,20 @@ export const initServer = async () => {
       gzip: {
         flush: require('zlib').Z_SYNC_FLUSH,
       },
-    })
+    }),
   )
 
   server.use(
     serve('./client/assets/public', {
       maxage: config.CACHE.PUBLIC_ASSETS * 1000,
-    })
+    }),
   )
 
   server.use(
     proxy({
       match: /^\/-\/search/,
       host: 'https://www.npmjs.com',
-    })
+    }),
   )
 
   type Key = {
@@ -136,7 +136,7 @@ export const initServer = async () => {
     }),
     blockBlacklistMiddleware,
     cachedResponseMiddleware,
-    buildMiddleware
+    buildMiddleware,
   )
 
   router.get(
@@ -144,7 +144,7 @@ export const initServer = async () => {
     errorMiddleware,
     resolvePackageMiddleware,
     blockBlacklistMiddleware,
-    exportsMiddlware
+    exportsMiddlware,
   )
 
   router.get(
@@ -161,7 +161,7 @@ export const initServer = async () => {
     }),
     blockBlacklistMiddleware,
     cachedResponseMiddleware,
-    exportsSizesMiddlware
+    exportsSizesMiddlware,
   )
 
   router.get('/api/recent', async ctx => {
@@ -186,14 +186,14 @@ export const initServer = async () => {
       }
       ctx.body = await firebaseUtils.getPackageHistory(
         name,
-        Number(ctx.query.limit)
+        Number(ctx.query.limit),
       )
     } catch (err: any) {
       console.error(err)
       logger.error(
         'HISTORY',
         err,
-        'HISTORY FAILED: for package' + ctx.query.package
+        'HISTORY FAILED: for package' + ctx.query.package,
       )
       ctx.status = 422
       ctx.body = { type: err.name, message: err.message }
@@ -216,7 +216,7 @@ export const initServer = async () => {
         ctx.status = 500
         ctx.body = err
       }
-    }
+    },
   )
 
   router.post('/admin/restart', async ctx => {
@@ -239,7 +239,7 @@ export const initServer = async () => {
       try {
         const { stdout } = await exec(
           'rm -rf /tmp/tmp-build/cache/_cacache /tmp/tmp-build/packages/',
-          { shell: true }
+          { shell: true },
         )
         ctx.body = 'Cache cleared' + stdout
       } catch (err) {
@@ -247,7 +247,7 @@ export const initServer = async () => {
         ctx.status = 500
         ctx.body = err
       }
-    }
+    },
   )
 
   router.get('/result', async ctx => {
@@ -285,4 +285,3 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export default server
-

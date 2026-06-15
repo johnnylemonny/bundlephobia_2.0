@@ -30,3 +30,14 @@ scripts/keys
 maintenance_logs/
 top-packages.json
 populate-v3-*.json
+
+# Graphify
+graphify-out/
+scratch/
+
+# Temporary logs and backup files
+*.log
+lint_output.txt
+upstream_ResultPage.js
+
+

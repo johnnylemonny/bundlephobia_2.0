@@ -3,6 +3,7 @@
 @import '../../../stylesheets/variables';
 
 .autocomplete-input-box {
+  width: 100%;
   border: 1px solid $autocomplete-border-color;
   border-radius: 10px;
   background: transparent;

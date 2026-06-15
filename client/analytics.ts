@@ -1,3 +1,5 @@
+declare const amplitude: any
+
 type HasPackageName = {
   packageName: string
 }
@@ -16,28 +18,38 @@ type HasSuccessRatio = {
 
 type HasPackageNameAndTimeTaken = HasPackageName & HasTimeTaken
 
+function safeLogEvent(eventName: string, data?: Record<string, any>) {
+  try {
+    if (typeof window !== 'undefined' && typeof amplitude !== 'undefined') {
+      amplitude.getInstance().logEvent(eventName, data)
+    }
+  } catch (err) {
+    // Amplitude SDK blocked or not loaded
+  }
+}
+
 export default class Analytics {
   static pageView(pageType: string) {
-    amplitude.getInstance().logEvent(`Viewed ${pageType}`, {
+    safeLogEvent(`Viewed ${pageType}`, {
       path: window.location.pathname,
     })
   }
 
   static performedSearch(packageName: string) {
-    amplitude.getInstance().logEvent('Search Performed', {
+    safeLogEvent('Search Performed', {
       package: packageName,
     })
   }
 
   static searchSuccess({ packageName, timeTaken }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Search Successful', {
+    safeLogEvent('Search Successful', {
       package: packageName,
       timeTaken,
     })
   }
 
   static searchFailure({ packageName, timeTaken }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Search Failed', {
+    safeLogEvent('Search Failed', {
       package: packageName,
       timeTaken,
     })
@@ -47,38 +59,38 @@ export default class Analytics {
     packageName,
     isDisabled,
   }: HasPackageName & HasIsDisabled) {
-    amplitude.getInstance().logEvent('Bar Graph Clicked', {
+    safeLogEvent('Bar Graph Clicked', {
       package: packageName,
       isDisabled,
     })
   }
 
   static scanPackageJsonDropped(itemCount: number) {
-    amplitude.getInstance().logEvent('Scan packageJSON dropped', {
+    safeLogEvent('Scan packageJSON dropped', {
       itemCount,
     })
   }
 
   static performedScan() {
-    amplitude.getInstance().logEvent('Scan Performed')
+    safeLogEvent('Scan Performed')
   }
 
   static scanParseError() {
-    amplitude.getInstance().logEvent('Scan Parse Error')
+    safeLogEvent('Scan Parse Error')
   }
 
   static scanCompleted({
     timeTaken,
     successRatio,
   }: HasTimeTaken & HasSuccessRatio) {
-    amplitude.getInstance().logEvent('Scan Parse Completed', {
+    safeLogEvent('Scan Parse Completed', {
       successRatio,
       timeTaken,
     })
   }
 
   static performedExportsAnalysis(packageName: string) {
-    amplitude.getInstance().logEvent('Exports Analysis Performed', {
+    safeLogEvent('Exports Analysis Performed', {
       package: packageName,
     })
   }
@@ -87,7 +99,7 @@ export default class Analytics {
     packageName,
     timeTaken,
   }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Exports Analysis Successful', {
+    safeLogEvent('Exports Analysis Successful', {
       package: packageName,
       timeTaken,
     })
@@ -97,7 +109,7 @@ export default class Analytics {
     packageName,
     timeTaken,
   }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Exports Analysis Failed', {
+    safeLogEvent('Exports Analysis Failed', {
       package: packageName,
       timeTaken,
     })
@@ -107,7 +119,7 @@ export default class Analytics {
     packageName,
     timeTaken,
   }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Exports Size Calculated', {
+    safeLogEvent('Exports Size Calculated', {
       package: packageName,
       timeTaken,
     })
@@ -117,7 +129,7 @@ export default class Analytics {
     packageName,
     timeTaken,
   }: HasPackageNameAndTimeTaken) {
-    amplitude.getInstance().logEvent('Exports Size Failed', {
+    safeLogEvent('Exports Size Failed', {
       package: packageName,
       timeTaken,
     })

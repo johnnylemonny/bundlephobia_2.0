@@ -40,10 +40,10 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
   getFirstSideEffectFreeIndex = () => {
     const { readings } = this.props
     const sideEffectFreeIntroducedRecently = !readings.every(
-      reading => !reading.hasSideEffects
+      reading => !reading.hasSideEffects,
     )
     const firstSideEffectFreeIndex = readings.findIndex(
-      reading => reading.hasSideEffects === false && !reading.disabled
+      reading => reading.hasSideEffects === false && !reading.disabled,
     )
 
     return sideEffectFreeIntroducedRecently ? firstSideEffectFreeIndex : -1
@@ -52,12 +52,12 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
   getFirstTreeshakeableIndex = () => {
     const { readings } = this.props
     const treeshakingIntroducedRecently = !readings.every(
-      reading => !!reading.hasJSModule
+      reading => !!reading.hasJSModule,
     )
     const firstTreeshakingIndex = readings.findIndex(
       reading =>
         !reading.disabled &&
-        (reading.hasJSModule || reading.hasJSNext || reading.isModuleType)
+        (reading.hasJSModule || reading.hasJSNext || reading.isModuleType),
     )
 
     return treeshakingIntroducedRecently ? firstTreeshakingIndex : -1
@@ -81,16 +81,17 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
   renderActiveBar = (
     reading: Reading,
     scale: number,
-    options: { isFirstTreeshakeable: boolean; isFirstSideEffectFree: boolean }
+    options: { isFirstTreeshakeable: boolean; isFirstSideEffectFree: boolean },
   ) => {
+    const TreeShakeIconComp = TreeShakeIcon
+    const SideEffectIconComp = SideEffectIcon
+
     const getTooltipMessage = (reading: Reading) => {
       const formattedSize = formatSize(reading.size || 0)
       const formattedGzip = formatSize(reading.gzip || 0)
       return `Minified: ${formattedSize.size.toFixed(1)}${
         formattedSize.unit
-      } | Gzipped: ${formattedGzip.size.toFixed(1)}${
-        formattedGzip.unit
-      }`
+      } | Gzipped: ${formattedGzip.size.toFixed(1)}${formattedGzip.unit}`
     }
 
     return (
@@ -109,7 +110,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
               }`}
               className="bar-graph__bar-symbol"
             >
-              <TreeShakeIcon />
+              <TreeShakeIconComp />
             </div>
           )}
           {options.isFirstSideEffectFree && (
@@ -121,14 +122,16 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
               }`}
               className="bar-graph__bar-symbol"
             >
-              <SideEffectIcon />
+              <SideEffectIconComp />
             </div>
           )}
         </div>
 
         <div
           className="bar-graph__bar"
-          style={{ height: `${((reading.size || 0) - (reading.gzip || 0)) * scale}%` }}
+          style={{
+            height: `${((reading.size || 0) - (reading.gzip || 0)) * scale}%`,
+          }}
           data-balloon={getTooltipMessage(reading)}
         />
         <div
@@ -156,7 +159,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
               : this.renderActiveBar(reading, graphScale, {
                   isFirstTreeshakeable: index === firstTreeshakeableIndex,
                   isFirstSideEffectFree: index === firstSideEffectFreeIndex,
-                })
+                }),
           )}
         </figure>
         <div className="bar-graph__legend">

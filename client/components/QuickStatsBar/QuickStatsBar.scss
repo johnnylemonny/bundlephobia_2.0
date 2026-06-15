@@ -1,5 +1,4 @@
-@use 'globals' as *;
-@use "sass:math";
+@use 'sass:math';
 
 @import '../../../stylesheets/colors';
 @import '../../../stylesheets/variables';
@@ -12,6 +11,7 @@
   background: rgba(var(--color-raven-rgb), 0.1);
   border-radius: 0 0 10px 10px;
   overflow: hidden;
+  border-top: 1px solid #f2f2f2;
 }
 
 .quick-stats-bar__stat {
@@ -39,8 +39,6 @@
     margin: auto;
     left: 0;
   }
-
-
 }
 
 .quick-stats-bar__stat--optional {
@@ -92,8 +90,7 @@
 
 .quick-stats-bar__link {
   margin: auto $global-spacing * 0.5;
-  color: inherit;
-  text-decoration: none;
+
   display: flex;
   align-items: center;
 

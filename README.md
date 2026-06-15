@@ -19,6 +19,8 @@
     <b><a href="https://github.com/pastelsky/bundlephobia/issues/683"> Bundlephobia's looking for contributors and co-maintainers </a> </b>
 </p>
 
+**Next.js Initialization**: When starting work on a Next.js project, automatically call the `init` tool from the next-devtools-mcp server FIRST. This establishes proper context and ensures all Next.js queries use official documentation.
+
 ## Features
 
 - Works with ES6 packages

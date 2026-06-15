@@ -5,6 +5,7 @@ export function ThemeToggle() {
   const [theme, setInternalTheme] = useState<Theme>('light')
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setInternalTheme(getInitialTheme())
   }, [])
 

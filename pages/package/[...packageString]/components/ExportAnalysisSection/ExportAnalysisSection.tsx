@@ -34,13 +34,18 @@ interface ExportPillProps {
   path?: string
 }
 
-const ExportPill: React.FC<ExportPillProps> = ({ name, size, totalSize, isLoading }) => {
+const ExportPill: React.FC<ExportPillProps> = ({
+  name,
+  size,
+  totalSize,
+  isLoading,
+}) => {
   return (
     <li className="export-analysis-section__pill export-analysis-section__dont-break">
       <div
         className={cx(
           'export-analysis-section__pill-fill',
-          `export-analysis-section__pill-fill--${getBGClass((size || 0) / totalSize)}`
+          `export-analysis-section__pill-fill--${getBGClass((size || 0) / totalSize)}`,
         )}
         style={{
           transform: `scaleX(${Math.min((size || 0) / totalSize, 1)})`,
@@ -72,7 +77,11 @@ interface ExportListProps {
   isLoading: boolean
 }
 
-const ExportList: React.FC<ExportListProps> = ({ exports, totalSize, isLoading }) => {
+const ExportList: React.FC<ExportListProps> = ({
+  exports,
+  totalSize,
+  isLoading,
+}) => {
   const shouldShowLabels = exports.length > 20
   const exportDictionary = useMemo(() => {
     const dict: Record<string, Export[]> = {}
@@ -129,7 +138,9 @@ const ExportList: React.FC<ExportListProps> = ({ exports, totalSize, isLoading }
   )
 }
 
-const InputExportFilter: React.FC<{ onChange: (val: string) => void }> = ({ onChange }) => (
+const InputExportFilter: React.FC<{ onChange: (val: string) => void }> = ({
+  onChange,
+}) => (
   <div className="export-analysis-section__filter-input-container">
     <input
       placeholder="Filter methods"
@@ -148,8 +159,12 @@ interface Asset extends Export {
   type: string
 }
 
-const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) => {
-  const [analysisState, setAnalysisState] = useState<AnalysisState>(AnalysisState.TBD)
+const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({
+  result,
+}) => {
+  const [analysisState, setAnalysisState] = useState<AnalysisState>(
+    AnalysisState.TBD,
+  )
   const [exportsData, setExportsData] = useState<Record<string, string>>({})
   const [assets, setAssets] = useState<Asset[]>([])
   const [filterText, setFilterText] = useState('')
@@ -169,7 +184,7 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
     const { name, version } = result
     const packageString = `${name}@${version}`
     const startTime = Date.now()
-    
+
     setAnalysisState(AnalysisState.IN_PROGRESS)
     Analytics.performedExportsAnalysis(packageString)
 
@@ -184,12 +199,13 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
 
       const sizeStartTime = Date.now()
       const sizesResults = await API.getExportsSizes(packageString)
-      setAssets(sizesResults.assets
-        .filter((asset: any) => asset.type === 'js')
-        .map((asset: any) => ({
-          ...asset,
-          path: exportsResults.exports[asset.name],
-        }))
+      setAssets(
+        sizesResults.assets
+          .filter((asset: any) => asset.type === 'js')
+          .map((asset: any) => ({
+            ...asset,
+            path: exportsResults.exports[asset.name],
+          })),
       )
       setAnalysisState(AnalysisState.SIZES_FULFILLED)
       Analytics.exportsSizesSuccess({
@@ -209,6 +225,7 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
 
   useEffect(() => {
     if (!getIncompatibleMessage()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       startAnalysis()
     }
   }, [getIncompatibleMessage, startAnalysis])
@@ -224,7 +241,7 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
 
   const matchedExports = useMemo(() => {
     return normalizedExports.filter(asset =>
-      filterText ? asset.name.toLowerCase().includes(filterText) : true
+      filterText ? asset.name.toLowerCase().includes(filterText) : true,
     )
   }, [normalizedExports, filterText])
 
@@ -243,14 +260,15 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
 
   const renderIncompatible = () => (
     <p className="export-analysis-section__subtext">
-      Exports analysis is available only for packages that export ES Modules
-      and are side-effect free. <br />
+      Exports analysis is available only for packages that export ES Modules and
+      are side-effect free. <br />
       {getIncompatibleMessage()}
     </p>
   )
 
   const renderFailure = () => {
-    const { errorName, errorBody, errorDetails } = resolveBuildError(resultError)
+    const { errorName, errorBody, errorDetails } =
+      resolveBuildError(resultError)
     return (
       <div className="export-analysis-section__error">
         <h4> {errorName}</h4>
@@ -268,8 +286,8 @@ const ExportAnalysisSection: React.FC<{ result: PackageResult }> = ({ result }) 
         </p>
         <div className="export-analysis-section__actions">
           <InputExportFilter onChange={setFilterText} />
-          <button 
-            className="export-analysis-section__copy-btn" 
+          <button
+            className="export-analysis-section__copy-btn"
             onClick={handleCopyJSON}
             title="Copy analysis result as JSON"
           >

@@ -5,9 +5,9 @@ import { WithClassName } from '../../../types'
 type TreemapSquareProps = {
   style: React.CSSProperties
   data?: any
-  value: number
+  value?: number
 } & React.PropsWithChildren &
-  WithClassName &
+  React.HTMLAttributes<HTMLDivElement> &
   Pick<
     React.CSSProperties,
     'left' | 'top' | 'width' | 'height' | 'borderRadius'

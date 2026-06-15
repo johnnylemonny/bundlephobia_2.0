@@ -59,7 +59,7 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
     return `${size.toFixed(2)} ${unit}`
   }
 
-  let dependenciesCopy: DependencySize[] = dependencySizes.map(dep => ({
+  const dependenciesCopy: DependencySize[] = dependencySizes.map(dep => ({
     ...dep,
     isSelf: dep.name === packageName,
     name: dep.name === packageName ? '(self)' : dep.name,
@@ -67,10 +67,10 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
 
   const sizeSum = dependenciesCopy.reduce(
     (acc, dep) => acc + dep.approximateSize,
-    0
+    0,
   )
 
-  let enrichedDependencies: DependencySize[] = dependenciesCopy.map(dep => {
+  const enrichedDependencies: DependencySize[] = dependenciesCopy.map(dep => {
     const percentShare = (dep.approximateSize / sizeSum) * 100
     const sizeShare = (dep.approximateSize / sizeSum) * packageSize
     return {
@@ -78,16 +78,20 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
       percentShare,
       sizeShare,
       tooltip: `${dep.name} ｜ ${percentShare.toFixed(1)}% ｜ ~ ${getFormattedSize(
-        sizeShare
+        sizeShare,
       )}`,
     }
   })
 
-  enrichedDependencies.sort((depA, depB) => (depB.percentShare || 0) - (depA.percentShare || 0))
+  enrichedDependencies.sort(
+    (depA, depB) => (depB.percentShare || 0) - (depA.percentShare || 0),
+  )
 
   let compactedDependencies: DependencySize[] = []
-  const compactLimit = typeof window !== 'undefined' && window.innerWidth <= 768 ? 8 : 16
-  const ellipsizeLimit = typeof window !== 'undefined' && window.innerWidth <= 768 ? 3.5 : 1.5
+  const compactLimit =
+    typeof window !== 'undefined' && window.innerWidth <= 768 ? 8 : 16
+  const ellipsizeLimit =
+    typeof window !== 'undefined' && window.innerWidth <= 768 ? 3.5 : 1.5
 
   if (enrichedDependencies.length > compactLimit) {
     const mainDependencies = enrichedDependencies.slice(0, compactLimit)
@@ -95,15 +99,15 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
 
     const approximateSize = otherDependencies.reduce(
       (acc, dep) => acc + dep.approximateSize,
-      0
+      0,
     )
     const percentShare = otherDependencies.reduce(
       (acc, dep) => acc + (dep.percentShare || 0),
-      0
+      0,
     )
     const sizeShare = otherDependencies.reduce(
       (acc, dep) => acc + (dep.sizeShare || 0),
-      0
+      0,
     )
 
     compactedDependencies = [
@@ -118,8 +122,8 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
           .map(
             dep =>
               `${dep.name} ｜ ${dep.percentShare?.toFixed(1)}% ｜ ~ ${getFormattedSize(
-                dep.sizeShare || 0
-              )} min`
+                dep.sizeShare || 0,
+              )} min`,
           )
           .join(' \u000D\u000A  \u000D\u000A '),
       },
@@ -142,13 +146,18 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
             className="treemap__square"
           >
             {(dep.percentShare || 0) > ellipsizeLimit &&
-            dep.name.length < (dep.percentShare || 0) * (12 / ellipsizeLimit) ? (
+            dep.name.length <
+              (dep.percentShare || 0) * (12 / ellipsizeLimit) ? (
               <div className="treemap__content">
                 <div className="treemap__label">
                   {dep.isSelf || dep.isOthers ? (
                     <span> {dep.name} </span>
                   ) : (
-                    <a href={`/package/${dep.name}`} target="_blank" rel="noreferrer">
+                    <a
+                      href={`/package/${dep.name}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
                       {dep.name}
                     </a>
                   )}
@@ -170,10 +179,10 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
         ))}
       </Treemap>
       <p className="treemap__note">
-        <b>Note: </b> These sizes represent the contribution made by dependencies
-        (direct or transitive) to <code>{packageName}</code>
-        &apos;s size. These may be different from the dependencies&apos; standalone
-        sizes.
+        <b>Note: </b> These sizes represent the contribution made by
+        dependencies (direct or transitive) to <code>{packageName}</code>
+        &apos;s size. These may be different from the dependencies&apos;
+        standalone sizes.
       </p>
     </section>
   )

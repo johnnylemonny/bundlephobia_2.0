@@ -1,0 +1,12 @@
+node_modules
+.next
+build
+out
+.git
+.idea
+graphify-out
+scratch
+test-packages
+scripts
+bin
+types
