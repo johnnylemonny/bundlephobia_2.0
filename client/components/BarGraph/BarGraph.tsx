@@ -72,7 +72,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
       <div
         className="bar-graph__bar"
         style={{ height: `${50}%` }}
-        data-balloon="Unknown | Click 👆 to build"
+        aria-label="Unknown | Click 👆 to build"
       />
       <BarVersion version={reading.version} />
     </div>
@@ -103,7 +103,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
         <div className="bar-graph__bar-symbols">
           {options.isFirstTreeshakeable && (
             <div
-              data-balloon={`ES2015 exports introduced. ${
+              aria-label={`ES2015 exports introduced. ${
                 reading.hasSideEffects
                   ? 'Not side-effect free yet, hence limited tree-shake ability.'
                   : ''
@@ -115,7 +115,7 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
           )}
           {options.isFirstSideEffectFree && (
             <div
-              data-balloon={`Was marked side-effect free. ${
+              aria-label={`Was marked side-effect free. ${
                 reading.hasJSNext || reading.hasJSModule || reading.isModuleType
                   ? 'Supports ES2015 exports also, hence fully tree-shakeable'
                   : "Doesn't export ESM yet, limited tree-shake ability"
@@ -132,12 +132,12 @@ export default class BarGraph extends PureComponent<BarGraphProps> {
           style={{
             height: `${((reading.size || 0) - (reading.gzip || 0)) * scale}%`,
           }}
-          data-balloon={getTooltipMessage(reading)}
+          aria-label={getTooltipMessage(reading)}
         />
         <div
           className="bar-graph__bar2"
           style={{ height: `${(reading.gzip || 0) * scale}%` }}
-          data-balloon={getTooltipMessage(reading)}
+          aria-label={getTooltipMessage(reading)}
         />
         <BarVersion version={reading.version} />
       </div>

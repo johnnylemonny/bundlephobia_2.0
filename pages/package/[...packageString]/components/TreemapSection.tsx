@@ -141,8 +141,8 @@ const TreemapSection: React.FC<TreemapSectionProps> = ({
             key={dep.name}
             value={dep.percentShare || 0}
             style={{ background: colors[index % colors.length] }}
-            data-balloon={dep.tooltip}
-            data-balloon-pos="top"
+            aria-label={dep.tooltip}
+            data-balloon-pos="up"
             className="treemap__square"
           >
             {(dep.percentShare || 0) > ellipsizeLimit &&

@@ -68,7 +68,7 @@ export default function Stat({
           <div
             className="stat-container__info-text"
             data-balloon-pos="right"
-            data-balloon={infoText}
+            aria-label={infoText}
             onClick={(e) => e.stopPropagation()}
           >
             i
