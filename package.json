@@ -47,7 +47,7 @@
     "github": "^14.0.0",
     "got": "^15.0.5",
     "hot-shots": "^16.0.0",
-    "html-to-image": "^1.11.11",
+    "html-to-image": "^1.11.13",
     "ipchecker": "^0.0.2",
     "is-empty-object": "^1.1.1",
     "jsdom": "^29.1.1",
