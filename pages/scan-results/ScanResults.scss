@@ -17,14 +17,14 @@
   width: 100%;
   padding: 0;
   margin: 0;
-  border: 1px solid lighten($raven, 50%);
+  border: 1px solid rgba(var(--color-raven-rgb), 0.2);
   border-radius: 2px;
-  box-shadow: 0 0 4px lighten($raven, 50%);
+  box-shadow: 0 0 4px rgba(var(--color-raven-rgb), 0.2);
 }
 
 .scan-results__note {
   @include font-size-xs;
-  color: lighten($raven, 20%);
+  color: color-mix(in srgb, var(--color-raven), white 20%);
   margin-top: $global-spacing * 2;
   margin-bottom: $global-spacing * 4;
 }
@@ -42,7 +42,7 @@
   button {
     cursor: pointer;
     border: none;
-    border-bottom: 1px dashed lighten($raven, 40%);
+    border-bottom: 1px dashed rgba(var(--color-raven-rgb), 0.3);
     box-shadow: none;
     background: none;
     margin-left: $global-spacing;
@@ -51,7 +51,7 @@
     color: inherit;
 
     &:hover {
-      border-color: lighten($raven, 30%);
+      border-color: rgba(var(--color-raven-rgb), 0.4);
     }
 
     &:focus {
@@ -78,12 +78,12 @@
   align-items: center;
 
   & + & {
-    border-top: 1px solid lighten($raven, 50%);
+    border-top: 1px solid rgba(var(--color-raven-rgb), 0.2);
   }
 }
 
 .scan-results__item--total {
-  background: transparentize($raven, 0.96);
+  background: rgba(var(--color-raven-rgb), 0.04);
 }
 
 .scan-results__item--loading {
@@ -144,7 +144,7 @@
   @include font-size-sm;
   flex-grow: 1;
   text-align: center;
-  color: lighten($raven, 20%);
+  color: color-mix(in srgb, var(--color-raven), white 20%);
   text-transform: uppercase;
   font-weight: $font-weight-bold;
   letter-spacing: 0.5px;
@@ -166,7 +166,7 @@
     @include font-size-sm;
     font-weight: $font-weight-light;
     text-align: left;
-    color: lighten($raven, 10%);
+    color: color-mix(in srgb, var(--color-raven), white 10%);
     font-family: $font-family-body;
     line-height: 1.5;
   }
@@ -187,7 +187,7 @@ $index-width: 4rem;
 .scan-results__index {
   @include font-size-xl;
   font-weight: $font-weight-very-bold;
-  color: lighten($raven, 50%);
+  color: rgba(var(--color-raven-rgb), 0.2);
   position: relative;
   width: $index-width;
 }
