@@ -29,7 +29,8 @@ function TreemapSquare({
   return (
     <div
       className={cx(className)}
-      data-vals={data.toString() + '...' + width + '...' + height}
+      data-value={value}
+      data-vals={`${data?.toString() ?? ''}...${width}...${height}`}
       style={{
         position: 'absolute',
         left,
