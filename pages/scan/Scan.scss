@@ -1,8 +1,8 @@
 @use 'sass:math';
 
-@import '../../stylesheets/base';
-@import '../../stylesheets/variables';
-@import '../../stylesheets/colors';
+@import 'base';
+@import 'variables';
+@import 'colors';
 
 .scan__dropzone {
   border: 2px dashed color-mix(in srgb, var(--color-raven), white 20%);
