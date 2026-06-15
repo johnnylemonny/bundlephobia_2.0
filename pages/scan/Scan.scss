@@ -3,107 +3,214 @@
 @import '../../stylesheets/base';
 @import '../../stylesheets/variables';
 
+.scan-page {
+  padding: 3rem 1.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
 .scan__dropzone {
-  border: 2px dashed var(--color-scan-dropzone-border);
-  width: 50vw;
-  height: 50vh;
+  border: 2px dashed var(--color-border-primary);
+  background: var(--color-bg-secondary);
+  max-width: 500px;
+  width: 100%;
+  min-height: 280px;
+  margin: 3rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 2.5rem 2rem;
+  text-align: center;
 
-  p {
-    margin-top: 0;
+  &:hover {
+    border-color: var(--color-link);
+    background: var(--color-bg-surface);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.04);
+
+    .scan__dropzone-icon {
+      color: var(--color-link);
+      transform: translateY(-4px);
+    }
+
+    .scan__btn--upload {
+      background: var(--color-link);
+      color: #fff;
+    }
+  }
+}
+
+.scan__dropzone-icon {
+  color: var(--color-text-muted);
+  margin-bottom: 1.25rem;
+  transition: all 0.25s ease;
+}
+
+.scan__dropzone-title {
+  font-size: 1.25rem;
+  font-weight: $font-weight-bold;
+  color: var(--color-text-primary);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.01em;
+}
+
+.scan__dropzone-text {
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 1.5rem 0;
+  font-weight: $font-weight-light;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.scan__btn--upload {
+  background: transparent;
+  border: 1px solid var(--color-border-primary);
+  color: var(--color-text-secondary);
+  box-shadow: none;
+  font-size: 0.8rem;
+  padding: 8px 16px;
+  border-radius: 6px;
+
+  &:hover {
+    background: var(--color-link);
+    border-color: var(--color-link);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(101, 161, 248, 0.2);
   }
 }
 
 .scan__btn {
   @include font-size-xs;
   cursor: pointer;
-  margin-top: $global-spacing;
-  background: var(--color-btn-bg);
-  border-radius: 6px;
+  background: var(--color-link);
+  border-radius: 8px;
   border: none;
-  padding: $global-spacing $global-spacing * 2;
-  display: block;
-  transition:
-    background 0.2s,
-    color 0.2s;
-  color: var(--color-btn-text);
-  letter-spacing: 1px;
+  padding: 10px 20px;
+  display: inline-block;
+  transition: all 0.2s ease-in-out;
+  color: #fff;
+  letter-spacing: 0.5px;
   font-weight: $font-weight-bold;
   font-family: $font-family-body;
+  box-shadow: 0 2px 6px rgba(101, 161, 248, 0.2);
 
   &:hover {
-    background: var(--color-btn-bg-hover);
+    background: var(--color-link-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(101, 161, 248, 0.3);
   }
 
-  & ~ & {
-    margin-left: $global-spacing * 1.5;
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.scan__selection-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding-bottom: 1.5rem;
+
+  .scan__page-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: $font-weight-bold;
+    letter-spacing: -0.02em;
+    color: var(--color-text-primary);
+  }
+
+  .scan__actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+
+  .scan__btn {
+    margin: 0;
+  }
+
+  .scan__btn--secondary {
+    background: transparent;
+    border: 1px solid var(--color-border-primary);
+    color: var(--color-text-secondary);
+    box-shadow: none;
+
+    &:hover {
+      background: var(--color-bg-secondary);
+      color: var(--color-text-primary);
+      border-color: var(--color-border-primary);
+      box-shadow: none;
+      transform: none;
+    }
   }
 }
 
 .scan__package-container {
   list-style: none;
-  columns: 3;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.75rem;
+}
 
-  @media screen and (max-width: 48em) {
-    columns: 2;
+.scan__package-item {
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: 8px;
+  transition: all 0.2s ease-in-out;
+  padding: 0.75rem 1rem;
+
+  label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    width: 100%;
+    user-select: none;
   }
 
-  @media screen and (max-width: 40em) {
-    columns: 1;
+  input[type='checkbox'] {
+    margin-right: 0.75rem;
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-link);
+    cursor: pointer;
+  }
+
+  &:hover {
+    background: var(--color-bg-surface);
+    border-color: var(--color-link);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  &.scan__package-item--checked {
+    background: var(--color-bg-surface);
+    border-color: var(--color-link);
   }
 }
 
 .scan__package-item-title {
-  opacity: 0.5;
-}
-
-.scan__package-item {
-  padding: math.div($global-spacing, 2.5);
-
-  input {
-    margin-right: $global-spacing;
-
-    &:checked ~ .scan__package-item-title {
-      opacity: 1;
-    }
-  }
-
-  label {
-    cursor: pointer;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  font-weight: $font-weight-bold;
+  font-size: 0.9rem;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .scan__package-item-version {
-  @include font-size-xs;
+  font-size: 0.75rem;
   font-family: $font-family-code;
-  margin-left: $global-spacing;
-  color: var(--color-scan-pkg-version);
-}
-
-.scan__selection-header {
-  display: flex;
-  padding: 0 $global-spacing * 2;
-  align-items: center;
-  margin-bottom: $global-spacing * 2;
-
-  .scan__page-title {
-    margin: 0 $global-spacing * 4 0 0;
-  }
-
-  .scan__btn {
-    @include font-size-xxs;
-    text-transform: uppercase;
-    padding: $global-spacing $global-spacing * 2;
-    border: 2px solid var(--color-btn-border);
-    background: var(--color-bg-base);
-    color: var(--color-btn-bg);
-
-    &:hover {
-      background: var(--color-btn-bg);
-      color: var(--color-btn-text);
-    }
-  }
+  color: var(--color-text-muted);
+  font-weight: $font-weight-light;
 }

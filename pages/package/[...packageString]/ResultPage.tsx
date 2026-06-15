@@ -354,6 +354,19 @@ class ResultPage extends PureComponent<Props, State> {
         twitterDescription="Insights into npm packages"
         canonicalPath={`/package/${name}`}
         isLargeImage={true}
+        schema={{
+          '@context': 'https://schema.org',
+          '@type': 'SoftwareApplication',
+          name: name,
+          version: version,
+          applicationCategory: 'DeveloperApplication',
+          operatingSystem: 'All',
+          offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+          },
+        }}
       />
     )
   }
@@ -386,7 +399,29 @@ class ResultPage extends PureComponent<Props, State> {
           }
           repository={results.repository || ''}
           name={results.name || ''}
-        />
+        >
+          <button
+            className="quick-stats-bar__share-btn"
+            onClick={this.exportToImage}
+            title="Share as Image"
+          >
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+              <polyline points="16 6 12 2 8 6" />
+              <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+            <span>Share</span>
+          </button>
+        </QuickStatsBar>
       )
 
     const EmptyBoxIcon = EmptyBox
@@ -479,6 +514,15 @@ class ResultPage extends PureComponent<Props, State> {
                           'kB/s',
                         )}
                       />
+                      <Stat
+                        value={getTimeFromSize(results.gzip!).fiveG}
+                        type={Stat.type.TIME}
+                        label="Standard 5G"
+                        infoText={referenceSpeedInfoText(
+                          DownloadSpeed.FIVE_G,
+                          'kB/s',
+                        )}
+                      />
                     </div>
                   </div>
                 </div>
@@ -490,31 +534,6 @@ class ResultPage extends PureComponent<Props, State> {
                     />
                   )}
                 </div>
-              </div>
-            )}
-            {resultsPromiseState === 'fulfilled' && (
-              <div className="result-page__share-container">
-                <button
-                  className="result-page__share-btn-standalone"
-                  onClick={this.exportToImage}
-                  title="Share as Image"
-                >
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                    <polyline points="16 6 12 2 8 6" />
-                    <line x1="12" y1="2" x2="12" y2="15" />
-                  </svg>
-                  <span>Share Image</span>
-                </button>
               </div>
             )}
           </div>

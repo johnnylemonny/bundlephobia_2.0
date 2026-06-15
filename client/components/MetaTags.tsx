@@ -11,6 +11,7 @@ type MetaTagsProps = {
   twitterDescription?: string
   image?: string
   isLargeImage?: boolean
+  schema?: Record<string, any>
 }
 
 export default function MetaTags({
@@ -20,6 +21,7 @@ export default function MetaTags({
   canonicalPath,
   image,
   isLargeImage,
+  schema,
 }: MetaTagsProps) {
   const defaultDescription = `${DEFAULT_DESCRIPTION_START} Find the size of any javascript package and its effect on your frontend bundle.`
   const defaultImage = 'https://bundlephobia.com/android-chrome-256x256.png'
@@ -67,6 +69,12 @@ export default function MetaTags({
         <meta name="twitter:card" content="summary" key="summary" />
       )}
       <link rel="canonical" href={origin + canonicalPath} />
+      {schema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+        />
+      )}
     </Head>
   )
 }

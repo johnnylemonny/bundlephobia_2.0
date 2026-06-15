@@ -19,4 +19,15 @@
   font-weight: $font-weight-bold;
   letter-spacing: 2px;
   line-height: 1.5;
+  animation: pulse-text 2s infinite ease-in-out;
+}
+
+@keyframes pulse-text {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
 }

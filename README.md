@@ -21,6 +21,16 @@
 
 **Next.js Initialization**: When starting work on a Next.js project, automatically call the `init` tool from the next-devtools-mcp server FIRST. This establishes proper context and ensures all Next.js queries use official documentation.
 
+## Modernized Fork Features
+
+This fork of Bundlephobia includes several improvements:
+
+- **Premium Redesign**: A modern look with high visual consistency, responsive grid layouts, and support for light/dark themes.
+- **Improved Animations**: Dynamic "nodes & lines" background animation replacing jumping logos.
+- **5G Support**: Download time estimations now include Standard 5G speeds (100 Mbps) in addition to 3G and 4G.
+- **SEO & Semantics**: Proper semantic HTML elements and Schema.org JSON-LD structured data for better search indexing.
+- **Optimized Performance**: Snellier build indicator timing and streamlined bundles aiming for Lighthouse desktop score >= 90.
+
 ## Features
 
 - Works with ES6 packages

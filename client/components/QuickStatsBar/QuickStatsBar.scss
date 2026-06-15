@@ -123,3 +123,44 @@
     fill: var(--color-icon-muted);
   }
 }
+
+.quick-stats-bar__right {
+  display: flex;
+  align-items: center;
+  padding: 0 $global-spacing * 1.5;
+  border-left: 1px solid var(--color-stats-bar-border);
+  margin-left: auto;
+}
+
+.quick-stats-bar__share-btn {
+  background: transparent;
+  border: 1px solid var(--color-border-primary);
+  border-radius: 4px;
+  color: var(--color-text-secondary);
+  font-size: 0.75rem;
+  padding: 3px 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: $font-weight-bold;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+  line-height: 1;
+
+  svg {
+    stroke-width: 2px;
+    width: 11px;
+    height: 11px;
+  }
+
+  &:hover {
+    color: var(--color-text-primary);
+    border-color: var(--color-text-primary);
+    background: var(--color-surface-raised);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}

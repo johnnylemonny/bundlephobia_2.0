@@ -46,12 +46,16 @@ export const formatTime = (value: number): { unit: string; size: number } => {
 export const DownloadSpeed = {
   THREE_G: 400 / 8, // Slow 3G
   FOUR_G: 7000 / 8, // 4G
+  FIVE_G: 100000 / 8, // 5G (100 Mbps)
 } as const
 
-export const getTimeFromSize = (sizeInBytes: number): { threeG: number; fourG: number } => {
+export const getTimeFromSize = (
+  sizeInBytes: number,
+): { threeG: number; fourG: number; fiveG: number } => {
   return {
     threeG: sizeInBytes / 1024 / DownloadSpeed.THREE_G,
     fourG: sizeInBytes / 1024 / DownloadSpeed.FOUR_G,
+    fiveG: sizeInBytes / 1024 / DownloadSpeed.FIVE_G,
   }
 }
 
@@ -63,7 +67,11 @@ export function zeroToN(n: number): number[] {
   return Array.from(Array(n).keys())
 }
 
-export function resolveBuildError(resultsError: any): { errorName: string | null; errorBody: string | null; errorDetails: string | null } {
+export function resolveBuildError(resultsError: any): {
+  errorName: string | null
+  errorBody: string | null
+  errorDetails: string | null
+} {
   if (!resultsError) {
     return {
       errorName: null,

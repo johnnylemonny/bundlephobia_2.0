@@ -27,6 +27,7 @@ if (typeof window !== 'undefined') {
 
 import { AnnouncementBanner } from '../AnnouncementBanner'
 import { WithClassName } from '../../../types'
+import JohnnyLemonnyBanner from '../../assets/johnnylemonny-banner.png'
 
 type LayoutProps = React.PropsWithChildren & WithClassName
 
@@ -59,7 +60,7 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
     return (
       <section className="layout">
         <AnnouncementBanner />
-        <section className={className}>{children}</section>
+        <main className={className}>{children}</main>
 
         <footer>
           <div className="footer__recent-search-bar">
@@ -122,6 +123,23 @@ export default class Layout extends Component<LayoutProps, LayoutState> {
                   Star on GitHub
                 </button>
               </a>
+              <div className="footer__johnnylemonny">
+                <a
+                  href="https://github.com/johnnylemonny"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <img
+                    src={
+                      typeof JohnnyLemonnyBanner === 'object'
+                        ? (JohnnyLemonnyBanner as any).src
+                        : JohnnyLemonnyBanner
+                    }
+                    alt="johnnylemonny"
+                    className="footer__johnnylemonny-banner"
+                  />
+                </a>
+              </div>
             </div>
           </section>
         </footer>

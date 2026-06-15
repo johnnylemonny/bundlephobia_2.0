@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import Analytics from '../../analytics'
 
 const McpNavPopup = () => {
   const [open, setOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const containerRef = useRef<HTMLDivElement>(null)
+
   const setupSnippet = `{
   "mcpServers": {
     "bundlephobia": {
@@ -12,10 +14,32 @@ const McpNavPopup = () => {
   }
 }`
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false)
+      }
+    }
+
+    if (open) {
+      document.addEventListener('mousedown', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [open])
+
   const onToggle = () => {
     const nextOpen = !open
     setOpen(nextOpen)
     Analytics.mcpHeaderClicked({ open: nextOpen })
+  }
+
+  const handleMouseLeave = () => {
+    setOpen(false)
   }
 
   const onCopySnippet = async () => {
@@ -26,12 +50,27 @@ const McpNavPopup = () => {
   }
 
   return (
-    <div className="mcp-nav">
+    <div className="mcp-nav" ref={containerRef}>
       <button className="mcp-nav__trigger" onClick={onToggle} type="button">
         MCP
       </button>
       {open && (
         <div className="mcp-nav__popup">
+          <div className="mcp-nav__header">
+            <h4 className="mcp-nav__title">Model Context Protocol (MCP)</h4>
+            <button
+              className="mcp-nav__close"
+              type="button"
+              onClick={() => setOpen(false)}
+              aria-label="Close"
+            >
+              &times;
+            </button>
+          </div>
+          <p className="mcp-nav__desc">
+            Copy this configuration into your Cursor or Claude Desktop setup to
+            query bundle sizes in your IDE.
+          </p>
           <div className="mcp-nav__code-wrap">
             <button
               className={`mcp-nav__copy-icon ${

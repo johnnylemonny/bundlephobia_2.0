@@ -41,14 +41,29 @@
   color: var(--color-logo-alt);
 }
 
+.logo__skeleton-group {
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+
+  [data-theme='dark'] & {
+    opacity: 0.5;
+  }
+}
+
 .logo__skeleton {
-  animation: move 2s alternate infinite;
-  stroke: var(--color-accent);
+  stroke: var(--color-logo-skeleton, #5a738e);
+  stroke-width: 1.5px;
+  animation: skeleton-glow 4s infinite ease-in-out;
 }
 
 .logo-graphic {
   width: 137px * 0.9;
   height: 157px * 0.9;
+  animation: float 5s infinite ease-in-out;
+  transform-origin: center center;
+  transition:
+    filter 0.3s ease,
+    transform 0.3s ease;
 
   > g {
     stroke: var(--color-logo-primary);
@@ -60,8 +75,16 @@
   }
 
   &:hover {
+    filter: drop-shadow(
+      0 0 15px var(--color-logo-skeleton-glow, rgba(90, 115, 142, 0.3))
+    );
+    transform: scale(1.05) rotate(2deg);
+
     .logo__skeleton-group {
-      opacity: 0.4;
+      opacity: 0.85;
+    }
+    .logo__skeleton {
+      animation-duration: 1.5s;
     }
   }
 }
@@ -97,8 +120,8 @@
 }
 
 .homepage__scan-link {
-  margin-top: 4vh;
-  margin-bottom: 14vh;
+  margin-top: 3vh;
+  margin-bottom: 4vh;
   letter-spacing: 0.5px;
 
   a {
@@ -114,7 +137,7 @@
   }
 
   @media screen and (max-width: 40em) {
-    margin-bottom: 20vh;
+    margin-bottom: 5vh;
   }
 }
 
@@ -123,26 +146,26 @@
   fill: #4a5568;
 }
 
-@for $i from 1 through 3 {
-  .logo__skeleton:nth-of-type(#{$i}) {
-    animation-delay: 0.2 * $i * 1s;
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
   }
 }
 
-@keyframes move {
-  0% {
-    transform: translate(1px, 0.5px);
-  }
-
-  20% {
-    transform: translate(0px, -1px);
-  }
-
-  75% {
-    transform: translate(-1px, 1px);
-  }
-
+@keyframes skeleton-glow {
+  0%,
   100% {
-    transform: translate(0.55px, -1px);
+    opacity: 0.4;
+    stroke: var(--color-logo-skeleton);
+    filter: drop-shadow(0 0 1px var(--color-logo-skeleton-glow));
+  }
+  50% {
+    opacity: 1;
+    stroke: var(--color-link);
+    filter: drop-shadow(0 0 8px var(--color-logo-skeleton-glow));
   }
 }

@@ -2,28 +2,42 @@
 @import '../../../stylesheets/variables';
 
 .bar-graph__bar-version {
-  @include font-size-xs;
-  z-index: 33;
-  font-weight: $font-weight-light;
-  transform: rotate(-90deg) translateX(#{-$global-spacing * 1.5});
-  font-variant-numeric: tabular-nums;
-  color: var(--color-bar-version);
-  transition:
-    opacity 0.2s,
-    color 0.2s;
-  font-family: $font-family-code;
-  letter-spacing: -1px;
-  line-height: 1;
+  position: absolute;
+  bottom: -70px;
+  left: 0;
+  right: 0;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
-  height: $bar-width;
-  text-align: right;
-  display: block;
+  z-index: 33;
 
-  .bar-graph-container:hover & {
+  > div {
+    display: inline-block;
+    transform: rotate(-90deg);
+    transform-origin: center center;
+    white-space: nowrap;
+    width: 60px;
+    text-align: center;
+  }
+
+  span {
+    @include font-size-xs;
+    font-weight: $font-weight-light;
+    font-variant-numeric: tabular-nums;
+    color: var(--color-bar-version);
+    font-family: $font-family-code;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    transition: color 0.2s;
+  }
+
+  .bar-graph-container:hover & span {
     color: var(--color-bar-version-hover);
   }
 
-  .bar-graph__bar-group:hover & {
+  .bar-graph__bar-group:hover & span {
     color: var(--color-bar-version-active);
   }
 }

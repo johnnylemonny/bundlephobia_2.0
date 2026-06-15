@@ -49,7 +49,7 @@ export default class BuildProgressIndicator extends Component<
 
   shouldComponentUpdate(
     nextProps: BuildProgressIndicatorProps,
-    nextState: BuildProgressIndicatorState
+    nextState: BuildProgressIndicatorState,
   ) {
     return (
       this.state.progressText !== nextState.progressText ||
@@ -61,7 +61,7 @@ export default class BuildProgressIndicator extends Component<
     clearTimeout(this.timeoutId)
   }
 
-  getProgressText = (stage: typeof order[number]) => {
+  getProgressText = (stage: (typeof order)[number]) => {
     const progressText = {
       resolving: 'Resolving version and dependencies',
       building: 'Bundling package',
@@ -73,10 +73,10 @@ export default class BuildProgressIndicator extends Component<
 
   setMessage = (stage = 0) => {
     const timings = {
-      resolving: 3 + Math.random() * 2,
-      building: 5 + Math.random() * 3,
-      minifying: 3 + Math.random() * 2,
-      calculating: 20,
+      resolving: 1.2 + Math.random() * 0.8,
+      building: 1.8 + Math.random() * 1.2,
+      minifying: 1.2 + Math.random() * 0.8,
+      calculating: 5.0,
     }
 
     if (this.stage === order.length) {

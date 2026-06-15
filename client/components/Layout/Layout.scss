@@ -32,33 +32,43 @@ footer {
 
 .footer__recent-search-bar {
   width: 100%;
-  background: var(--color-footer-search-bg);
-  padding: 0 $global-spacing * 2;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border-subtle);
+  border-bottom: 1px solid var(--color-border-subtle);
+  padding: $global-spacing * 1.5 $global-spacing * 2;
 }
 
 .footer__recent-search-bar__wrap {
   max-width: $footer-content-max-width;
   display: flex;
   align-items: center;
-  justify-content: center;
   margin: auto;
 
+  @media screen and (max-width: 40em) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
   h4 {
-    @include font-size-xs;
-    color: var(--color-footer-text);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
     margin: 0;
     line-height: 1.2;
+    letter-spacing: 1.5px;
+    font-weight: $font-weight-bold;
+    min-width: 130px;
   }
 }
 
 .footer__recent-search-list {
-  @include font-size-xs;
-
   display: flex;
+  flex-wrap: wrap;
   padding: 0;
-  margin: 0 0 0 $global-spacing * 1.5;
+  margin: 0 0 0 $global-spacing * 2;
   flex-grow: 1;
-  max-width: 960px;
+  gap: 0.5rem;
 
   @media screen and (max-width: 40em) {
     margin: 0;
@@ -66,43 +76,25 @@ footer {
 
   li {
     list-style: none;
-    position: relative;
-    flex-grow: 1;
-    text-align: center;
     font-family: $font-family-code;
-    letter-spacing: 0.5px;
+    font-size: 0.75rem;
+    letter-spacing: 0.3px;
 
     a {
-      padding: $global-spacing $global-spacing * 2;
+      display: inline-block;
+      padding: 6px 12px;
+      background: var(--color-bg-base);
+      border: 1px solid var(--color-border-primary);
+      border-radius: 20px;
+      color: var(--color-text-secondary);
+      transition: all 0.2s ease-in-out;
 
-      @media screen and (max-width: 48em) {
-        padding: $global-spacing $global-spacing * 0.5;
-      }
-    }
-
-    &:not(:first-of-type) {
-      &::after {
-        content: '';
-        width: 1px;
-        height: 60%;
-        background: rgba(255, 255, 255, 0.1);
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        margin: auto;
-      }
-    }
-
-    @media screen and (max-width: 48em) {
-      &:nth-child(n + 5) {
-        display: none;
-      }
-    }
-
-    @media screen and (max-width: 40em) {
-      &:nth-child(n + 4) {
-        display: none;
+      &:hover {
+        color: var(--color-link-hover);
+        border-color: var(--color-link);
+        background: var(--color-bg-surface);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(101, 161, 248, 0.1);
       }
     }
   }
@@ -184,33 +176,29 @@ footer {
   width: 8vw;
   height: 8vw;
   max-width: 100px;
+  transform-origin: center center;
+  transition: transform 0.2s ease;
 
   path {
-    fill: var(--color-neptune); // mix($raven, $maya-blue) ≈ teal
+    fill: var(--color-neptune);
   }
 
   &:hover {
-    path {
-      animation: pulse 10s infinite both;
-    }
+    animation: heartbeat 1.2s infinite ease-in-out;
   }
 }
 
-@keyframes pulse {
-  0% {
-    fill: var(--color-neptune);
+@keyframes heartbeat {
+  0%,
+  100% {
+    transform: scale(1);
   }
-
-  25% {
-    fill: var(--color-cornflower-blue);
+  25%,
+  60% {
+    transform: scale(1.15);
   }
-
-  50% {
-    fill: var(--color-raven);
-  }
-
-  75% {
-    fill: var(--color-neptune);
+  40% {
+    transform: scale(1.05);
   }
 }
 
@@ -248,6 +236,31 @@ footer {
 
 .footer__sponsor-logo {
   margin-top: $global-spacing;
+}
+
+.footer__johnnylemonny {
+  margin-top: $global-spacing * 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.footer__johnnylemonny-banner {
+  max-width: 160px;
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+
+  &:hover {
+    opacity: 0.95;
+    transform: translateY(-2px) scale(1.03);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
 }
 
 footer {

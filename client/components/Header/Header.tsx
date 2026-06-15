@@ -83,8 +83,8 @@ export default class Header extends Component<HeaderProps, HeaderState> {
                 </a>
               </li>
               <li>
-                <Link href="/scan">
-                  Scan package.json <sup>β</sup>
+                <Link href="/scan" className="scan-link">
+                  Scan package.json
                 </Link>
               </li>
             </ul>

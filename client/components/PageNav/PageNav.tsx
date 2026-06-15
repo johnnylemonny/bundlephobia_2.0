@@ -42,13 +42,24 @@ const PageNav = ({ minimal }: PageNavProps) => {
             </a>
           </li>
           <li>
-            <Link href="/blog">Blog</Link>
+            <Link
+              href="/blog"
+              className="blog-link disabled"
+              style={{
+                opacity: 0.4,
+                cursor: 'not-allowed',
+                pointerEvents: 'none',
+              }}
+              aria-disabled="true"
+            >
+              Blog
+            </Link>
           </li>
-          {!minimal && (
-            <li>
-              <Link href="/scan">Scan package.json</Link>
-            </li>
-          )}
+          <li>
+            <Link href="/scan" className="scan-link">
+              Scan package.json
+            </Link>
+          </li>
         </ul>
         <McpNavPopup />
         <ThemeToggle />

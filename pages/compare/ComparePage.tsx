@@ -110,6 +110,18 @@ class ComparePage extends PureComponent<Props, State> {
             label="Slow 3G"
             compact
           />
+          <Stat
+            value={getTimeFromSize(pkg.gzip!).fourG}
+            type="time"
+            label="Emerging 4G"
+            compact
+          />
+          <Stat
+            value={getTimeFromSize(pkg.gzip!).fiveG}
+            type="time"
+            label="Standard 5G"
+            compact
+          />
         </div>
       </div>
     )
